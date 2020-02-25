@@ -18,6 +18,9 @@ User input:
     - filename: full path file name
     - crop: if 'yes' (default), user will identify area around the object of
         interest that could be used to limit noise in strobe image
+    - autoid: OPTIONAL default: None, minimum number of frames between manually 
+        identified strobe frames before auto id occurs (will find apex and two
+        additional frames before and after apex)
 
 Created on Thu Feb 6 10:36:26 2020
 
@@ -27,8 +30,9 @@ Created on Thu Feb 6 10:36:26 2020
 from findframe import findframe
 import pandas as pd
 from capture_area import findarea
+import numpy as np
 
-def strobe_findframes(filename, crop='yes'):
+def strobe_findframes(filename, crop='yes', autoid=None):
     #%% initialize variables
     strobeframes = None
     frame = 0
@@ -63,4 +67,23 @@ def strobe_findframes(filename, crop='yes'):
     #%% drop duplicates
     strobeframes = strobeframes.drop_duplicates()
     
+    #%% if auto-find frames was selected
+    if autoid is not None:
+        # store strobeframes as another variable to use as search
+        sframestemp = strobeframes
+        # find difference between selected frames
+        diffframes = np.diff(strobeframes)
+        # auto select evenly spaced frames
+        for cntdf in range(len(diffframes)):
+            if diffframes[cntdf] >= autoid:
+                frames = np.linspace(sframestemp.iloc[cntdf],
+                                     sframestemp.iloc[cntdf+1], 7, dtype=int)
+                strobeframes = (strobeframes.append(pd.Series(frames)).reset_index(drop=True)).sort_values(ignore_index=True).drop_duplicates()
+                # if crop was selected, crop area for each new frame
+                if crop == 'yes':
+                    for cntf in frames[1:-1]:
+                        area = findarea(filename,frame=cntf,label='Select area around object')
+                        searcharea[cntf] = area
+    
+    #%%
     return strobeframes, searcharea
