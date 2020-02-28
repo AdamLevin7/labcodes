@@ -25,7 +25,6 @@ Created on Thu Feb  6 12:35:18 2020
 import cv2
 import numpy as np
 from scipy import ndimage
-from skimage.measure import compare_ssim
 
 
 def strobe(filename, filesave, frames, searcharea=None, samp=240, thresh=60, bgint=5):
