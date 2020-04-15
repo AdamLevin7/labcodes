@@ -1,0 +1,90 @@
+# -*- coding: utf-8 -*-
+"""
+segdim_deleva
+    Create data frame containing segment center of mass length and percent weight
+        based on de Leva 1996.
+        
+Inputs
+    gender: STR segmental parameters for which gender ('f' or 'm')
+    
+Outputs
+    segdim: DATAFRAME center of mass position (cmpos) and percent weight (cmper)
+    
+de Leva. Adjustments to Zatsiorsky-Seluyanov's segment inertia parameters. 1996
+
+Based on digitized points:
+    segment:    origin                  -   other
+    head:       vertex                  -   cervicale (C7)
+    trunk:      cervical (C7)           -   mid-hip
+    upperarm:   shoulder joint center   -   elbow joint center
+    forearm:    elbow joint center      -   stylion (distal point radial styloid)
+    hand:       sylion (see forearm)    -   3rd dactylion (tip of 3rd digit)
+    thigh:      hip joint center        -   knee joint center 
+    shank:      knee joint center       -   lateral malleolus
+    foot:       heel                    -   acropodion (tip of longest toe - 1st or 2nd)
+
+Created on Wed Apr 15 13:32:30 2020
+
+@author: cwiens, Casey Wiens, cwiens32@gmail.com
+"""
+
+import pandas as pd
+import numpy as np
+
+def segmentdim(gender):
+    
+    # create segment dimension dict
+    segdim = pd.DataFrame(index={'head', 'trunk', 'upperarm', 'forearm',
+                                 'hand', 'thigh', 'shank', 'foot'},
+                          columns={'cmpos', 'cmper'},
+                          dtype=np.int64)
+
+    #%% location of center of mass length percentages for each segment
+    # if female..
+    if gender == 'f':
+        segdim['cmpos']['head'] = 0.4841
+        segdim['cmpos']['trunk'] = 0.4964
+        segdim['cmpos']['upperarm'] = 0.5754
+        segdim['cmpos']['forearm'] = 0.4592
+        segdim['cmpos']['hand'] = 0.3502
+        segdim['cmpos']['thigh'] = 0.3612
+        segdim['cmpos']['shank'] = 0.4416
+        segdim['cmpos']['foot'] = 0.4014
+    
+    else:
+        segdim['cmpos']['head'] = 0.5002
+        segdim['cmpos']['trunk'] = 0.5138
+        segdim['cmpos']['upperarm'] = 0.5772
+        segdim['cmpos']['forearm'] = 0.4608
+        segdim['cmpos']['hand'] = 0.3691
+        segdim['cmpos']['thigh'] = 0.4095
+        segdim['cmpos']['shank'] = 0.4459
+        segdim['cmpos']['foot'] = 0.4415
+        
+    
+    #%% mass percents for each segment
+    # if female..
+    if gender == 'f':
+        segdim['cmper']['head'] = 0.0668
+        segdim['cmper']['trunk'] = 0.4257
+        segdim['cmper']['upperarm'] = 0.0255
+        segdim['cmper']['forearm'] = 0.0138
+        segdim['cmper']['hand'] = 0.0056
+        segdim['cmper']['thigh'] = 0.1478
+        segdim['cmper']['shank'] = 0.0481
+        segdim['cmper']['foot'] = 0.0129
+    
+    else:
+        segdim['cmper']['head'] = 0.0694
+        segdim['cmper']['trunk'] = 0.4346
+        segdim['cmper']['upperarm'] = 0.0271
+        segdim['cmper']['forearm'] = 0.0162
+        segdim['cmper']['hand'] = 0.0061
+        segdim['cmper']['thigh'] = 0.1416
+        segdim['cmper']['shank'] = 0.0433
+        segdim['cmper']['foot'] = 0.0137
+        
+        
+    #%% return data frame
+    return segdim
+        
