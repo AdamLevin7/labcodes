@@ -8,7 +8,8 @@ Inputs
     gender: STR segmental parameters for which gender ('f' or 'm')
     
 Outputs
-    segdim: DATAFRAME center of mass position (cmpos) and percent weight (cmper)
+    segments: DATAFRAME contains origin and other location for segment definition,
+        as well as segmental center of mass position (cmpos) and percent weight (cmper)
     
 de Leva. Adjustments to Zatsiorsky-Seluyanov's segment inertia parameters. 1996
 
@@ -34,10 +35,36 @@ import numpy as np
 def segmentdim(gender):
     
     # create segment dimension dict
+    segloc = pd.DataFrame(index={'head', 'trunk', 'upperarm', 'forearm',
+                                 'hand', 'thigh', 'shank', 'foot'},
+                          columns={'origin', 'other'},
+                          dtype=str)
+    
+    # create segment dimension dict
     segdim = pd.DataFrame(index={'head', 'trunk', 'upperarm', 'forearm',
                                  'hand', 'thigh', 'shank', 'foot'},
                           columns={'cmpos', 'cmper'},
                           dtype=np.int64)
+    
+    #%% store location of origin and other for each segment
+    # origin
+    segloc['origin']['head'] = 'vertex'
+    segloc['origin']['trunk'] = 'c7'
+    segloc['origin']['upperarm'] = 'shoulder'
+    segloc['origin']['forearm'] = 'elbow'
+    segloc['origin']['hand'] = 'wrist'
+    segloc['origin']['thigh'] = 'hip'
+    segloc['origin']['shank'] = 'knee'
+    segloc['origin']['foot'] = 'heel'
+    # other
+    segloc['other']['head'] = 'c7'
+    segloc['other']['trunk'] = 'hip'
+    segloc['other']['upperarm'] = 'elbow'
+    segloc['other']['forearm'] = 'wrist'
+    segloc['other']['hand'] = 'finger'
+    segloc['other']['thigh'] = 'knee'
+    segloc['other']['shank'] = 'ankle'
+    segloc['other']['foot'] = 'toe'
 
     #%% location of center of mass length percentages for each segment
     # if female..
@@ -61,7 +88,6 @@ def segmentdim(gender):
         segdim['cmpos']['shank'] = 0.4459
         segdim['cmpos']['foot'] = 0.4415
         
-    
     #%% mass percents for each segment
     # if female..
     if gender == 'f':
@@ -84,7 +110,10 @@ def segmentdim(gender):
         segdim['cmper']['shank'] = 0.0433
         segdim['cmper']['foot'] = 0.0137
         
-        
+    #%% join data tables
+    segments = segloc.join(segdim)
+    
+    
     #%% return data frame
-    return segdim
+    return segments
         
