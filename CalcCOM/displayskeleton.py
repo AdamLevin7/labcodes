@@ -1,5 +1,27 @@
 # -*- coding: utf-8 -*-
 """
+displayskeleton
+    Add visual representation of segments and center of mass of body and segments.
+    
+Inputs
+    file_vid: STR full file name of video
+    data: DATAFRAME digitized data for each segment
+        Row 0: frame
+        Row 1+: digitized locations with x then y
+    data_cm: DATAFRAME body and segment CM locations (prefe)
+        Row 0: frame
+        Row 1+: center of mass locations with x then y
+    segments: DATAFRAME segment parameters obtained from segdim_deleva.py
+    
+Outputs
+    image of each digitized frame with body cm, segment cm, and segment visually represented
+        loaction: 'SkeletonOL' folder within location of file_vid
+    
+Dependencies
+    cv2 (opencv)
+    pandas
+    numpy
+    
 Created on Fri Apr 17 15:27:11 2020
 
 @author: cwiens
