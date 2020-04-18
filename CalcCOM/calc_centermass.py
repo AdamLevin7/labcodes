@@ -111,7 +111,7 @@ def calc_segcm(datain, segments):
                                      (segments.iloc[cnt,:]).name + '_right_y']
                     # add column to data out
                     dataout = dataout.join(seg_r)
-                # if nether left or right exists
+                # if neither left or right exists
                 if (len(orig_l.columns)==0) and (len(orig_r.columns)==0):
                     # calculate center of mass location of segment
                     seg = calc_indsegcm(segments['cmpos'][cnt], orig, oth)
@@ -120,6 +120,9 @@ def calc_segcm(datain, segments):
                                      (segments.iloc[cnt,:]).name + '_y']
                     # add column to data out
                     dataout = dataout.join(seg)
+    
+    
+    return dataout
 
 
 
@@ -132,21 +135,21 @@ def calc_cm(segcm, segments):
     for cnt in range(len(segments)):
         # find columns of current segment
         seg = segcm.filter(regex = segments.iloc[cnt,:].name)
-        # multiply segment center of mass location by % center of mass position
-        seg = seg * segments['cmpos'][cnt]
+        # multiply segment center of mass location by % mass segment of total body
+        seg = seg * segments['massper'][cnt]
         # add current segment to total body data frame
         totalbody = totalbody.join(seg)
         # find total % segment mass to divide by
-        segmass = int(len(seg.columns)/2) * segments['cmpos'][cnt]
+        segmass = int(len(seg.columns)/2) * segments['massper'][cnt]
         # add current segment mass to total
         totalmass += segmass
     
     # calculate center of mass of body
     # sum(mi * xcmi) / M
-    x = pd.DataFrame({'x': totalbody.filter(regex = '_x').iloc[:,1: ].sum(axis=1, skipna=False) / totalmass})
-    y = pd.DataFrame({'y': totalbody.filter(regex = '_y').iloc[:,1: ].sum(axis=1, skipna=False) / totalmass})
+    x = pd.DataFrame({'body_x': totalbody.filter(regex = '_x').sum(axis=1, skipna=False) / totalmass})
+    y = pd.DataFrame({'body_y': totalbody.filter(regex = '_y').sum(axis=1, skipna=False) / totalmass})
     # join datatables
-    bodycm = pd.DataFrame(segcm.iloc[:,0]).join(x).join(y)
+    bodycm = pd.DataFrame(segcm).join(x).join(y)
     
     
     return bodycm
