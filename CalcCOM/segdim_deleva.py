@@ -9,7 +9,7 @@ Inputs
     
 Outputs
     segments: DATAFRAME contains origin and other location for segment definition,
-        as well as segmental center of mass position (cmpos) and percent weight (cmper)
+        as well as segmental center of mass position (cmpos) and percent weight (massper)
     
 de Leva. Adjustments to Zatsiorsky-Seluyanov's segment inertia parameters. 1996
 
@@ -43,7 +43,7 @@ def segmentdim(gender):
     # create segment dimension dict
     segdim = pd.DataFrame(index={'head', 'trunk', 'upperarm', 'forearm',
                                  'hand', 'thigh', 'shank', 'foot'},
-                          columns={'cmpos', 'cmper'},
+                          columns={'cmpos', 'massper'},
                           dtype=np.int64)
     
     #%% store location of origin and other for each segment
@@ -91,24 +91,24 @@ def segmentdim(gender):
     #%% mass percents for each segment
     # if female..
     if gender == 'f':
-        segdim['cmper']['head'] = 0.0668
-        segdim['cmper']['trunk'] = 0.4257
-        segdim['cmper']['upperarm'] = 0.0255
-        segdim['cmper']['forearm'] = 0.0138
-        segdim['cmper']['hand'] = 0.0056
-        segdim['cmper']['thigh'] = 0.1478
-        segdim['cmper']['shank'] = 0.0481
-        segdim['cmper']['foot'] = 0.0129
+        segdim['massper']['head'] = 0.0668
+        segdim['massper']['trunk'] = 0.4257
+        segdim['massper']['upperarm'] = 0.0255
+        segdim['massper']['forearm'] = 0.0138
+        segdim['massper']['hand'] = 0.0056
+        segdim['massper']['thigh'] = 0.1478
+        segdim['massper']['shank'] = 0.0481
+        segdim['massper']['foot'] = 0.0129
     
     else:
-        segdim['cmper']['head'] = 0.0694
-        segdim['cmper']['trunk'] = 0.4346
-        segdim['cmper']['upperarm'] = 0.0271
-        segdim['cmper']['forearm'] = 0.0162
-        segdim['cmper']['hand'] = 0.0061
-        segdim['cmper']['thigh'] = 0.1416
-        segdim['cmper']['shank'] = 0.0433
-        segdim['cmper']['foot'] = 0.0137
+        segdim['massper']['head'] = 0.0694
+        segdim['massper']['trunk'] = 0.4346
+        segdim['massper']['upperarm'] = 0.0271
+        segdim['massper']['forearm'] = 0.0162
+        segdim['massper']['hand'] = 0.0061
+        segdim['massper']['thigh'] = 0.1416
+        segdim['massper']['shank'] = 0.0433
+        segdim['massper']['foot'] = 0.0137
         
     #%% join data tables
     segments = segloc.join(segdim)
