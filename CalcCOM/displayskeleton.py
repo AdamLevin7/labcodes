@@ -33,7 +33,8 @@ import numpy as np
 import os
 
 
-def addskeleton(file_vid, data, data_cm, segments):
+def addskeleton(file_vid, data, data_cm, segments,
+                file_vid_n='skeletonvideo.mp4', samp_vid=240):
     
     #%% set up location to store images
     # if just file name was given
@@ -46,8 +47,15 @@ def addskeleton(file_vid, data, data_cm, segments):
         os.makedirs(savefolder)
                 
     
-    #%% load video file
+    #%% load video file and initialize new video
     cap = cv2.VideoCapture(file_vid)
+    # default resolutions of the frame are obtained.The default resolutions are system dependent.
+    # we convert the resolutions from float to integer.
+    frame_width, frame_height = int(cap.get(3)), int(cap.get(4))
+    # define the codec and create VideoWriter object
+    vid_out = cv2.VideoWriter(file_vid_n, cv2.VideoWriter_fourcc('M','P','4','V'),
+                              samp_vid/4, (frame_width,frame_height))
+    
     
     #%% apply skeleton on each image
     # loop through frames
@@ -163,14 +171,17 @@ def addskeleton(file_vid, data, data_cm, segments):
             frame = cv2.circle(frame, bodycm_loc, 8, (0,255,255), -1)
         
         
-        #%% save frame
+        #%% save frame and add to video
         # create frame name
         framename = os.path.join(savefolder,
                                  os.path.basename(file_vid)[ :-4] + '_' + str(framenum) + '.png')
         cv2.imwrite(framename, frame)
+        # write the frame into the file
+        vid_out.write(frame)
         
         
     #%% when everything done, release the video capture and video write objects
     cap.release()
+    vid_out.release()
     # closes all the frames
     cv2.destroyAllWindows()
