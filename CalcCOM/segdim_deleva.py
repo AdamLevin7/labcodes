@@ -9,7 +9,8 @@ Inputs
     
 Outputs
     segments: DATAFRAME contains origin and other location for segment definition,
-        as well as segmental center of mass position (cmpos) and percent weight (massper)
+        as well as segmental center of mass position (cmpos),
+        percent weight (massper), and sagittal radii of gyration (r_gyr).
     
 de Leva. Adjustments to Zatsiorsky-Seluyanov's segment inertia parameters. 1996
 
@@ -43,7 +44,7 @@ def segmentdim(gender):
     # create segment dimension dict
     segdim = pd.DataFrame(index={'head', 'trunk', 'upperarm', 'forearm',
                                  'hand', 'thigh', 'shank', 'foot'},
-                          columns={'cmpos', 'massper'},
+                          columns={'cmpos', 'massper', 'r_gyr'},
                           dtype=np.int64)
     
     #%% store location of origin and other for each segment
@@ -109,6 +110,28 @@ def segmentdim(gender):
         segdim['massper']['thigh'] = 0.1416
         segdim['massper']['shank'] = 0.0433
         segdim['massper']['foot'] = 0.0137
+        
+    #%% radius of gyration for each segment
+    # if female..
+    if gender == 'f':
+        segdim['r_gyr']['head'] = 0.271
+        segdim['r_gyr']['trunk'] = 0.307
+        segdim['r_gyr']['upperarm'] = 0.278
+        segdim['r_gyr']['forearm'] = 0.263
+        segdim['r_gyr']['hand'] = 0.241
+        segdim['r_gyr']['thigh'] = 0.369
+        segdim['r_gyr']['shank'] = 0.271
+        segdim['r_gyr']['foot'] = 0.299
+    
+    else:
+        segdim['r_gyr']['head'] = 0.303
+        segdim['r_gyr']['trunk'] = 0.328
+        segdim['r_gyr']['upperarm'] = 0.285
+        segdim['r_gyr']['forearm'] = 0.278
+        segdim['r_gyr']['hand'] = 0.285
+        segdim['r_gyr']['thigh'] = 0.329
+        segdim['r_gyr']['shank'] = 0.255
+        segdim['r_gyr']['foot'] = 0.257
         
     #%% join data tables
     segments = segloc.join(segdim)
