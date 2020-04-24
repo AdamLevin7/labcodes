@@ -71,23 +71,6 @@ def plateorigin(platelocs):
     return plate_origin
 
 
-def flipdata(data, flip=None):
-    # if flip is not none
-    if flip is not None:
-        # loop through force plates
-        for cnt in range(len(data)):
-            if 'fx' in flip[cnt]:
-                data[cnt]['fx'] = data[cnt]['fx'] * -1
-            if 'fy' in flip[cnt]:
-                data[cnt]['fy'] = data[cnt]['fy'] * -1
-            if 'ax' in flip[cnt]:
-                data[cnt]['ax'] = data[cnt]['ax'] * -1
-            if 'ay' in flip[cnt]:
-                data[cnt]['ay'] = data[cnt]['ay'] * -1
-    
-    return data
-
-
 def datareform(fx, fy, ax, ay, mode='ind', platelocs=None):
     # initialize data_fp
     data_fp = {}
@@ -112,6 +95,34 @@ def datareform(fx, fy, ax, ay, mode='ind', platelocs=None):
     return data_fp
 
 
+def flipdata(data, flip=None):
+    # if flip is not none
+    if flip is not None:
+        # loop through force plates
+        for cnt in range(len(data)):
+            if 'fx' in flip[cnt]:
+                data[cnt]['fx'] = data[cnt]['fx'] * -1
+            if 'fy' in flip[cnt]:
+                data[cnt]['fy'] = data[cnt]['fy'] * -1
+            if 'ax' in flip[cnt]:
+                data[cnt]['ax'] = data[cnt]['ax'] * -1
+            if 'ay' in flip[cnt]:
+                data[cnt]['ay'] = data[cnt]['ay'] * -1
+    
+    return data
+
+
+def data2meter(data, pix2m, plate_origin=None):
+    # loop through number of plates
+    for cnt in range(len(data)):
+        # if plate_origin is not None, move cop data to it
+        if plate_origin is not None:
+            data[cnt]['ax'] = data[cnt]['ax'] + plate_origin[cnt][0] * pix2m['x']
+            data[cnt]['ay'] = data[cnt]['ay'] + plate_origin[cnt][1] * pix2m['x']
+    
+    return data
+
+
 def data2pix(data, mag2pix, pix2m, plate_origin=None):
     # loop through number of plates
     for cnt in range(len(data)):
@@ -119,13 +130,28 @@ def data2pix(data, mag2pix, pix2m, plate_origin=None):
         data[cnt][['fx','fy']] = data[cnt][['fx','fy']] / mag2pix
         # convert cop data to pixels
         data[cnt]['ax'] = data[cnt]['ax'] / pix2m['x']
-        data[cnt]['ay'] = data[cnt]['ay'] / pix2m['y']
+        data[cnt]['ay'] = data[cnt]['ay'] / pix2m['z']
         # if plate_origin is not None, move cop data to it
         if plate_origin is not None:
             data[cnt]['ax'] = data[cnt]['ax'] + plate_origin[cnt][0]
             data[cnt]['ay'] = data[cnt]['ay'] + plate_origin[cnt][1]
     
     return data
+
+
+def transfrom2vidrefsys(data, pix2m, view='fy', mode='ind', platelocs=None, flip=None):
+    # select data
+    fx, fy, ax, ay = selectdata(data, view=view)
+    # find plate origin
+    plate_origin = plateorigin(platelocs)
+    # reformat data
+    data_n = datareform(fx, fy, ax, ay, mode=mode, platelocs=platelocs)
+    # flip data to video reference system
+    data_f = flipdata(data_n, flip)
+    # convert to meters
+    data_out = data2meter(data_f, pix2m, plate_origin)
+    
+    return data_out
 
 
 def main(data, mag2pix, pix2m, view='fy', mode='ind', platelocs=None, flip=None):
