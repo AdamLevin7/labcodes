@@ -5,8 +5,8 @@ calc_segmentlength
     
 Inputs
     data: DATAFRAME digitized data for each segment
-        Row 0: frame
-        Row 1+: digitized locations with x then y
+        Column 0: time or frame number
+        Column 1+: digitized locations with x then y
     segments: DATAFRAME segment parameters obtained from segdim_deleva.py
     
 Outputs
