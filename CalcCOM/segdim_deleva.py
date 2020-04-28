@@ -9,6 +9,7 @@ Inputs
     
 Outputs
     segments: DATAFRAME contains origin and other location for segment definition,
+        proximal and distal joints (primarily for digitized point),
         as well as segmental center of mass position (cmpos),
         percent weight (massper), and sagittal radii of gyration (r_gyr).
     
@@ -38,8 +39,9 @@ def segmentdim(gender):
     # create segment dimension dict
     segloc = pd.DataFrame(index={'head', 'trunk', 'upperarm', 'forearm',
                                  'hand', 'thigh', 'shank', 'foot'},
-                          columns={'origin', 'other'},
-                          dtype=str)
+                          columns={'origin', 'other', 'joint_p', 'joint_d'},
+                          dtype=str).reindex(columns=['origin', 'other',
+                                             'joint_p', 'joint_d'])
     
     # create segment dimension dict
     segdim = pd.DataFrame(index={'head', 'trunk', 'upperarm', 'forearm',
@@ -66,6 +68,26 @@ def segmentdim(gender):
     segloc['other']['thigh'] = 'knee'
     segloc['other']['shank'] = 'ankle'
     segloc['other']['foot'] = 'toe'
+    
+    #%% store location of proximal joint and distal joint
+    # origin
+    segloc['joint_p']['head'] = None
+    segloc['joint_p']['trunk'] = 'neck'
+    segloc['joint_p']['upperarm'] = 'shoulder'
+    segloc['joint_p']['forearm'] = 'elbow'
+    segloc['joint_p']['hand'] = 'wrist'
+    segloc['joint_p']['thigh'] = 'hip'
+    segloc['joint_p']['shank'] = 'knee'
+    segloc['joint_p']['foot'] = 'ankle'
+    # other
+    segloc['joint_d']['head'] = 'neck'
+    segloc['joint_d']['trunk'] = 'hip'
+    segloc['joint_d']['upperarm'] = 'elbow'
+    segloc['joint_d']['forearm'] = 'wrist'
+    segloc['joint_d']['hand'] = None
+    segloc['joint_d']['thigh'] = 'knee'
+    segloc['joint_d']['shank'] = 'ankle'
+    segloc['joint_d']['foot'] = None
 
     #%% location of center of mass length percentages for each segment
     # if female..
