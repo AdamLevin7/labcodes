@@ -69,10 +69,10 @@ def segmentdim(gender):
     segloc['other']['shank'] = 'ankle'
     segloc['other']['foot'] = 'toe'
     
-    #%% store location of proximal joint and distal joint
+    #%% store location of proximal joint and distal joint landmarks
     # origin
     segloc['joint_p']['head'] = None
-    segloc['joint_p']['trunk'] = 'neck'
+    segloc['joint_p']['trunk'] = 'c7'
     segloc['joint_p']['upperarm'] = 'shoulder'
     segloc['joint_p']['forearm'] = 'elbow'
     segloc['joint_p']['hand'] = 'wrist'
@@ -80,7 +80,7 @@ def segmentdim(gender):
     segloc['joint_p']['shank'] = 'knee'
     segloc['joint_p']['foot'] = 'ankle'
     # other
-    segloc['joint_d']['head'] = 'neck'
+    segloc['joint_d']['head'] = 'c7'
     segloc['joint_d']['trunk'] = 'hip'
     segloc['joint_d']['upperarm'] = 'elbow'
     segloc['joint_d']['forearm'] = 'wrist'
