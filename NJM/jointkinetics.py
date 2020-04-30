@@ -5,7 +5,7 @@ jointkinetics
     
 Modules
     calcnjm: actual joint kinetic calculations for a single segment
-    njm_setup: set up data to run calcnjm for muliple segments
+    njm_full: run calcnjm for muliple segments
     
 Dependencies
     pandas
@@ -89,7 +89,7 @@ def calcnjm(segname, m, ax, ay, Rxd, Ryd, r_d, r_p, Icm, alpha, njm_d):
 
 
 """
-njm_setup
+njm_full
     set up data to run calcnjm for muliple segments
     
 Inputs
@@ -110,7 +110,7 @@ Outputs
     data_njm: DATAFRAME contains calculated variables for segment(s)'s joint kinetics
 """
 
-def njm_setup(dig, cm, cm_acc, icm, segang_acc, forcedata, mass, seg_sequence, segments):
+def njm_full(dig, cm, cm_acc, icm, segang_acc, forcedata, mass, seg_sequence, segments):
     # initialize data out
     dataout = pd.DataFrame(dig.iloc[:,0])
     
