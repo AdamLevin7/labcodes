@@ -30,7 +30,7 @@ import numpy as np
 def centraldiff(f, dt):
     
     #%% initialize derived data
-    d = pd.DataFrame(np.zeros(f.shape, dtype=float), columns=f.columns)
+    d = pd.DataFrame(np.zeros(f.shape, dtype=float), columns=f.columns, index=f.index)
     
     #%% foward difference for first frame
     d.iloc[0,:] = (f.iloc[1,:] - f.iloc[0,:]) / dt
