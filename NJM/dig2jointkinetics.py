@@ -116,11 +116,11 @@ def datainterp(data_dig, data_cm, xvals, segments, mass, contact_seg, samp=240):
     w = fc / (samp / 2)
     b, a = signal.butter(N/2, w, 'low')
     # digitized data
-    data_dig_filt = pd.DataFrame({'frame': data_dig['frame']}).join(filtdata(data_dig))
+    data_dig_filt = pd.DataFrame({'frame': data_dig['frame']}).join(filtdata(data_dig, b, a))
     # center of mass data
-    data_cm_filt = pd.DataFrame({'frame': data_cm['frame']}).join(filtdata(data_cm))
+    data_cm_filt = pd.DataFrame({'frame': data_cm['frame']}).join(filtdata(data_cm, b, a))
     # segment length
-    data_seglength_filt = pd.DataFrame({'frame': data_seglength['frame']}).join(filtdata(data_seglength))
+    data_seglength_filt = pd.DataFrame({'frame': data_seglength['frame']}).join(filtdata(data_seglength, b, a))
     
     ### interpolate kinematic data
     # digitized data
@@ -195,13 +195,13 @@ def cm_velocityacceleration(data_cm, xvals, samp):
     # replace time series
     data_cm_vel['time'] = xvals
     # filter center of mass velocities
-    data_cm_vel_filt = pd.DataFrame({'time': xvals}).join(filtdata(data_cm_vel))
+    data_cm_vel_filt = pd.DataFrame({'time': xvals}).join(filtdata(data_cm_vel, b, a))
     # center of mass accelerations
     data_cm_acc = centraldiff(data_cm_vel_filt, np.mean(np.diff(data_cm_vel_filt['time'])))
     # replace time series
     data_cm_acc['time'] = xvals
     # filter center of mass accelerations
-    data_cm_acc_filt = pd.DataFrame({'time': xvals}).join(filtdata(data_cm_acc))
+    data_cm_acc_filt = pd.DataFrame({'time': xvals}).join(filtdata(data_cm_acc, b, a))
     
     
     return data_cm_vel_filt, data_cm_acc_filt
