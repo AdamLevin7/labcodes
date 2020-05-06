@@ -6,9 +6,14 @@ Vector Overlay
 Inputs 
     file: STRING file name of video
     file_out: STRING file name for new video
-    data_vid: DATAFRAME force and cop data, prefer that output from data2pix.
-        format (fx, fy, ax, ay)
-    frame_con: INT contact frame of video
+    data_vid: DICT force and cop data, prefer that output from data2pix.
+        format (0: {fx, fy, ax, ay},
+                1: {fx, fy, ax, ay},
+                ...)
+    frame_con: DICT contact frame of video
+        format (0: INT,
+                1: INT,
+                ...)
     samp_video: INT sampling rate of video
     samp_force: INT sampling rate of force
     dispthresh: INT display threshold, amount of force needed to display
@@ -36,50 +41,55 @@ def vectoroverlay(file, file_out, data_vid, frame_con,
     #%% initialize variables
     # first video frame number
     framenumV = 0
-    # find first force frame number
-    framenumF = (data_vid[0]['ax'] != 0).idxmax()
-    # find last force frame number
-    frameendF = int(framenumF + len(data_vid[0]['ax']) - 1)
+    # initialize variables
+    framenumF = {}
+    frameendF = {}
+    # loop through plates
+    for cntp in range(len(data_vid)):
+        # find first force frame number
+        framenumF[cntp] = (data_vid[cntp]['ax'] != 0).idxmax()
+        # find last force frame number
+        frameendF[cntp] = int(framenumF[cntp] + len(data_vid[cntp]['ax']) - 1)
     # find sampling rate factor
     samp_fact = samp_force/samp_video
     
     #%% create video
     while(True):
-      ret, frame = cap.read()
-      if ret == True:
-          # if frame number is greater than contact frame..
-          if (framenumV >= frame_con) and (framenumF <= frameendF - samp_fact):
-              for i in range(int(samp_fact)):
-                  if framenumF <= frameendF:
-                      # loop through force plates
-                      for cntp in range(len(data_vid)):
-                          # if resultant force is above display threshold
-                          if np.sqrt(np.sum(np.square(data_vid[cntp][['fx','fy']]),axis=1)).loc[framenumF] >= dispthresh:
-                              # start coordinate
-                              start_point = (int(data_vid[cntp]['ax'][framenumF]),
-                                             int(data_vid[cntp]['ay'][framenumF]))
-                              # end coordinate
-                              end_point = (int(data_vid[cntp]['ax'][framenumF]+data_vid[cntp]['fx'][framenumF]),
-                                           int(data_vid[cntp]['ay'][framenumF]+data_vid[cntp]['fy'][framenumF]))
-                              # set parameters
-                              color = (0, int(255*((i+1)/samp_fact)), 0)
-                              thickness = 2
-                              tipLength = 1
-                              # draw a arrowed line
-                              cv2.arrowedLine(frame, start_point, end_point, color, thickness, tipLength)
-                      # iterate counter
-                      framenumF += 1
-          # Displaying the image
-          cv2.imshow('frame', frame)
-          # write the frame into the file
-          out.write(frame)
-          # iterate video frame number
-          framenumV += 1
-          # press q on keyboard to stop recording
-          if cv2.waitKey(1) & 0xFF == ord('q'):
-              break
-      else:
-          break
+        ret, frame = cap.read()
+        if ret == True:
+            # loop through force plates
+            for cntp in range(len(data_vid)):
+                # if frame number is greater than contact frame..
+                if (framenumV >= frame_con[cntp]) and (framenumF[cntp] <= frameendF[cntp] - samp_fact):
+                    for i in range(int(samp_fact)):
+                        if framenumF[cntp] <= frameendF[cntp]:
+                            # if resultant force is above display threshold
+                            if np.sqrt(np.sum(np.square(data_vid[cntp][['fx','fy']]),axis=1)).loc[framenumF[cntp]] >= dispthresh:
+                                # start coordinate
+                                start_point = (int(data_vid[cntp]['ax'][framenumF[cntp]]),
+                                               int(data_vid[cntp]['ay'][framenumF[cntp]]))
+                                # end coordinate
+                                end_point = (int(data_vid[cntp]['ax'][framenumF[cntp]]+data_vid[cntp]['fx'][framenumF[cntp]]),
+                                             int(data_vid[cntp]['ay'][framenumF[cntp]]+data_vid[cntp]['fy'][framenumF[cntp]]))
+                                # set parameters
+                                color = (0, int(255*((i+1)/samp_fact)), 0)
+                                thickness = 2
+                                tipLength = 1
+                                # draw a arrowed line
+                                cv2.arrowedLine(frame, start_point, end_point, color, thickness, tipLength)
+                                # iterate counter
+                                framenumF[cntp] += 1
+                                # Displaying the image
+            cv2.imshow('frame', frame)
+            # write the frame into the file
+            out.write(frame)
+            # iterate video frame number
+            framenumV += 1
+            # press q on keyboard to stop recording
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+        else:
+            break
     # when everything done, release the video capture and video write objects
     cap.release()
     out.release()

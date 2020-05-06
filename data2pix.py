@@ -25,34 +25,41 @@ import pandas as pd
 import numpy as np
 
 def selectdata(data, view='fy'):
-    if view == 'fx':
-        # select Fx as video Fx | select Fz as video Fy
-        fx = data.filter(regex='Fx', axis=1)
-        fy = data.filter(regex='Fz', axis=1)
-        # select Ax as video Ax | select Ay as video Ay
-        ax = data.filter(regex='Ax', axis=1)
-        ay = data.filter(regex='Ay', axis=1)
-    elif view == 'fy':
-        # select Fy as video Fx | select Fz as video Fy
-        fx = data.filter(regex='Fy', axis=1)
-        fy = data.filter(regex='Fz', axis=1)
-        # select Ay as video Ax | select Ax as video Ay
-        ax = data.filter(regex='Ay', axis=1)
-        ay = data.filter(regex='Ax', axis=1)
-    elif view == 'fxoh':
-        # select Fx as video Fx | select Fy as video Fy
-        fx = data.filter(regex='Fx', axis=1)
-        fy = data.filter(regex='Fy', axis=1)
-        # select Ax as video Ax | select Ay as video Ay
-        ax = data.filter(regex='Ax', axis=1)
-        ay = data.filter(regex='Ay', axis=1)
-    elif view == 'fyoh':
-        # select Fy as video Fx | select Fx as video Fy
-        fx = data.filter(regex='Fy', axis=1)
-        fy = data.filter(regex='Fx', axis=1)
-        # select Ay as video Ax | select Ax as video Ay
-        ax = data.filter(regex='Ay', axis=1)
-        ay = data.filter(regex='Ax', axis=1)
+    # initialize variables
+    fx = {}
+    fy = {}
+    ax = {}
+    ay = {}
+    # loop through force plates
+    for cntf in range(len(data)):
+        if view == 'fx':
+            # select Fx as video Fx | select Fz as video Fy
+            fx[cntf] = data[cntf].filter(regex='Fx', axis=1)
+            fy[cntf] = data[cntf].filter(regex='Fz', axis=1)
+            # select Ax as video Ax | select Ay as video Ay
+            ax[cntf] = data[cntf].filter(regex='Ax', axis=1)
+            ay[cntf] = data[cntf].filter(regex='Ay', axis=1)
+        elif view == 'fy':
+            # select Fy as video Fx | select Fz as video Fy
+            fx[cntf] = data[cntf].filter(regex='Fy', axis=1)
+            fy[cntf] = data[cntf].filter(regex='Fz', axis=1)
+            # select Ay as video Ax | select Ax as video Ay
+            ax[cntf] = data[cntf].filter(regex='Ay', axis=1)
+            ay[cntf] = data[cntf].filter(regex='Ax', axis=1)
+        elif view == 'fxoh':
+            # select Fx as video Fx | select Fy as video Fy
+            fx[cntf] = data[cntf].filter(regex='Fx', axis=1)
+            fy[cntf] = data[cntf].filter(regex='Fy', axis=1)
+            # select Ax as video Ax | select Ay as video Ay
+            ax[cntf] = data[cntf].filter(regex='Ax', axis=1)
+            ay[cntf] = data[cntf].filter(regex='Ay', axis=1)
+        elif view == 'fyoh':
+            # select Fy as video Fx | select Fx as video Fy
+            fx[cntf] = data[cntf].filter(regex='Fy', axis=1)
+            fy[cntf] = data[cntf].filter(regex='Fx', axis=1)
+            # select Ay as video Ax | select Ax as video Ay
+            ax[cntf] = data[cntf].filter(regex='Ay', axis=1)
+            ay[cntf] = data[cntf].filter(regex='Ax', axis=1)
     
     return fx, fy, ax, ay
 
@@ -76,12 +83,12 @@ def datareform(fx, fy, ax, ay, mode='ind', platelocs=None):
     data_fp = {}
     # if mode is to keep plates individually
     if mode == 'ind':
-        # loop through columns
-        for cnt in range(len(fx.columns)):
-            data_fp[cnt] = pd.DataFrame({'fx': fx.iloc[:,cnt],
-                                         'fy': fy.iloc[:,cnt],
-                                         'ax': ax.iloc[:,cnt],
-                                         'ay': ay.iloc[:,cnt]})
+        # loop through plates
+        for cnt in range(len(fx)):
+            data_fp[cnt] = pd.DataFrame({'fx': fx[cnt].iloc[:,0],
+                                         'fy': fy[cnt].iloc[:,0],
+                                         'ax': ax[cnt].iloc[:,0],
+                                         'ay': ay[cnt].iloc[:,0]})
     else:
         # combine force data and rename
         fx = pd.DataFrame({'fx': fx.sum(axis=1)})
