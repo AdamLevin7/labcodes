@@ -77,9 +77,9 @@ def vectoroverlay(file, file_out, data_vid, frame_con,
                                 tipLength = 1
                                 # draw a arrowed line
                                 cv2.arrowedLine(frame, start_point, end_point, color, thickness, tipLength)
-                                # iterate counter
-                                framenumF[cntp] += 1
-                                # Displaying the image
+                            # iterate counter
+                            framenumF[cntp] += 1
+            # Displaying the image
             cv2.imshow('frame', frame)
             # write the frame into the file
             out.write(frame)
