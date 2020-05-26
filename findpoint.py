@@ -12,8 +12,8 @@ Steps:
         
 Input:
     file: STRING file name of video
-    framenum: INT frame number to use as selection image (default=0)
-    labelname = STRING a label to be displayed in window (default='')
+    framestart: INT frame number to use as selection image (default=0)
+    label: STRING a label to be displayed in window (default='')
     
 Output:
     ix1: LIST x location of each double-click (pixels)
@@ -32,7 +32,7 @@ import cv2
 from capture_area import findarea
 
 #%%
-def clickpoint(file, framenum=0, labelname=''):
+def clickpoint(file, framestart=0, label=''):
     global ix, iy, imgcrop
     ix = []
     iy = []
@@ -53,11 +53,11 @@ def clickpoint(file, framenum=0, labelname=''):
     # open video file
     cap = cv2.VideoCapture(file)
     # set frame
-    cap.set(1,framenum)
+    cap.set(1,framestart)
     ret, imgO = cap.read()
     while(1):
         while zoom_area is None:
-            zoom_area = findarea(file,label='Crop to area of interest')
+            zoom_area = findarea(file,label='Crop to area of interest',frame=framestart)
         imgcrop = imgO[zoom_area[0][1]:zoom_area[1][1],
                        zoom_area[0][0]:zoom_area[1][0],
                        :]
@@ -74,7 +74,7 @@ def clickpoint(file, framenum=0, labelname=''):
     cv2.destroyAllWindows()
             
     #%% find the object's location
-    label = 'Press "esc" when finished. Identify point(s) of interest. ' + labelname
+    label = 'Press "esc" when finished. Identify point(s) of interest. ' + label
     cv2.namedWindow(label, cv2.WND_PROP_FULLSCREEN)
     cv2.setMouseCallback(label,clickfun)
     while(1):
