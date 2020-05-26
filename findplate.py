@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 findplate
-
-Identifies the four corners of the plate(s) in the image.
+    Identifies the four corners of the plate(s) in the image.
 
 Steps:
     1) Crop original image to zoom into plate(s) by click, hold and drag over area
@@ -14,8 +13,8 @@ Steps:
         
 Input:
     file: STRING file name of video
-    framenum: INT frame number to use as selection image (default=0)
-    labelname = STRING a label to be displayed in window (default='')
+    framestart: INT frame number to use as selection image (default=0)
+    label: STRING a label to be displayed in window (default='')
     
 Output:
     plate: DICT containing 2x4 dataframe with rows x and y.
@@ -27,16 +26,18 @@ Dependencies:
     pandas
     capture_area
 
-Created on Thu Jan  2 15:10:57 2020
+Created on Thu Jan 2 15:10:57 2020
 
 @author: cwiens, Casey Wiens, cwiens32@gmail.com
 """
+
 import cv2
 import pandas as pd
 from capture_area import findarea
 
+
 #%%
-def findplate(file, framenum=0, labelname=''):
+def findplate(file, framestart=0, label=''):
     global ix, iy, imgcrop
     ix = []
     iy = []
@@ -53,7 +54,7 @@ def findplate(file, framenum=0, labelname=''):
     #%% crop area to plate
     plate_area = None
     cap = cv2.VideoCapture(file)
-    cap.set(1,framenum)
+    cap.set(1,framestart)
     ret, imgO = cap.read()
     while(1):
         while plate_area is None:
@@ -74,7 +75,7 @@ def findplate(file, framenum=0, labelname=''):
     cv2.destroyAllWindows()
             
     #%% find the corners of the plate
-    label = 'Press "esc" when finished. Identify corners in counterclockwise starting with top left. ' + labelname
+    label = 'Press "esc" when finished. Identify corners in counterclockwise starting with top left. ' + label
     cv2.namedWindow(label, cv2.WND_PROP_FULLSCREEN)
     cv2.setMouseCallback(label,clickfun)
     while(1):
