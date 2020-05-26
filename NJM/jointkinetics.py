@@ -93,9 +93,6 @@ njm_full
     set up data to run calcnjm for muliple segments
     
 Inputs
-    segname: STR segment name
-    m: FLOAT segment mass (kg)
-    
     dig: DATAFRAME digitized end-point data (x,y) (m)
     cm: DATAFRAME segment(s) center of mass position (x,y) (m)
     cm_acc: DATAFRAME segment(s) center of mass acceleration (x,y) (m/s^2)
@@ -164,6 +161,6 @@ def njm_full(dig, cm, cm_acc, icm, segang_acc, forcedata, mass, seg_sequence, se
                                                  Rxd, Ryd, r_d, r_p,
                                                  Icm, alpha, njm_d)
         # join with new dataframe
-        dataout = dataout.join(data_njm)
+        dataout = dataout.join(data_njm.set_index(dataout.index))
     
-    return data_njm
+    return dataout
