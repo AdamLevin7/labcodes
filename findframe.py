@@ -13,6 +13,9 @@ Outputs
     cnt: INT frame number when video was closed
     key: INT key identifier for last selected key
 
+Dependencies:
+    cv2 (opencv)
+
 The following buttons shift the current frame by:
     k : -100
     m : -10
