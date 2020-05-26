@@ -32,6 +32,7 @@ Created on Tue Apr 21 14:26:27 2020
 
 
 from scipy import signal
+from scipy.interpolate import splev, splrep
 import pandas as pd
 import numpy as np
 from calc_segmentlength import seglength
@@ -77,9 +78,9 @@ Outputs
 # function to interpolate data
 def interpdatasig(df, xvals, samp):
     # create original time seires
-    xp = (df['frame'] - df['frame'][0]) * (1/samp)
+    xp = df['time']
     # interpolate data
-    return df.iloc[:,1:].apply(lambda x: np.interp(xvals, xp, x))
+    return df.iloc[:,1:].apply(lambda y: splev(xvals, splrep(xp, y)))
 
 
 #%%    
@@ -116,19 +117,19 @@ def datainterp(data_dig, data_cm, xvals, segments, mass, contact_seg, samp=240):
     w = fc / (samp / 2)
     b, a = signal.butter(N/2, w, 'low')
     # digitized data
-    data_dig_filt = pd.DataFrame({'frame': data_dig['frame']}).join(filtdata(data_dig, b, a))
+    data_dig_filt = pd.DataFrame({'time': data_dig.iloc[:,0]}).join(filtdata(data_dig, b, a))
     # center of mass data
-    data_cm_filt = pd.DataFrame({'frame': data_cm['frame']}).join(filtdata(data_cm, b, a))
+    data_cm_filt = pd.DataFrame({'time': data_cm.iloc[:,0]}).join(filtdata(data_cm, b, a))
     # segment length
-    data_seglength_filt = pd.DataFrame({'frame': data_seglength['frame']}).join(filtdata(data_seglength, b, a))
+    data_seglength_filt = pd.DataFrame({'time': data_seglength.iloc[:,0]}).join(filtdata(data_seglength, b, a))
     
     ### interpolate kinematic data
     # digitized data
-    data_dig_interp = pd.DataFrame({'time': xvals}).join(interpdatasig(data_dig_filt, xvals, samp))
+    data_dig_interp = pd.DataFrame({'time': xvals}).join(interpdatasig(data_dig_filt, xvals, samp).set_index(xvals.index))
     # center of mass data
-    data_cm_interp = pd.DataFrame({'time': xvals}).join(interpdatasig(data_cm_filt, xvals, samp))
+    data_cm_interp = pd.DataFrame({'time': xvals}).join(interpdatasig(data_cm_filt, xvals, samp).set_index(xvals.index))
     # segment length data
-    data_seglength_interp = pd.DataFrame({'time': xvals}).join(interpdatasig(data_seglength_filt, xvals, samp))
+    data_seglength_interp = pd.DataFrame({'time': xvals}).join(interpdatasig(data_seglength_filt, xvals, samp).set_index(xvals.index))
     
     
     return data_dig_interp, data_cm_interp, data_seglength_interp
@@ -191,7 +192,7 @@ def cm_velocityacceleration(data_cm, xvals, samp):
     w = fc / (samp / 2)
     b, a = signal.butter(N/2, w, 'low')
     # center of mass velocities
-    data_cm_vel = centraldiff(data_cm, np.mean(np.diff(data_cm['time'])))
+    data_cm_vel = centraldiff(data_cm, (1/samp))
     # replace time series
     data_cm_vel['time'] = xvals
     # filter center of mass velocities
@@ -353,7 +354,6 @@ Inputs
     mass: FLOAT individual/system's mass (kg)
     contact_seg: STR name of segment that is in contact with force sensor.
         Denote of it is left or right (ex. 'right foot')
-    seg_sequence: LIST segment sequence for order to calculate joint kinetics
     xvals: 1-D FLOATS x-coordinates for new data series
     samp_dig: INT sampling rate of digitized data (default=240)
     samp_force: INT sampling rate of force data (default=1200)
@@ -361,9 +361,9 @@ Inputs
 Outputs
     data_njm: DATAFRAME calculated joint kinetics variables from jointkinetics.py
 """
-def main(data_dig, data_cm, data_force, segments, mass, contact_seg, seg_sequence, xvals, samp_dig=240, samp_force=1200):
+def main(data_dig, data_cm, data_force, segments, mass, contact_seg, xvals, samp_dig=240, samp_force=1200):
     ### filter and interpoloate data
-    data_dig_interp, data_cm_interp, data_seglength_interp = datainterp(data_dig, data_cm, data_force, segments, mass, contact_seg, samp_dig)
+    data_dig_interp, data_cm_interp, data_seglength_interp = datainterp(data_dig, data_cm, xvals, segments, mass, contact_seg, samp_dig)
     
     ### calculate center of mass velocity and acceleration
     data_cm_vel, data_cm_acc = cm_velocityacceleration(data_cm_interp, xvals, samp_force)
@@ -378,7 +378,7 @@ def main(data_dig, data_cm, data_force, segments, mass, contact_seg, seg_sequenc
     data_i = momentinertia(data_seglength_interp, segments, mass)
     
     ### select data to be used in joint kinetics calculations
-    data_dig_njm, data_cm_njm, data_cm_acc_njm, data_i_njm, data_segang_acc_njm, seg_sequence = selectdata(data_cm_interp, data_cm_acc, data_i, data_segang_acc, data_dig_interp, contact_seg)
+    data_dig_njm, data_cm_njm, data_cm_acc_njm, data_i_njm, data_segang_acc_njm, seg_sequence = selectdata(data_dig_interp, data_cm_interp, data_cm_acc, data_i, data_segang_acc, contact_seg)
     
     ### calculate joint kinetics
     data_njm = njm_full(data_dig_njm, data_cm_njm, data_cm_acc_njm, data_i_njm, data_segang_acc_njm, data_force, mass, seg_sequence, segments)
