@@ -5,15 +5,19 @@ calc_centermass
     
 Inputs
     data: DATAFRAME digitized data for each segment
-        Row 0: frame
-        Row 1+: digitized locations with x then y
-    segments: DATAFRAME segment parameters obtained from segdim_deleva.py
+        Column 0: frame
+        Column 1+: digitized locations with x then y
+    segments: DATAFRAME segment parameters obtained from segdim_deleva.py (default=None)
+    sex: STR input to gather segment parameters [m (male) or f (female)] (default=None)
+    
+    USER NEEDS TO PROVIDE EITHER SEGMENTS OR SEX
     
 Outputs
     cm_body: DATAFRAME location of body/system center of mass
     
 Dependencies
     pandas
+    segdim_deleva.py
 
 Created on Thu Apr 16 11:28:32 2020
 
@@ -21,6 +25,7 @@ Created on Thu Apr 16 11:28:32 2020
 """
 
 import pandas as pd
+from segdim_deleva import segmentdim
 
 def calc_indsegcm(cmpos, origin_loc, other_loc):
     # convert column names
@@ -156,7 +161,11 @@ def calc_cm(segcm, segments):
 
 
 
-def main(data, segments):
+def main(data, segments=None, sex=None):
+    ### gather segment dimension parameters if not provided
+    if segments == None:
+        # find segment parameters
+        segments = segmentdim(sex)
     # calculate segments' center of mass
     cm_seg = calc_segcm(data, segments)
     # calculate body center of mass
