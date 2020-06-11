@@ -1,0 +1,20 @@
+# uscbrl_njm.yaml 
+
+#Calculating NJM
+#https://github.com/cwiens32/USCBRL/tree/master/NJM
+
+# Calculationg NJM environment
+#
+# install: conda env create -f uscbrl_njm.yaml 
+# update:  conda env update -f uscbrl_njm.yaml 
+name: uscbrl_njm
+dependencies:
+  - python=3.8
+  - pip
+  - matplotlib
+  - numpy
+  - opencv
+  - pandas
+  - spyder
+  - scipy
+  - xlrd
