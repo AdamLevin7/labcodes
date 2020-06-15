@@ -76,8 +76,8 @@ class graph_video(object):
 
 		
 		clone.set(cv2.CAP_PROP_POS_FRAMES, self.frame_number)
-		width = 800
-		height = 450
+		width = 640
+		height = 480
 		while True:
 			key = cv2.waitKey(2) # Declare key for keyboard presses
 			ret, frame = clone.read() #read frame
@@ -97,14 +97,14 @@ class graph_video(object):
 						break
 					cnt = cnt + 1
 			if key == 57: # Press 9 key to increase size
-				width = width + 160
-				height = height + 90
+				width = width + 100
+				height = height + 75
 			if key == 48: # Press 0 key to decrease size
-				width = width - 160
-				height = height - 90
-				if width < 160:
-					width = 160
-					height = 90
+				width = width - 100
+				height = height - 75
+				if width < 100:
+					width = 100
+					height = 75
 			if key == 100: # Press D key to go forward 1 frame
 				self.frame_number = self.frame_number + 1
 			if key == 97: # Press A key to go backward 1 frame
@@ -785,7 +785,7 @@ class graph_video(object):
 		clone.set(cv2.CAP_PROP_POS_FRAMES, frame_num_vid)
 		graph.set(cv2.CAP_PROP_POS_FRAMES, frame_num_graph)
 		width = 640
-		height = 360
+		height = 480
 		while True:
 			key = cv2.waitKey(2) #Set key for presses
 			ret, frame = clone.read() #Read video frame
@@ -822,14 +822,14 @@ class graph_video(object):
 						break
 			#Key presses for changing frame size 
 			if key == 57: # Press 9 key to increase size
-				width = width + 160
-				height = height + 90
+				width = width + 100
+				height = height + 75
 			if key == 48: # Press 0 key to decrease size
-				width = width - 160
-				height = height - 90
-				if width < 160:
-					width = 160
-					height = 90
+				width = width - 100
+				height = height - 75
+				if width < 100:
+					width = 100
+					height = 75
 			#Key presses for iterating through video 
 			if key == 100: #If D key is pressed, go forward 1 
 				frame_num_vid = frame_num_vid + 1
@@ -868,14 +868,14 @@ class graph_video(object):
 
 		file = input("Save Video - Input File Name as .mp4 (Ex: output.mp4): ") #Input filename for output
 		print(" ")
-		out = cv2.VideoWriter(file,0x7634706d, clone.get(cv2.CAP_PROP_FPS), (640, 2 * 360))	#Set videowriter
+		out = cv2.VideoWriter(file,0x7634706d, clone.get(cv2.CAP_PROP_FPS), (640, 2 * 480))	#Set videowriter
 		print("Saving:")
 		while True: #Stack and save 
 			ret, frame = clone.read()
 			ret2, frame2 = graph.read()
 			if ret == True and ret2 == True:
-				frame = cv2.resize(frame, (640, 360))
-				frame2 = cv2.resize(frame2, (640, 360))
+				frame = cv2.resize(frame, (640, 480))
+				frame2 = cv2.resize(frame2, (640, 480))
 				both = cv2.vconcat([frame, frame2])		
 				out.write(both)		
 				if cv2.waitKey(30) & 0xFF == ord('q'):
