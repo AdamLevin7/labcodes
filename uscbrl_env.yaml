@@ -18,3 +18,4 @@ dependencies:
   - spyder
   - scipy
   - xlrd
+  - ffmpeg
