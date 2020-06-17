@@ -10,10 +10,8 @@ Inputs
         format (0: {fx, fy, ax, ay},
                 1: {fx, fy, ax, ay},
                 ...)
-    frame_con: DICT contact frame of video
-        format (0: INT,
-                1: INT,
-                ...)
+    frame_con: LIST contact frame of video
+        format [INT, INT, ...]
     samp_video: INT sampling rate of video
     samp_force: INT sampling rate of force
     dispthresh: INT display threshold, amount of force needed to display
@@ -28,7 +26,12 @@ import cv2
 import numpy as np
 
 def vectoroverlay(file, file_out, data_vid, frame_con,
-                  samp_force=1200, samp_video=240, dispthresh=60):    
+                  samp_force=1200, samp_video=240, dispthresh=60):
+    
+    #%% reformat frame_con if not list
+    if not isinstance(frame_con, list):
+        frame_con = [frame_con]
+    
     #%% initialize video
     cap = cv2.VideoCapture(file)
     # default resolutions of the frame are obtained. The default resolutions are system dependent.
