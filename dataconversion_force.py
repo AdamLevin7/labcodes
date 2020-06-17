@@ -39,41 +39,45 @@ class convertdata:
         
         
     def selectdata(self):
-        # initialize variables
-        self.fx = {}
-        self.fy = {}
-        self.ax = {}
-        self.ay = {}
+        # initialize data_fp
+        self.data_fp = {}
+        
         # loop through force plates
         for cntf in range(len(self.data)):
             if self.view == 'fx':
                 # select Fx as video Fx | select Fz as video Fy
-                self.fx[cntf] = self.data[cntf].filter(regex='Fx', axis=1)
-                self.fy[cntf] = self.data[cntf].filter(regex='Fz', axis=1)
+                fx = self.data[cntf].filter(regex='Fx', axis=1)
+                fy = self.data[cntf].filter(regex='Fz', axis=1)
                 # select Ax as video Ax | select Ay as video Ay
-                self.ax[cntf] = self.data[cntf].filter(regex='Ax', axis=1)
-                self.ay[cntf] = self.data[cntf].filter(regex='Ay', axis=1)
+                ax = self.data[cntf].filter(regex='Ax', axis=1)
+                ay = self.data[cntf].filter(regex='Ay', axis=1)
             elif self.view == 'fy':
                 # select Fy as video Fx | select Fz as video Fy
-                self.fx[cntf] = self.data[cntf].filter(regex='Fy', axis=1)
-                self.fy[cntf] = self.data[cntf].filter(regex='Fz', axis=1)
+                fx = self.data[cntf].filter(regex='Fy', axis=1)
+                fy = self.data[cntf].filter(regex='Fz', axis=1)
                 # select Ay as video Ax | select Ax as video Ay
-                self.ax[cntf] = self.data[cntf].filter(regex='Ay', axis=1)
-                self.ay[cntf] = self.data[cntf].filter(regex='Ax', axis=1)
+                ax = self.data[cntf].filter(regex='Ay', axis=1)
+                ay = self.data[cntf].filter(regex='Ax', axis=1)
             elif self.view == 'fxoh':
                 # select Fx as video Fx | select Fy as video Fy
-                self.fx[cntf] = self.data[cntf].filter(regex='Fx', axis=1)
-                self.fy[cntf] = self.data[cntf].filter(regex='Fy', axis=1)
+                fx = self.data[cntf].filter(regex='Fx', axis=1)
+                fy = self.data[cntf].filter(regex='Fy', axis=1)
                 # select Ax as video Ax | select Ay as video Ay
-                self.ax[cntf] = self.data[cntf].filter(regex='Ax', axis=1)
-                self.ay[cntf] = self.data[cntf].filter(regex='Ay', axis=1)
+                ax = self.data[cntf].filter(regex='Ax', axis=1)
+                ay = self.data[cntf].filter(regex='Ay', axis=1)
             elif self.view == 'fyoh':
                 # select Fy as video Fx | select Fx as video Fy
-                self.fx[cntf] = self.data[cntf].filter(regex='Fy', axis=1)
-                self.fy[cntf] = self.data[cntf].filter(regex='Fx', axis=1)
+                fx = self.data[cntf].filter(regex='Fy', axis=1)
+                fy = self.data[cntf].filter(regex='Fx', axis=1)
                 # select Ay as video Ax | select Ax as video Ay
-                self.ax[cntf] = self.data[cntf].filter(regex='Ay', axis=1)
-                self.ay[cntf] = self.data[cntf].filter(regex='Ax', axis=1)
+                ax = self.data[cntf].filter(regex='Ay', axis=1)
+                ay = self.data[cntf].filter(regex='Ax', axis=1)
+            
+            # assign to dataframe
+            self.data_fp[cntf] = pd.DataFrame({'fx': fx.iloc[:,0],
+                                               'fy': fy.iloc[:,0],
+                                               'ax': ax.iloc[:,0],
+                                               'ay': ay.iloc[:,0]})
     
     
     def plateorigin(self):
@@ -88,36 +92,9 @@ class convertdata:
             self.plate_origin[cnt] = (x,y)
     
     
-    def datareform(self):
-        ### select data
-        convertdata.selectdata(self)
-        
-        # initialize data_fp
-        self.data_fp = {}
-        # if mode is to keep plates individually
-        if self.mode == 'ind':
-            # loop through plates
-            for cnt in range(len(self.fx)):
-                self.data_fp[cnt] = pd.DataFrame({'fx': self.fx[cnt].iloc[:,0],
-                                                  'fy': self.fy[cnt].iloc[:,0],
-                                                  'ax': self.ax[cnt].iloc[:,0],
-                                                  'ay': self.ay[cnt].iloc[:,0]})
-        else:
-            # combine force data and rename
-            fx = pd.DataFrame({'fx': self.fx.sum(axis=1)})
-            fy = pd.DataFrame({'fy': self.fx.sum(axis=1)})
-            # need to figure out how to combine cop data into one signal!!!!
-            
-            
-            # combine data into single data frame
-            self.data_fp = fx.join(fy).join(ax).join(ay)
-    
-    
     def flipdata(self):
         ### select data
         convertdata.selectdata(self)
-        ### reformat data
-        convertdata.datareform(self)
         
         # if flip is not none
         if self.flip is not None:
@@ -133,13 +110,50 @@ class convertdata:
                     self.data_fp[cnt]['ay'] = self.data_fp[cnt]['ay'] * -1
     
     
+    def datareform(self):
+        
+        # if mode is to keep plates individually
+        if self.mode == 'ind':
+            pass
+        
+        else:
+            ### for fy and ax
+            # calculate "moment" from image origin to force fy
+            fp1_m_fy = -abs(self.data_fp[0]['fy']) * self.data_fp[0]['ax']
+            fp2_m_fy = -abs(self.data_fp[1]['fy']) * self.data_fp[1]['ax']
+            # sum fy force data from each plate
+            fy = abs(self.data_fp[0]['fy']) + abs(self.data_fp[1]['fy'])
+            # calculate location of centralized center of pressure
+            # fp1_m_fy + fp2_m_fy + fy*ax = 0
+            ax = (-fp1_m_fy - fp2_m_fy) / fy
+            # convert fy back to reformated values
+            fy = (self.data_fp[0]['fy']) + (self.data_fp[1]['fy'])
+            
+            ### for fx and ay
+            # calculate "moment" from image origin to force fx
+            fp1_m_fx = -abs(self.data_fp[0]['fx']) * self.data_fp[0]['ay']
+            fp2_m_fx = -abs(self.data_fp[1]['fx']) * self.data_fp[1]['ay']
+            # sum fx force data from each plate
+            fx = abs(self.data_fp[0]['fx']) + abs(self.data_fp[1]['fx'])
+            # calculate location of centralized center of pressure
+            # fp1_m_fx + fp2_m_fx + fx*ay = 0
+            ay = (-fp1_m_fx - fp2_m_fx) / fx
+            # convert fy back to reformated values
+            fx = (self.data_fp[0]['fx']) + (self.data_fp[1]['fx'])
+            
+            # combine data into single data frame
+            self.data_fp = {}
+            self.data_fp[0] = pd.DataFrame({'fx': fx,
+                                            'fy': fy,
+                                            'ax': ax,
+                                            'ay': ay})
+    
+    
     def data2meter(self):
         ### select data
         convertdata.selectdata(self)
         ### find plate origin
         convertdata.plateorigin(self)
-        ### reformat data
-        convertdata.datareform(self)
         ### flip data to video reference system
         convertdata.flipdata(self)
         
@@ -149,6 +163,9 @@ class convertdata:
             if self.plate_origin is not None:
                 self.data_fp[cnt]['ax'] = self.data_fp[cnt]['ax'] + self.plate_origin[cnt][0] * self.pix2m['x']
                 self.data_fp[cnt]['ay'] = self.data_fp[cnt]['ay'] + self.plate_origin[cnt][1] * self.pix2m['x']
+        
+        ### reformat data
+        convertdata.datareform(self)
     
     
     def data2pix(self):
@@ -156,8 +173,6 @@ class convertdata:
         convertdata.selectdata(self)
         ### find plate origin
         convertdata.plateorigin(self)
-        ### reformat data
-        convertdata.datareform(self)
         ### flip data to video reference system
         convertdata.flipdata(self)
         
@@ -172,3 +187,6 @@ class convertdata:
             if self.plate_origin is not None:
                 self.data_fp[cnt]['ax'] = self.data_fp[cnt]['ax'] + self.plate_origin[cnt][0]
                 self.data_fp[cnt]['ay'] = self.data_fp[cnt]['ay'] + self.plate_origin[cnt][1]
+        
+        ### reformat data
+        convertdata.datareform(self)
