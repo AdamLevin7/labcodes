@@ -62,9 +62,6 @@ def findplate(file, framestart=0, label=''):
         imgcrop = imgO[plate_area[0][1]:plate_area[1][1],
                        plate_area[0][0]:plate_area[1][0],
                        :]
-        cv2.namedWindow('Press esc to exit, o to recrop', cv2.WND_PROP_FULLSCREEN)
-        cv2.setWindowProperty('Press esc to exit, o to recrop',cv2.WND_PROP_FULLSCREEN,
-                              cv2.WINDOW_FULLSCREEN)
         cv2.imshow('Press esc to exit, o to recrop',imgcrop)
         k = cv2.waitKey(20) & 0xFF
         if k == 27:
@@ -76,7 +73,6 @@ def findplate(file, framestart=0, label=''):
             
     #%% find the corners of the plate
     label = 'Press "esc" when finished. Identify corners in counterclockwise starting with top left. ' + label
-    cv2.namedWindow(label, cv2.WND_PROP_FULLSCREEN)
     cv2.setMouseCallback(label,clickfun)
     while(1):
         cv2.imshow(label,imgcrop)
