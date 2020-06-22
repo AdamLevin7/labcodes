@@ -73,6 +73,7 @@ def findplate(file, framestart=0, label=''):
             
     #%% find the corners of the plate
     label = 'Press "esc" when finished. Identify corners in counterclockwise starting with top left. ' + label
+    cv2.namedWindow(label)
     cv2.setMouseCallback(label,clickfun)
     while(1):
         cv2.imshow(label,imgcrop)
