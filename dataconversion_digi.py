@@ -105,15 +105,15 @@ class convertdigi:
                             "c7_x", "c7_y",
                             "vertex_x", "vertex_y"]
         
-        ### crop data
-        # find last frame without all nans
+        ### find first and last frame without all nans
         temp = np.isnan(data_out).all(axis=1)
+        start_dig_frame = temp.idxmin()
         last_dig_frame = temp.iloc[temp.idxmin()+1:].idxmax()
-        data_out = data_out.iloc[:last_dig_frame, :]
         
-        ### join frame with digitized data
-        # create frame column
-        frame = pd.DataFrame({'frame': range(1,len(data_out)+1)})
-        self.data_out = frame.join(data_out)
+        ### create frame column and join with digitized data
+        data_out = pd.DataFrame({'frame': range(1,len(data_out)+1)}).join(data_out)
+        
+        ### crop data
+        self.data_out = data_out.iloc[start_dig_frame:last_dig_frame, :].reset_index(drop=True)
         
         return self.data_out
