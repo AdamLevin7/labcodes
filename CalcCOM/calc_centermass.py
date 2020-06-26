@@ -25,7 +25,7 @@ Created on Thu Apr 16 11:28:32 2020
 """
 
 import pandas as pd
-from segdim_deleva import segmentdim
+from CalcCOM.segdim_deleva import segmentdim
 
 def calc_indsegcm(cmpos, origin_loc, other_loc):
     # convert column names
@@ -163,7 +163,7 @@ def calc_cm(segcm, segments):
 
 def main(data, segments=None, sex=None):
     ### gather segment dimension parameters if not provided
-    if segments == None:
+    if segments is None:
         # find segment parameters
         segments = segmentdim(sex)
     # calculate segments' center of mass
