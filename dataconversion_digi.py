@@ -7,25 +7,26 @@ Created on Fri Apr 17 11:10:02 2020
 
 import pandas as pd
 import numpy as np
+import cv2
 
 class convertdigi:
     
     def __init__(self, file, thresh=0.95, idfilt=None):
-        ### initialize variables
+        """ initialize variables """
         self.file = file
         self.thresh = thresh
         self.idfilt = idfilt
     
     
-    def dlc_reformat(self):
-        ### load data
+    def dlc_reformat(self, file_vid=None, flipy='yes'):
+        """ load data """
         data_in = pd.read_csv(self.file, header=None)
         
-        ### add the coordinate to the location name
+        """ add the coordinate to the location name """
         for cnt in range(1,len(data_in.columns)):
             data_in.loc[2,cnt] = data_in.loc[1,cnt] + '_' + data_in.loc[2,cnt]
         
-        ### convert into new data frame
+        """ convert into new data frame """
         # remove first three rows
         data = data_in.loc[3: ,:].reset_index(drop=True)
         # rename columns
@@ -34,13 +35,25 @@ class convertdigi:
         # convert data type to float
         data = data.astype('float')
         
-        ### subset digitized location and likelihood scores
+        """ flip y-axis of digitized and center of mass data """
+        if flipy == 'yes':
+            # find height of image (max y value)
+            cap = cv2.VideoCapture(file_vid)
+            frame_height = int(cap.get(4))
+            cap.release()
+            # subtract digitzed loction from frame height (only y columns)
+            data_digi_crop.iloc[:,data_digi_crop.columns.str.contains('_y')] = frame_height - data_digi_crop.filter(regex = '_y')
+            # subtract center of mass location from frame height (only y columns)
+            data_cm_crop.iloc[:,data_cm_crop.columns.str.contains('_y')] = frame_height - data_cm_crop.filter(regex = '_y')
+        
+        
+        """ subset digitized location and likelihood scores """
         # likelihood scores
         data_like = data.filter(regex = 'likelihood')
         # digitized data
         self.data_out = data.iloc[:,~data.columns.str.contains('likelihood', regex=False)]
         
-        ### estimate when body is in view based on likelihood scores
+        """ estimate when body is in view based on likelihood scores """
         # find first frame where all data is above threshold
         self.frame_first = np.max((data_like > self.thresh).idxmax())
         # find last frame where all data is above threshold (flipped data)
@@ -51,19 +64,19 @@ class convertdigi:
     
 #%%    
     def intel_reformat(self):
-        ### load data
+        """ load data """
         data_in = pd.read_csv(self.file)
         
-        ### filter which person id in video
+        """ filter which person id in video """
         if not self.idfilt == None:
             data_in = data_in[data_in['id'] == self.idfilt]
         
-        ### remove id and bounding box columns
+        """ remove id and bounding box columns """
         self.data = data_in.drop(['id','bounding_box_corner_left','bounding_box_corner_right',
                                   'bounding_box_corner_top', 'bounding_box_corner_bottom'],
                                  axis = 1)
         
-        ### convert path to frame number
+        """ convert path to frame number """
         # rename columns
         self.data = self.data.rename(columns = {'path': 'frame'})
         # rename frame to actual number
@@ -71,7 +84,7 @@ class convertdigi:
         # convert data type to float
         self.data = self.data.astype('float').reset_index(drop=True)
         
-        ### convert negative numbers to nan
+        """ convert negative numbers to nan """
         self.data[self.data<0] = np.nan
         
         return self.data
@@ -79,11 +92,14 @@ class convertdigi:
 
 #%%
     def dltdv_reformat(self):
-        ### load data
+        """ load data """
         data_in = pd.read_csv(self.file)
         
-        ### rename data_in columns
-        data_out = data_in.iloc[:,:40]
+        """ remove one frame (need to figure out why - 2020 Jun 23) """
+        data_out = data_in.iloc[2:,:].reset_index(drop=True)
+        
+        """ rename data_in columns """
+        data_out = data_out.iloc[:,:40]
         data_out.columns = ["toe_right_x", "toe_right_y",
                             "heel_right_x", "heel_right_y",
                             "ankle_right_x", "ankle_right_y",
@@ -105,15 +121,15 @@ class convertdigi:
                             "c7_x", "c7_y",
                             "vertex_x", "vertex_y"]
         
-        ### find first and last frame without all nans
+        """ find first and last frame without all nans """
         temp = np.isnan(data_out).all(axis=1)
         start_dig_frame = temp.idxmin()
         last_dig_frame = temp.iloc[temp.idxmin()+1:].idxmax()
         
-        ### create frame column and join with digitized data
-        data_out = pd.DataFrame({'frame': range(1,len(data_out)+1)}).join(data_out)
+        """ create frame column and join with digitized data """
+        data_out = pd.DataFrame({'frame': range(0,len(data_out))}).join(data_out)
         
-        ### crop data
-        self.data_out = data_out.iloc[start_dig_frame:last_dig_frame, :].reset_index(drop=True)
+        """ crop data """
+        self.data_out = data_out.iloc[start_dig_frame:last_dig_frame, :]
         
         return self.data_out
