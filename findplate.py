@@ -62,8 +62,8 @@ def findplate(file, framestart=0, label=''):
         imgcrop = imgO[plate_area[0][1]:plate_area[1][1],
                        plate_area[0][0]:plate_area[1][0],
                        :]
-        cv2.imshow('Press esc to exit, o to recrop',imgcrop)
-        k = cv2.waitKey(20) & 0xFF
+        cv2.imshow('Press q to exit, o to recrop',imgcrop)
+        k = cv2.waitKey(1) & 0xFF
         if k == 27:
             break
         elif k == 111:

@@ -61,24 +61,22 @@ def findarea(video,frame=0,label='frame'):
     cap.set(1,frame)
     ret, frame = cap.read()
     clone = frame.copy()
-    cv2.namedWindow(label)
+    cv2.namedWindow(label, cv2.WINDOW_KEEPRATIO)
     cv2.setMouseCallback(label, shape_selection)
     
     
     # keep looping until the 'q' key is pressed 
     while True:
-    	# display the image and wait for a keypress
-    	cv2.imshow(label, frame)
-    	key = cv2.waitKey(1) & 0xFF
-    
-    	# press 'r' to reset the window
-    	if key == ord("r"):
-    		frame = clone.copy()
-    
-    	# if the 'c' key is pressed, break from the loop
-    	elif key == ord("c"):
-    		break
-    
+        key = cv2.waitKey(1) & 0xFF
+        
+        # press 'w' to reset the window
+        if key == ord("w"):
+            frame = clone.copy()
+            
+        # if the 'a' key is pressed, break from the loop
+        elif key == ord("a"):
+            break
+        
     # close all open windows
     cv2.destroyAllWindows()
 
