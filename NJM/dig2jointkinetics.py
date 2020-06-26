@@ -180,14 +180,10 @@ class dig2jk:
         b, a = signal.butter(N/2, w, 'low')
         # center of mass velocities
         data_cm_vel = centraldiff(self.data_cm_interp, (1/self.samp_force))
-        # replace time series
-        data_cm_vel['time'] = self.xvals
         # filter center of mass velocities
         self.data_cm_vel_filt = pd.DataFrame({'time': self.xvals}).join(data_cm_vel.iloc[:, 1:].apply(lambda x: x.interpolate(method='spline', order=3).fillna(method='bfill')).apply(lambda x: signal.filtfilt(b, a, x)))
         # center of mass accelerations
         data_cm_acc = centraldiff(self.data_cm_vel_filt, (1/self.samp_force))
-        # replace time series
-        data_cm_acc['time'] = self.xvals
         # filter center of mass accelerations
         self.data_cm_acc_filt = pd.DataFrame({'time': self.xvals}).join(data_cm_acc.iloc[:, 1:].apply(lambda x: x.interpolate(method='spline', order=3).fillna(method='bfill')).apply(lambda x: signal.filtfilt(b, a, x)))
     
@@ -219,14 +215,10 @@ class dig2jk:
         ### calculate segmental angular velocities
         # segmental angular velocities
         self.data_segang_vel = centraldiff(self.data_segang, np.mean(np.diff(self.data_segang['time'])))
-        # replace time series
-        self.data_segang_vel['time'] = self.xvals
         
         ### calculate segmental angular accelerations
         # segmental angular velocities
         self.data_segang_acc = centraldiff(self.data_segang_vel, np.mean(np.diff(self.data_segang_vel['time'])))
-        # replace time series
-        self.data_segang_acc['time'] = self.xvals
     
     
     #%%    
@@ -256,8 +248,6 @@ class dig2jk:
         self.data_jointang = jointangle(self.data_dig_interp, self.segments)
         # calculate joint angular velocities
         self.data_jointang_vel = centraldiff(self.data_jointang, np.mean(np.diff(self.data_jointang['time'])))
-        # replace time series
-        self.data_jointang_vel['time'] = self.xvals
     
     
     #%%
