@@ -67,6 +67,7 @@ def findarea(video,frame=0,label='frame'):
     
     # keep looping until the 'q' key is pressed 
     while True:
+        cv2.imshow(label, frame)
         key = cv2.waitKey(1) & 0xFF
         
         # press 'w' to reset the window
