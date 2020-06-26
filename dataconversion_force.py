@@ -23,6 +23,7 @@ Created on Mon Jan  6 09:02:02 2020
 """
 import pandas as pd
 import numpy as np
+import cv2
 
 class convertdata:
     
@@ -149,7 +150,7 @@ class convertdata:
                                             'ay': ay})
     
     
-    def data2meter(self):
+    def data2meter(self, flipy_cp='yes', file_vid=None):
         ### select data
         convertdata.selectdata(self)
         ### find plate origin
@@ -157,12 +158,24 @@ class convertdata:
         ### flip data to video reference system
         convertdata.flipdata(self)
         
+        """ move center of pressure data to relative to plate origin """
         # loop through number of plates
         for cnt in range(len(self.data_fp)):
             # if plate_origin is not None, move cop data to it
             if self.plate_origin is not None:
                 self.data_fp[cnt]['ax'] = self.data_fp[cnt]['ax'] + self.plate_origin[cnt][0] * self.pix2m['x']
                 self.data_fp[cnt]['ay'] = self.data_fp[cnt]['ay'] + self.plate_origin[cnt][1] * self.pix2m['x']
+        
+        """ flip y-axis of center of pressure data """
+        if flipy_cp == 'yes':
+            # find height of image (max y value)
+            cap = cv2.VideoCapture(file_vid)
+            frame_height = int(cap.get(4))
+            cap.release()
+            for cnt in range(len(self.data_fp)):
+                # subtract digitzed loction from frame height (only y columns)
+                self.data_fp[cnt]['ay'] = (frame_height * self.pix2m['x']) - self.data_fp[cnt]['ay']
+            
         
         ### reformat data
         convertdata.datareform(self)
