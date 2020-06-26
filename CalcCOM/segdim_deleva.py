@@ -5,7 +5,7 @@ segdim_deleva
         based on de Leva 1996.
         
 Inputs
-    gender: STR segmental parameters for which gender ('f' or 'm')
+    sex: STR segmental parameters for which gender ('f' or 'm')
     
 Outputs
     segments: DATAFRAME contains origin and other location for segment definition,
@@ -34,7 +34,7 @@ Created on Wed Apr 15 13:32:30 2020
 import pandas as pd
 import numpy as np
 
-def segmentdim(gender):
+def segmentdim(sex):
     
     # create segment dimension dict
     segloc = pd.DataFrame(index={'head', 'trunk', 'upperarm', 'forearm',
@@ -91,7 +91,7 @@ def segmentdim(gender):
 
     #%% location of center of mass length percentages for each segment
     # if female..
-    if gender == 'f':
+    if sex == 'f':
         segdim['cmpos']['head'] = 0.4841
         segdim['cmpos']['trunk'] = 0.4964
         segdim['cmpos']['upperarm'] = 0.5754
@@ -113,7 +113,7 @@ def segmentdim(gender):
         
     #%% mass percents for each segment
     # if female..
-    if gender == 'f':
+    if sex == 'f':
         segdim['massper']['head'] = 0.0668
         segdim['massper']['trunk'] = 0.4257
         segdim['massper']['upperarm'] = 0.0255
@@ -135,7 +135,7 @@ def segmentdim(gender):
         
     #%% radius of gyration for each segment
     # if female..
-    if gender == 'f':
+    if sex == 'f':
         segdim['r_gyr']['head'] = 0.271
         segdim['r_gyr']['trunk'] = 0.307
         segdim['r_gyr']['upperarm'] = 0.278
