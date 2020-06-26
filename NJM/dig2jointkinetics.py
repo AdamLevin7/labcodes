@@ -35,18 +35,24 @@ from scipy import signal
 from scipy.interpolate import splev, splrep
 import pandas as pd
 import numpy as np
-from calc_segmentlength import seglength
+from kinematics.calc_segmentlength import seglength
 from derivative import centraldiff
-from calc_segmentangle import segangle
-from calc_jointangle import jointangle
-from calc_segmentmomentinertia import momentinertia
-from jointkinetics import njm_full
+from kinematics.calc_segmentangle import segangle
+from kinematics.calc_jointangle import jointangle
+from kinematics.calc_segmentmomentinertia import momentinertia
+from NJM.jointkinetics import njm_full
+from FindContactIntervals import FindContactIntervals
+from findplate import findplate
+from pixelratios import pix2m_fromplate, bw2pix
+from dataconversion_force import convertdata
+import cv2
+from CalcCOM.segdim_deleva import segmentdim
 
 
 class dig2jk:
     
-    def __init__(self, data_dig, data_cm, data_force, segments, mass,
-                 contact_seg, xvals, samp_dig=240, samp_force=1200):
+    def __init__(self, data_dig, data_cm, data_force, segments, xvals,
+                 contact_seg=None, mass=None, samp_dig=240, samp_force=1200):
         # initialize variables
         self.data_dig = data_dig
         self.data_cm = data_cm
@@ -90,19 +96,19 @@ class dig2jk:
         w = fc / (self.samp_dig / 2)
         b, a = signal.butter(N/2, w, 'low')
         # digitized data
-        data_dig_filt = pd.DataFrame({'time': self.data_dig.iloc[:,0]}).join(self.data_dig.iloc[:, 1:].apply(lambda x: x.interpolate(method='spline', order=3).fillna(method='bfill')).apply(lambda x: signal.filtfilt(b, a, x)))
+        self.data_dig_filt = pd.DataFrame({'time': self.data_dig.iloc[:,0]}).join(self.data_dig.iloc[:, 1:].apply(lambda x: x.interpolate(method='spline', order=3).fillna(method='bfill')).apply(lambda x: signal.filtfilt(b, a, x)))
         # center of mass data
-        data_cm_filt = pd.DataFrame({'time': self.data_cm.iloc[:,0]}).join(self.data_cm.iloc[:, 1:].apply(lambda x: x.interpolate(method='spline', order=3).fillna(method='bfill')).apply(lambda x: signal.filtfilt(b, a, x)))
+        self.data_cm_filt = pd.DataFrame({'time': self.data_cm.iloc[:,0]}).join(self.data_cm.iloc[:, 1:].apply(lambda x: x.interpolate(method='spline', order=3).fillna(method='bfill')).apply(lambda x: signal.filtfilt(b, a, x)))
         # segment length
-        data_seglength_filt = pd.DataFrame({'time': data_seglength.iloc[:,0]}).join(data_seglength.iloc[:, 1:].apply(lambda x: x.interpolate(method='spline', order=3).fillna(method='bfill')).apply(lambda x: signal.filtfilt(b, a, x)))
+        self.data_seglength_filt = pd.DataFrame({'time': data_seglength.iloc[:,0]}).join(data_seglength.iloc[:, 1:].apply(lambda x: x.interpolate(method='spline', order=3).fillna(method='bfill')).apply(lambda x: signal.filtfilt(b, a, x)))
         
         ### interpolate kinematic data
         # digitized data
-        self.data_dig_interp = pd.DataFrame({'time': self.xvals}).join(data_dig_filt.iloc[:,1:].apply(lambda y: splev(self.xvals, splrep(data_dig_filt['time'], y))).set_index(self.xvals.index))
+        self.data_dig_interp = pd.DataFrame({'time': self.xvals}).join(self.data_dig_filt.iloc[:,1:].apply(lambda y: splev(self.xvals, splrep(self.data_dig_filt['time'], y))).set_index(self.xvals.index))
         # center of mass data
-        self.data_cm_interp = pd.DataFrame({'time': self.xvals}).join(data_cm_filt.iloc[:,1:].apply(lambda y: splev(self.xvals, splrep(data_cm_filt['time'], y))).set_index(self.xvals.index))
+        self.data_cm_interp = pd.DataFrame({'time': self.xvals}).join(self.data_cm_filt.iloc[:,1:].apply(lambda y: splev(self.xvals, splrep(self.data_cm_filt['time'], y))).set_index(self.xvals.index))
         # segment length data
-        self.data_seglength_interp = pd.DataFrame({'time': self.xvals}).join(data_seglength_filt.iloc[:,1:].apply(lambda y: splev(self.xvals, splrep(data_seglength_filt['time'], y))).set_index(self.xvals.index))
+        self.data_seglength_interp = pd.DataFrame({'time': self.xvals}).join(self.data_seglength_filt.iloc[:,1:].apply(lambda y: splev(self.xvals, splrep(self.data_seglength_filt['time'], y))).set_index(self.xvals.index))
     
     
     
@@ -122,14 +128,25 @@ class dig2jk:
         cm_theta: ARRAY angle between center of mass and reaction force (rad)
     """
     def cm_angularimpulse(self):
+        ### filter and interpoloate data
+        dig2jk.datainterp(self)
+        
         ### calculate angular impulse about body center of mass
         # create vector from center of mass to center of pressure
-        cm_r = pd.DataFrame({'x': self.data_force['ax'].values - self.data_cm['body_x'].values,
-                             'y': self.data_force['ay'].values - self.data_cm['body_y'].values})
+        cm_r = pd.DataFrame({'x': self.data_force['ax'].values - self.data_cm_interp['body_x'].values,
+                             'y': self.data_force['ay'].values - self.data_cm_interp['body_y'].values})
         # calculate moment about center of mass
         self.cm_moment = np.cross(cm_r, self.data_force[['fx','fy']])
-        # calculate center of mass theta
+        # calculate angular impulse
+        self.ang_imp = sum(self.cm_moment) / self.samp_force
+        # calculate center of mass theta (FROM RIGHT HORIZONTAL)
         self.cm_theta = np.arctan2(-cm_r['y'], -cm_r['x'])
+        # calculate reaction force theta (FROM RIGHT HORIZONTAL)
+        self.rf_theta = np.arctan2(self.data_force['fy'].reset_index(drop=True),
+                                   self.data_force['fx'].reset_index(drop=True))
+        
+        
+        return self.ang_imp, self.cm_moment, self.cm_theta, self.rf_theta
     
     
     
@@ -362,3 +379,128 @@ class dig2jk:
         
         
         return data_njm
+
+
+
+#%%
+class dig2jk_format:
+    
+    def __init__(self, data_digi, data_cm, data_force, bw, sex,
+                 con_plate, con_frame, flip, file_vid=None):
+        # initialize variables
+        self.data_digi = data_digi
+        self.data_cm = data_cm
+        self.data_force = data_force
+        self.bw = bw
+        self.sex = sex
+        self.con_plate = con_plate
+        self.con_frame = con_frame
+        self.flip = flip
+        self.file_vid = file_vid
+        
+        
+    def data_reformat(self, view="fy", mode="combined", flipy_digi='no',
+                      con_num=0, zero_thresh=16, plate_area=None,
+                      plate_dim=(0.9, 0.6), bwpermeter=2, samp_vid=240, samp_force=1200):
+        
+        """ find contact interval for force and digitized data """
+        con_plate_fz = [s + '_Fz' for s in self.con_plate]
+        # contact interval for force data
+        ci_force = FindContactIntervals(self.data_force[con_plate_fz].sum(axis=1), samp_force, thresh=16)
+        # find contact duration in digitized data
+        frame_finalcont = self.con_frame + int((ci_force['End'][con_num] - ci_force['Start'][con_num]) / (samp_force / samp_vid)) + 1
+        # set contact interval for digitized data
+        ci_digi = pd.DataFrame({'Start': [np.where(self.data_digi['frame'] == self.con_frame)[0][0]],
+                                'End': [np.where(self.data_digi['frame'] == frame_finalcont)[0][0]]})
+        
+        
+        """ crop data """
+        ### force data
+        # find time for cropped section
+        t = self.data_force.iloc[ci_force['Start'][con_num]:ci_force['End'][con_num]].filter(regex = 'Time')
+        # crop force data
+        # loop through plates
+        data_force_crop = {}
+        for cntp in range(len(self.con_plate)):
+            data_force_crop[cntp] = t.join(self.data_force.iloc[ci_force['Start'][con_num]:ci_force['End'][con_num]].filter(regex = self.con_plate[cntp]+'.*'))
+        
+        
+        ### digitized data
+        # crop digitized data
+        # plus one to match force data length - need to double check why
+        data_digi_crop = self.data_digi.iloc[ci_digi['Start'][0]:ci_digi['End'][0]+1]
+        data_cm_crop = self.data_cm.iloc[ci_digi['Start'][0]:ci_digi['End'][0]+1]
+        
+        
+        """ truly zero force plates """
+        # set values below 16 to 0
+        for cntf in range(len(data_force_crop[0])):
+            if (data_force_crop[0].iloc[cntf,3] < zero_thresh):
+                data_force_crop[0].iloc[cntf,1:] = 0
+            if (data_force_crop[1].iloc[cntf,3] < zero_thresh):
+                data_force_crop[1].iloc[cntf,1:] = 0
+        
+        
+        """ find plates """
+        if plate_area == None:
+            # identify force plate location in image
+            plate_area = findplate(self.file_vid, label="Select all plates in order in force file")
+        
+        
+        """ calculate pix2m and mag2pix """
+        pix2m = pix2m_fromplate(plate_area, plate_dim)
+        mag2pix = bw2pix(pix2m['x'], self.bw, bwpermeter=bwpermeter)
+        
+        
+        """ convert force data pixels """
+        # create object
+        transform_data = convertdata(data_force_crop, mag2pix, pix2m, view=view, mode=mode,
+                                     platelocs=plate_area, flip=self.flip)
+        # run function to convert to meters in video reference system
+        transform_data.data2meter(file_vid=self.file_vid)
+        # [0] is selecting the first contact interval
+        self.data_force_vidref_m = transform_data.data_fp[0]
+        
+        
+        """ flip y-axis of digitized and center of mass data """
+        if flipy_digi == 'yes':
+            # find height of image (max y value)
+            cap = cv2.VideoCapture(self.file_vid)
+            frame_height = int(cap.get(4))
+            cap.release()
+            # subtract digitzed loction from frame height (only y columns)
+            data_digi_crop.iloc[:,data_digi_crop.columns.str.contains('_y')] = frame_height - data_digi_crop.filter(regex = '_y')
+            # subtract center of mass location from frame height (only y columns)
+            data_cm_crop.iloc[:,data_cm_crop.columns.str.contains('_y')] = frame_height - data_cm_crop.filter(regex = '_y')
+        
+        
+        """ convert to meters """
+        # convert digitized data to meters
+        self.data_digi_crop_m = pd.DataFrame(data_digi_crop.iloc[:,0]).join(data_digi_crop.iloc[:,1:] * pix2m['x'])
+        # convert center of mass data to meters
+        self.data_cm_crop_m = pd.DataFrame(data_cm_crop.iloc[:,0]).join(data_cm_crop.iloc[:,1:] * pix2m['x'])
+        
+        
+        """ format data """
+        # create time series (reset to start at 0)
+        t = data_force_crop[0]['Time'] - data_force_crop[0]['Time'].iloc[0]
+        # convert frame to time
+        self.data_digi_crop_m['frame'] = self.data_digi_crop_m['frame'] / samp_vid
+        self.data_cm_crop_m['frame'] = self.data_cm_crop_m['frame'] / samp_vid
+        # rename frame column
+        self.data_digi_crop_m = self.data_digi_crop_m.rename(columns={'frame': 'time'})
+        self.data_cm_crop_m = self.data_cm_crop_m.rename(columns={'frame': 'time'})
+        # reset time series (reset to start at 0)
+        self.data_digi_crop_m['time'] = self.data_digi_crop_m['time'] - self.data_digi_crop_m['time'].iloc[0]
+        self.data_cm_crop_m['time'] = self.data_cm_crop_m['time'] - self.data_cm_crop_m['time'].iloc[0]
+        
+        
+        """ create object """
+        # find segment parameters
+        segments = segmentdim(self.sex)
+        # create object
+        jk_obj = dig2jk(self.data_digi_crop_m, self.data_cm_crop_m, self.data_force_vidref_m,
+                        segments, t, mass=self.bw/9.81, samp_dig=samp_vid, samp_force=samp_force)
+        
+        
+        return jk_obj
