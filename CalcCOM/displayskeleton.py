@@ -14,6 +14,7 @@ Inputs
     segments: DATAFRAME segment parameters obtained from segdim_deleva.py
     file_vid_n: STR full file name of new video (default: skeletonvideo.mp4)
     samp_vid: INT sampling rate of video (Hz) (default: 240)
+    flipy: STR flip y-axis values to match (0,0) in upper left of video (default: 'no')
     
 Outputs
     image of each digitized frame with body cm, segment cm, and segment visually represented
@@ -37,7 +38,7 @@ import os
 
 
 def addskeleton(file_vid, data, data_cm, segments,
-                file_vid_n='skeletonvideo.mp4', samp_vid=240):
+                file_vid_n='skeletonvideo.mp4', samp_vid=240, flipy='yes'):
     
     #%% set up location to store images
     # if just file name was given
@@ -59,6 +60,13 @@ def addskeleton(file_vid, data, data_cm, segments,
     vid_out = cv2.VideoWriter(file_vid_n, cv2.VideoWriter_fourcc('M','P','4','V'),
                               samp_vid/4, (frame_width,frame_height))
     
+    
+    #%% flip y axis
+    if flipy == 'yes':
+        # digitized data
+        data.loc[:, data.columns.str.contains('_y')] = frame_height - data.loc[:, data.columns.str.contains('_y')]
+        # center of mass data
+        data_cm.loc[:, data_cm.columns.str.contains('_y')] = frame_height - data_cm.loc[:, data_cm.columns.str.contains('_y')]
     
     #%% create video
     # frame number 
