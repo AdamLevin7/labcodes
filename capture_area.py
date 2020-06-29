@@ -28,8 +28,13 @@ Created on Wed Oct 30 10:06:19 2019
 
 # import the necessary packages 
 import cv2
+import wx
 
 def findarea(video,frame=0,label='frame'):
+    
+    # set parameters for window resize
+    app = wx.App(False)
+    width, height = wx.GetDisplaySize()
     
     global ref_point
     
@@ -61,9 +66,13 @@ def findarea(video,frame=0,label='frame'):
     cap.set(1,frame)
     ret, frame = cap.read()
     clone = frame.copy()
-    cv2.namedWindow(label, cv2.WINDOW_KEEPRATIO)
+    # resize window
+    (h, w) = frame.shape[:2]
+    r = height*0.75 / float(h)
+    dim = (int(w*r), int(height*0.75))
+    cv2.namedWindow(label, cv2.WINDOW_NORMAL)
     cv2.setMouseCallback(label, shape_selection)
-    
+    cv2.resizeWindow(label, dim)
     
     # keep looping until the 'q' key is pressed 
     while True:
