@@ -28,13 +28,15 @@ Created on Wed Oct 30 10:06:19 2019
 
 # import the necessary packages 
 import cv2
-import wx
+from PyQt5 import QtWidgets
+import sys
 
 def findarea(video,frame=0,label='frame'):
     
-    # set parameters for window resize
-    app = wx.App(False)
-    width, height = wx.GetDisplaySize()
+    # idenify screen resolution
+    app = QtWidgets.QApplication(sys.argv)
+    screen = app.primaryScreen()    
+    size = screen.size()
     
     global ref_point
     
@@ -68,8 +70,8 @@ def findarea(video,frame=0,label='frame'):
     clone = frame.copy()
     # resize window
     (h, w) = frame.shape[:2]
-    r = height*0.75 / float(h)
-    dim = (int(w*r), int(height*0.75))
+    r = size.height()*0.75 / float(h)
+    dim = (int(w*r), int(size.height()*0.75))
     cv2.namedWindow(label, cv2.WINDOW_NORMAL)
     cv2.setMouseCallback(label, shape_selection)
     cv2.resizeWindow(label, dim)
