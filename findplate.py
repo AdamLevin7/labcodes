@@ -62,11 +62,11 @@ def findplate(file, framestart=0, label=''):
         imgcrop = imgO[plate_area[0][1]:plate_area[1][1],
                        plate_area[0][0]:plate_area[1][0],
                        :]
-        cv2.imshow('Press q to exit, o to recrop',imgcrop)
+        cv2.imshow('Press esc to exit, w to recrop',imgcrop)
         k = cv2.waitKey(1) & 0xFF
         if k == 27:
             break
-        elif k == 111:
+        elif k == ord("w"):
             cv2.destroyAllWindows()
             plate_area = None
     cv2.destroyAllWindows()
