@@ -33,19 +33,34 @@ Created on Fri Dec 27 11:10:54 2019
 """
 
 import cv2
+from PyQt5 import QtWidgets
+import sys
 
 
 def findframe(file, label='Find Frame', framestart=0):
+    
+    # idenify screen resolution
+    app = QtWidgets.QApplication(sys.argv)
+    screen = app.primaryScreen()    
+    size = screen.size()
+    
     #%% set call back for trackbar
     def nothing(x):
         pass
     
     #%% initialize window
-    cv2.namedWindow(label)
+    cv2.namedWindow(label, cv2.WINDOW_NORMAL)
     cnt = framestart
     cap = cv2.VideoCapture(file)
+    ret, im1 = cap.read()
     cap.set(1,cnt)
     ret, im1 = cap.read()
+    
+    #%% resize window
+    (h, w) = im1.shape[:2]
+    r = size.height()*0.75 / float(h)
+    dim = (int(w*r), int(size.height()*0.75))
+    cv2.resizeWindow(label, dim)
     
     #%% create and set trackbar
     cv2.createTrackbar('Frame', label, framestart, int(cap.get(cv2.CAP_PROP_FRAME_COUNT)), nothing)
