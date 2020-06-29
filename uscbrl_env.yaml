@@ -9,7 +9,7 @@
 # update:  conda env update -f uscbrl_env.yaml 
 name: uscbrl_env
 dependencies:
-  - python=3.8
+  - python=3.7.7
   - pip
   - matplotlib
   - numpy
@@ -19,3 +19,4 @@ dependencies:
   - scipy
   - xlrd
   - ffmpeg
+  - wxpython
