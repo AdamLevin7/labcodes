@@ -38,6 +38,9 @@ def findarea(video,frame=0,label='frame'):
     screen = app.primaryScreen()    
     size = screen.size()
     
+    # set label to show
+    labelshow = 'a: advance, w: recrop. ' + label
+    
     global ref_point
     
     # now let's initialize the list of reference point 
@@ -60,7 +63,7 @@ def findarea(video,frame=0,label='frame'):
     
     		# draw a rectangle around the region of interest 
     		cv2.rectangle(frame, ref_point[0], ref_point[1], (0, 255, 0), 2)
-    		cv2.imshow(label, frame)
+    		cv2.imshow(labelshow, frame)
              
     
     # load the image, clone it, and setup the mouse callback function    
@@ -72,13 +75,13 @@ def findarea(video,frame=0,label='frame'):
     (h, w) = frame.shape[:2]
     r = size.height()*0.75 / float(h)
     dim = (int(w*r), int(size.height()*0.75))
-    cv2.namedWindow(label, cv2.WINDOW_NORMAL)
-    cv2.setMouseCallback(label, shape_selection)
-    cv2.resizeWindow(label, dim)
+    cv2.namedWindow(labelshow, cv2.WINDOW_NORMAL)
+    cv2.setMouseCallback(labelshow, shape_selection)
+    cv2.resizeWindow(labelshow, dim)
     
     # keep looping until the 'q' key is pressed 
     while True:
-        cv2.imshow(label, frame)
+        cv2.imshow(labelshow, frame)
         key = cv2.waitKey(1) & 0xFF
         
         # press 'w' to reset the window
