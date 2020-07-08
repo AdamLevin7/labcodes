@@ -1,7 +1,8 @@
 import cv2
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-
+import numpy as np
+from scipy import signal
 
 class graph_video(object):
 	def __init__(self):
@@ -139,6 +140,7 @@ class graph_video(object):
 		self.contact_plate = input("Enter which plate is first contact made on? (Attila/Ryan) ")
 		self.split_plate = input("Is the contact split across plates? (Y/N): ")
 		print(" ")
+        
 	def get_data(self): # Function to get force data from txt file
 		filename = input("Enter Force File Name with full Path if not in Working Directory (Ex: User/File.txt): ")
 		print(" ")
@@ -192,7 +194,9 @@ class graph_video(object):
 		print(" ")
 		#Set dwonsample trigger
 		downsample = int(data_SR)/int(video_SR)
-		downsample = int(downsample)
+		up_samp = 0
+		if downsample - int(downsample) != 0:
+			up_samp = 1
 		
 		#Declare lists for graphing data 
 		self.graph = [0] * (self.total_frames)
@@ -207,20 +211,50 @@ class graph_video(object):
 		self.graphZ2 = [0] * (self.total_frames)
 
 		#Downsample data to video rate 
-		cnt = 0
-		for i in range(len(self.time_abs)):
-			if cnt == downsample:
-				self.time_DS.append(self.time_abs[i])
-				self.forceX_DS.append(self.forceX[i])
-				self.forceY_DS.append(self.forceY[i])
-				self.forceZ_DS.append(self.forceZ[i])
-				self.forceX2_DS.append(self.forceX2[i])
-				self.forceY2_DS.append(self.forceY2[i])
-				self.forceZ2_DS.append(self.forceZ2[i])
-				cnt = 0
-			cnt += 1
+		if up_samp == 0:
+			cnt = 0
+			for i in range(len(self.time_abs)):
+				if cnt == downsample:
+					self.time_DS.append(self.time_abs[i])
+					self.forceX_DS.append(self.forceX[i])
+					self.forceY_DS.append(self.forceY[i])
+					self.forceZ_DS.append(self.forceZ[i])
+					self.forceX2_DS.append(self.forceX2[i])
+					self.forceY2_DS.append(self.forceY2[i])
+					self.forceZ2_DS.append(self.forceZ2[i])
+					cnt = 0
+				cnt += 1
 
+		#if resampling is needed
+		if up_samp == 1:
+			#find least common multiples and factors 
+			lcm = np.lcm(int(data_SR), int(video_SR))
+			data_factor = int(lcm/int(data_SR))
+			video_factor = int(lcm/int(video_SR))
 
+			#resample data to a factor of data_factor
+			f_time = np.linspace(0, max(self.time_abs), int(data_factor*len(self.time_abs)))
+			f_X = signal.resample(self.forceX, data_factor*len(self.forceX))
+			f_Y = signal.resample(self.forceY, data_factor*len(self.forceY))
+			f_Z = signal.resample(self.forceZ, data_factor*len(self.forceZ))
+			f_X2 = signal.resample(self.forceX2, data_factor*len(self.forceX2))
+			f_Y2 = signal.resample(self.forceY2, data_factor*len(self.forceY2))
+			f_Z2 = signal.resample(self.forceZ2, data_factor*len(self.forceZ2))
+
+			#downsample data to video_factor 
+			cnt = 0
+			for i in range(len(f_time)):
+				if cnt == video_factor:
+					self.time_DS.append(f_time[i])
+					self.forceX_DS.append(f_X[i])
+					self.forceY_DS.append(f_Y[i])
+					self.forceZ_DS.append(f_Z[i])
+					self.forceX2_DS.append(f_X2[i])
+					self.forceY2_DS.append(f_Y2[i])
+					self.forceZ2_DS.append(f_Z2[i])
+					cnt = 0
+				cnt += 1
+				
 		#create data lists to grah
 		if self.contact_plate == "Attila":
 			self.list_creator(self.forceZ_DS, self.graphZ, self.frame_number1)
