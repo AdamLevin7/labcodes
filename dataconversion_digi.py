@@ -96,7 +96,7 @@ class convertdigi:
         data_in = pd.read_csv(self.file)
         
         """ remove one frame (need to figure out why - 2020 Jun 23) """
-        data_out = data_in.iloc[2:,:].reset_index(drop=True)
+        data_out = data_in.iloc[1:,:].reset_index(drop=True)
         
         """ rename data_in columns """
         data_out = data_out.iloc[:,:40]
