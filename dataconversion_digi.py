@@ -42,10 +42,7 @@ class convertdigi:
             frame_height = int(cap.get(4))
             cap.release()
             # subtract digitzed loction from frame height (only y columns)
-            data_digi_crop.iloc[:,data_digi_crop.columns.str.contains('_y')] = frame_height - data_digi_crop.filter(regex = '_y')
-            # subtract center of mass location from frame height (only y columns)
-            data_cm_crop.iloc[:,data_cm_crop.columns.str.contains('_y')] = frame_height - data_cm_crop.filter(regex = '_y')
-        
+            data.iloc[:,data.columns.str.contains('_y')] = frame_height - data.filter(regex = '_y')
         
         """ subset digitized location and likelihood scores """
         # likelihood scores
@@ -91,7 +88,7 @@ class convertdigi:
 
 
 #%%
-    def dltdv_reformat(self):
+    def dltdv_reformat(self, file_vid=None, flipy='no'):
         """ load data """
         data_in = pd.read_csv(self.file)
         
@@ -121,15 +118,24 @@ class convertdigi:
                             "c7_x", "c7_y",
                             "vertex_x", "vertex_y"]
         
-        """ find first and last frame without all nans """
-        temp = np.isnan(data_out).all(axis=1)
-        start_dig_frame = temp.idxmin()
-        last_dig_frame = temp.iloc[temp.idxmin()+1:].idxmax()
-        
         """ create frame column and join with digitized data """
-        data_out = pd.DataFrame({'frame': range(0,len(data_out))}).join(data_out)
+        self.data_out = pd.DataFrame({'frame': range(0,len(data_out))}).join(data_out)
         
-        """ crop data """
-        self.data_out = data_out.iloc[start_dig_frame:last_dig_frame, :]
+        """ flip y-axis of digitized and center of mass data """
+        if flipy == 'yes':
+            # find height of image (max y value)
+            cap = cv2.VideoCapture(file_vid)
+            frame_height = int(cap.get(4))
+            cap.release()
+            # subtract digitzed loction from frame height (only y columns)
+            self.data_out.iloc[:,self.data_out.columns.str.contains('_y')] = frame_height - self.data_out.filter(regex = '_y')
         
-        return self.data_out
+        """ estimate when body is in view based on likelihood scores """
+        # find rows where all columns are nan
+        temp = np.isnan(data_out).all(axis=1)
+        # find first frame where all data is not all nan
+        self.frame_first = temp.idxmin()
+        # find last frame where all data is not nan
+        self.frame_last = temp.iloc[temp.idxmin()+1:].idxmax()
+        
+        return self.data_out, self.frame_first, self.frame_last
