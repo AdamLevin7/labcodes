@@ -28,8 +28,9 @@ ii) when selecting the frames to use as strobe, click 'q' to select frame and 'e
 vidlist = ['ChBr75_190728_LJ1_349.mp4']
 # do you want to crop the "search" area to only keep pixels within selected area?
 crop = 'yes'
-# if there are more than autoid number, it will auto select frame(s) within that range
-autoid = None
+# if there are more than autoid_thresh number, it will auto select autoid_num number of frame(s) within that range
+autoid_thresh = None
+autoid_num = None
 # sampling rate
 samp = 240
 # absolute difference threshold to find which pixels changed
@@ -47,7 +48,7 @@ i = 0
 #%% loop through videos to find frames and search areas
 for filename in vidlist:
     # find strobe frames
-    frames, searcharea = strobe_findframes(filename, crop=crop, autoid=autoid)
+    frames, searcharea = strobe_findframes(filename, crop=crop, autoid_thresh=autoid_thresh, autoid_num=autoid_num)
     # add to list
     frameALL[i] = frames
     searchALL[i] = searcharea

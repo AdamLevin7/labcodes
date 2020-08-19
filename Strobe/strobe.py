@@ -306,9 +306,15 @@ User input:
     - filename: full path file name
     - crop: if 'yes' (default), user will identify area around the object of
         interest that could be used to limit noise in strobe image
-    - autoid: OPTIONAL default: None, minimum number of frames between manually 
+    - autoid_thresh: OPTIONAL default: None, minimum number of frames between manually 
         identified strobe frames before auto id occurs (will find apex and two
         additional frames before and after apex)
+    - autoid_num: OPTIONAL default None, number of frames to automatically find
+        when autoid_thresh is triggered (ex: when two manual frames are spaced
+                                         greater than autoid_thresh, it will find
+                                         autoid_num of frames -including the
+                                         original two frames- between the
+                                         chosen frames)
 
 Created on Thu Feb 6 10:36:26 2020
 
@@ -320,7 +326,7 @@ import pandas as pd
 from capture_area import findarea
 import numpy as np
 
-def strobe_findframes(filename, crop='yes', autoid=None):
+def strobe_findframes(filename, crop='yes', autoid_thresh=None, autoid_num=None):
     ### initialize variables
     strobeframes = None
     frame = 0
@@ -356,16 +362,16 @@ def strobe_findframes(filename, crop='yes', autoid=None):
     strobeframes = strobeframes.drop_duplicates()
     
     ### if auto-find frames was selected
-    if autoid is not None:
+    if autoid_thresh is not None:
         # store strobeframes as another variable to use as search
         sframestemp = strobeframes
         # find difference between selected frames
         diffframes = np.diff(strobeframes)
         # auto select evenly spaced frames
         for cntdf in range(len(diffframes)):
-            if diffframes[cntdf] >= autoid:
+            if diffframes[cntdf] >= autoid_thresh:
                 frames = np.linspace(sframestemp.iloc[cntdf],
-                                     sframestemp.iloc[cntdf+1], 7, dtype=int)
+                                     sframestemp.iloc[cntdf+1], autoid_num, dtype=int)
                 strobeframes = (strobeframes.append(pd.Series(frames)).reset_index(drop=True)).sort_values(ignore_index=True).drop_duplicates()
                 # if crop was selected, crop area for each new frame
                 if crop == 'yes':
