@@ -12,6 +12,10 @@ Inputs
                 ...)
     frame_con: LIST contact frame of video
         format [INT, INT, ...]
+    vect_color: LIST color of vector
+        format ['x', 'y', ...] for how many plates
+        ex: FP1 as green and FP2 as blue: ['g', 'b']
+        ex: both FPs as green: ['g', 'g']
     samp_video: INT sampling rate of video
     samp_force: INT sampling rate of force
     dispthresh: INT display threshold, amount of force needed to display
@@ -25,10 +29,14 @@ Created on Thu Jan  2 16:14:15 2020
 import cv2
 import numpy as np
 
-def vectoroverlay(file, file_out, data_vid, frame_con,
+def vectoroverlay(file, file_out, data_vid, frame_con, vect_color='g',
                   samp_force=1200, samp_video=240, dispthresh=60):
     
-    #%% reformat frame_con if not list
+    #%% reformat vect_color and frame_con if not list
+    if not isinstance(vect_color, list):
+        # assumes the input argument is just one letter/color, so this will make
+            # it a list and as many as there are plates
+        vect_color = [vect_color] * len(data_vid)
     if not isinstance(frame_con, list):
         frame_con = [frame_con]
     
@@ -75,7 +83,10 @@ def vectoroverlay(file, file_out, data_vid, frame_con,
                                 end_point = (int(data_vid[cntp]['ax'][framenumF[cntp]]+data_vid[cntp]['fx'][framenumF[cntp]]),
                                              int(data_vid[cntp]['ay'][framenumF[cntp]]+data_vid[cntp]['fy'][framenumF[cntp]]))
                                 # set parameters
-                                color = (0, int(255*((i+1)/samp_fact)), 0)
+                                if vect_color[cntp] in ('g', 'green'):
+                                    color = (0, int(255*((i+1)/samp_fact)), 0)
+                                elif vect_color[cntp] in ('b', 'blue'):
+                                    color = (int(255*((i+1)/samp_fact)), 0, 0)
                                 thickness = 2
                                 tipLength = 1
                                 # draw a arrowed line
