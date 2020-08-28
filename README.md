@@ -4,7 +4,7 @@
 # USCBRL: Codes for USC Biomechanics Research Lab
 >>>>>>> upstream/master
 
-#Topics:
+# Topics:
 
 *Vector Overlay*
 
