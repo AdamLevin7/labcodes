@@ -1,30 +1,34 @@
 <<<<<<< HEAD
 # uscbiomech
 =======
-# USCBRL
-codes for USC Biomechanics Research Lab
+# USCBRL: Codes for USC Biomechanics Research Lab
 >>>>>>> upstream/master
 
+#Topics:
 
-Testing Stuff
-# Testing Stuff
-## Testing Stuff
-[testLink](https://github.com/USCBiomechanicsLab/labcodes/tree/master/CalcCOM)
-
-
-Topics:
-Vector Overlay
+*Vector Overlay*
 
 [Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/VectorOverlay) [Code Documentation]
 
-Strobe Images/Videos
+**Strobe Images/Videos**
 
-Calculating Center of Mass
+[Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/Strobe)
 
-Digitizing
+**Calculating Center of Mass**
 
-Net Joint Moments
+[Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/CalcCOM)
 
-Kinematics
+**Digitizing**
 
-General Codes
+[Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/digitizing)
+
+**Net Joint Moments**
+
+[Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/NJM)
+
+**Kinematics**
+
+[Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/kinematics)
+
+**General Codes**
+[Code Documentation]
