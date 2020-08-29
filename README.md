@@ -2,31 +2,36 @@
 
 ## Topics:
 
-### *Vector Overlay*
+### Vector Overlay
 
 * [Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/VectorOverlay) <br/>
-* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/README-Documentation/VectorOverlay/Documentation_VectorOverlay.md)
+* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/VectorOverlay/Documentation_VectorOverlay.md)
 
-### **Strobe Images/Videos**
+### Strobe Images/Videos
 
-[Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/Strobe)
+* [Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/Strobe) <br/>
+* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Strobe/Documentation_Strobe.md)
 
-### **Calculating Center of Mass**
+### Calculating Center of Mass
 
-* [Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/CalcCOM)
-* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/DocumentationEdits-8/28/2020/CalcCOM/Documentation_CalcCOM.md)
+* [Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/CalcCOM) <br/>
+* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/VectorOverlay/Documentation_CalcCOM.md)
 
-### **Digitizing**
+### Digitizing
 
-[Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/digitizing)
+* [Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/digitizing) <br/>
+* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/VectorOverlay/Documentation_Digitizing.md)
 
-### **Net Joint Moments**
+### Net Joint Moments
 
-[Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/NJM)
+* [Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/NJM) <br/>
+* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/VectorOverlay/Documentation_NJM.md)
 
-### **Kinematics**
+### Kinematics
 
-[Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/kinematics)
+* [Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/kinematics) <br/>
+* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/VectorOverlay/Documentation_Kinematics.md)
 
-### **General Codes**
-[Code Documentation]
+### General Codes
+
+Need to create this markdown still...
