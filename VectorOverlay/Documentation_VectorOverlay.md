@@ -35,7 +35,7 @@ Add a colored vector to the video to represent the ground reaction force.
 #### *Outputs*<br/>
 * Creates a new video with force vector overlaid on the original video:
 
-![Vector Overlay](https://github.com/USCBiomechanicsLab/labcodes/blob/DocumentationEdits-8/28/2020/DocMaterials/VectorOverlayExample.PNG)<br/>
+![Vector Overlay](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/VectorOverlayExample.PNG)<br/>
 Figure 1: Example of Vector Overlay
 
 ### **Examples:**
