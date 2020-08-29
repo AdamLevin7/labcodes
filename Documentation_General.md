@@ -5,7 +5,7 @@
 ### Environment
 Maybe have a section to explain how environment works
 ### FindContactIntervals
-### ImportForce_TXT
+### [ImportForce_TXT - ImportForce_TXT](#importforce_txt)
 ### Impulse_Velocity
 ### capture_area
 ### dataconversion_digi
@@ -20,7 +20,9 @@ Maybe have a section to explain how environment works
 
 
 
-## ImportForce_TXT: _ImportForce_TXT_
+## ImportForce_TXT
+
+### _ImportForce_TXT_
 
 ### **Keywords:**
 Import, Force, Text file, Bodyweight, BW, Sampling Rate, Rezero
