@@ -13,7 +13,8 @@
 
 ### **Calculating Center of Mass**
 
-[Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/CalcCOM)
+* [Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/CalcCOM)
+* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/DocumentationEdits-8/28/2020/CalcCOM/Documentation_CalcCOM.md)
 
 ### **Digitizing**
 
