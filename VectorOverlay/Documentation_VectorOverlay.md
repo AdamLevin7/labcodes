@@ -1,22 +1,22 @@
-## Documentation- Vector Overlay Functions
+# Documentation- Vector Overlay Functions
 
-# vectoroverlay: _vectoroverlay_
+## vectoroverlay: _vectoroverlay_
 
-**Keywords:**
+### **Keywords:**
 Vector, Overlay, Force, Vector
 
-**Syntax:**
+### **Syntax:**
 
-from *VectorOverlay.vectoroverlay* import *vectoroverlay*
+* from *VectorOverlay.vectoroverlay* import *vectoroverlay*
 
-*vectoroverlay*(file, file_out, data_vid, frame_con, vect_color='g', samp_force=1200, samp_video=240, dispthresh=60) 
+* *vectoroverlay*(file, file_out, data_vid, frame_con, vect_color='g', samp_force=1200, samp_video=240, dispthresh=60) 
 
-**Description:**<br/>
+### **Description:**<br/>
 Add a colored vector to the video to represent the ground reaction force.
 
-**Arguments:**
+### **Arguments:**
 
-*Inputs*
+#### *Inputs*
 
    * **file:** STRING file name of video<br/>
    * **file_out:** STRING file name for new video<br/>
@@ -32,12 +32,12 @@ Add a colored vector to the video to represent the ground reaction force.
    * **samp_force:** INT sampling rate of force<br/>
    * **dispthresh:** INT display threshold, amount of force needed to display vector (unit=Newtons, default=60)
     
-*Outputs*<br/>
+#### *Outputs*<br/>
 * Creates a new video with force vector overlaid on the original video:
 
-![Figure 1: Example of Vector Overlay](https://github.com/USCBiomechanicsLab/labcodes/blob/README-Documentation/DocMaterials/VectorOverlayExample.JPG)<br/>
+![Vector Overlay](https://github.com/USCBiomechanicsLab/labcodes/blob/DocumentationEdits-8/28/2020/DocMaterials/VectorOverlayExample.PNG)<br/>
 Figure 1: Example of Vector Overlay
 
-**Examples:**
+### **Examples:**
 Helpful examples
 
