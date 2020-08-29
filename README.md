@@ -34,4 +34,4 @@
 
 ### General Codes
 
-Need to create this markdown still...
+* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Documentation_General.md)
