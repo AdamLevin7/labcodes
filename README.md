@@ -15,7 +15,7 @@
 ### Calculating Center of Mass
 
 * [Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/CalcCOM) <br/>
-* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/VectorOverlay/Documentation_CalcCOM.md)
+* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/CalcCOM/Documentation_CalcCOM.md)
 
 ### Digitizing
 
