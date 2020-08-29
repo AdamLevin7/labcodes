@@ -5,7 +5,7 @@
 ### Environment
 Maybe have a section to explain how environment works
 ### FindContactIntervals
-### [ImportForce_TXT - ImportForce_TXT](#importforce_txt)
+### [ImportForce_TXT](#importforce_txt)
 ### Impulse_Velocity
 ### capture_area
 ### dataconversion_digi
@@ -53,7 +53,7 @@ Force data can be re-zeroed based on the beginning or end of trial. <br/>
    * **data:** DATAFRAME force data with plate names and components<br/>
 
  Fix this
- ![Vector Overlay](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/VectorOverlayExample.PNG)<br/>
+ ![Vector Overlay](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials!/VectorOverlayExample.PNG)<br/>
 Figure 1: Example of "data" output dataframe<br/>
 
    * **samp:** FLOAT64 sampling rate of collection<br/>
