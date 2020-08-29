@@ -20,17 +20,17 @@
 ### Digitizing
 
 * [Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/digitizing) <br/>
-* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/VectorOverlay/Documentation_Digitizing.md)
+* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/digitizing/Documentation_Digitizing.md)
 
 ### Net Joint Moments
 
 * [Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/NJM) <br/>
-* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/VectorOverlay/Documentation_NJM.md)
+* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/NJM/Documentation_NJM.md)
 
 ### Kinematics
 
 * [Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/kinematics) <br/>
-* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/VectorOverlay/Documentation_Kinematics.md)
+* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/kinematics/Documentation_Kinematics.md)
 
 ### General Codes
 
