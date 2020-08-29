@@ -35,6 +35,8 @@ Add a colored vector to the video to represent the ground reaction force.
 *Outputs*
 * Creates vector overlay video
 
+![Test Image](https://github.com/USCBiomechanicsLab/labcodes/blob/README-Documentation/DocMaterials/PSYC501_HW2_Density_Stewart_Rev02.jpeg)
+
 **Examples:**
 Helpful examples
 
