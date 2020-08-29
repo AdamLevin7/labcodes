@@ -33,9 +33,10 @@ Add a colored vector to the video to represent the ground reaction force.
    * **dispthresh:** INT display threshold, amount of force needed to display vector (unit=Newtons, default=60)
     
 *Outputs*<br/>
-* Creates vector overlay video
+* Creates a new video with force vector overlaid on the original video:
 
-![Test Image](https://github.com/USCBiomechanicsLab/labcodes/blob/README-Documentation/DocMaterials/PSYC501_HW2_Density_Stewart_Rev02.jpeg)
+![Figure 1: Example of Vector Overlay](https://github.com/USCBiomechanicsLab/labcodes/blob/README-Documentation/DocMaterials/VectorOverlayExample.JPG)<br/>
+Figure 1: Example of Vector Overlay
 
 **Examples:**
 Helpful examples
