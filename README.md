@@ -1,15 +1,11 @@
-<<<<<<< HEAD
-# uscbiomech
-=======
-# USCBRL: Codes for USC Biomechanics Research Lab
->>>>>>> upstream/master
+## USCBRL: Codes for USC Biomechanics Research Lab
 
 # Topics:
 
 *Vector Overlay*
 
-[Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/VectorOverlay) 
-[Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/README-Documentation/VectorOverlay/Documentation_VectorOverlay.md)
+* [Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/VectorOverlay) <br/>
+* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/README-Documentation/VectorOverlay/Documentation_VectorOverlay.md)
 
 **Strobe Images/Videos**
 
