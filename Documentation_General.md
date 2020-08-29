@@ -61,3 +61,5 @@ Figure 1: Example of "data" output dataframe<br/>
 
 ### **Examples:**
 Helpful examples
+
+[Back to Table of Contents](#table-of-contents)
