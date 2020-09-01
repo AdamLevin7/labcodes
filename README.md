@@ -1,34 +1,24 @@
-<<<<<<< HEAD
-# uscbiomech
-=======
 # USCBRL: Codes for USC Biomechanics Research Lab
->>>>>>> upstream/master
 
-#Topics:
+## Topics:
 
-*Vector Overlay*
+### [Vector Overlay](https://github.com/USCBiomechanicsLab/labcodes/tree/master/VectorOverlay) <br/>
+* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/VectorOverlay/Documentation_VectorOverlay.md)
 
-[Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/VectorOverlay) [Code Documentation]
+### [Strobe Images/Videos](https://github.com/USCBiomechanicsLab/labcodes/tree/master/Strobe) <br/>
+* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Strobe/Documentation_Strobe.md)
 
-**Strobe Images/Videos**
+### [Calculating Center of Mass](https://github.com/USCBiomechanicsLab/labcodes/tree/master/CalcCOM) <br/>
+* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/CalcCOM/Documentation_CalcCOM.md)
 
-[Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/Strobe)
+### [Digitizing](https://github.com/USCBiomechanicsLab/labcodes/tree/master/digitizing) <br/>
+* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/digitizing/Documentation_Digitizing.md)
 
-**Calculating Center of Mass**
+### [Net Joint Moments](https://github.com/USCBiomechanicsLab/labcodes/tree/master/NJM) <br/>
+* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/NJM/Documentation_NJM.md)
 
-[Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/CalcCOM)
+### [Kinematics](https://github.com/USCBiomechanicsLab/labcodes/tree/master/kinematics) <br/>
+* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/kinematics/Documentation_Kinematics.md)
 
-**Digitizing**
-
-[Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/digitizing)
-
-**Net Joint Moments**
-
-[Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/NJM)
-
-**Kinematics**
-
-[Folder](https://github.com/USCBiomechanicsLab/labcodes/tree/master/kinematics)
-
-**General Codes**
-[Code Documentation]
+### General Codes <br/>
+* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Documentation_General.md)
