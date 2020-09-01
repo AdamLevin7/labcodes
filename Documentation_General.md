@@ -4,15 +4,15 @@
 
 ### Environment
 Maybe have a section to explain how environment works
-### [FindContactIntervals](#findcontactintervals)
-### [ImportForce_TXT](#importforce_txt)
+### [FindContactIntervals](#function-findcontactintervals)
+### [ImportForce_TXT](#function-importforce_txt)
 ### Impulse_Velocity
 ### capture_area
 ### dataconversion_digi
 ### data_conversion_force
 ### derivative
 ### findframe
-### [findplate](#findplate)
+### [findplate](#function-findplate)
 ### findpoint
 ### pixelratios
 ### projectiletraj
@@ -21,8 +21,8 @@ Maybe have a section to explain how environment works
 
 
 
-## ImportForce_TXT
-### _ImportForce_TXT_
+## Script: ImportForce_TXT
+### Function ImportForce_TXT
 
 ### **Keywords:**
 Import, Force, Text file, Bodyweight, BW, Sampling Rate, Rezero
@@ -65,8 +65,8 @@ Helpful examples
 [Back to Table of Contents](#table-of-contents)
 
 
-## FindContactIntervals
-### _FindContactIntervals_
+## Script: FindContactIntervals
+### Function FindContactIntervals
 
 ### **Keywords:**
 Contact, Intervals, Force, Threshold, Vertical 
@@ -103,8 +103,8 @@ Helpful examples
 [Back to Table of Contents](#table-of-contents)
 
 
-## findplate
-### _findplate_
+## Script: findplate
+### Function findplate
 
 ### **Keywords:**
 Force, Plate, Identify, Corners, Find
