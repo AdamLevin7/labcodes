@@ -163,6 +163,9 @@ pix2m = pix2m_fromplate(plate_area, (0.6, 0.4))
 mag2pix = bw2pix(pix2m['x'],bw,bwpermeter=2)
 ```
 
+Functions Used in this Section  
+[pix2m_fromplate](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Documentation_General.md#function-pix2m_fromplate), [mag2pix](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Documentation_General.md#function-bw2pix)
+
 
 ### Convert Force Data to Pixels
 This argument of the convertdata function helps to put the force data in the __video__ reference system. 
@@ -196,6 +199,9 @@ Run the extract data function
 ```
 data_pix_f1 = transform_data.data_fp
 ```
+
+Functions Used in this Section  
+[convertdata](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Documentation_General.md#function-convertdata)
 
 ### Run Vector Overlay
 Run the vector overlay function after setting up all of the appropriate variables above.  
