@@ -10,14 +10,56 @@ Maybe have a section to explain how environment works
 ### capture_area
 ### dataconversion_digi
 ### data_conversion_force
+#### 
 ### derivative
 ### findframe
 ### [findplate](#function-findplate)
 ### findpoint
 ### pixelratios
 #### [pix2m_fromplate](#function-pix2m_fromplate)
-####
-### projectiletraj
+#### [bw2pix](#function-bw2pix)
+### projectiletraj  
+
+End Table of Contents  <br/>
+
+  
+   
+     
+     
+## Script: pixelratios
+### Function bw2pix
+
+### **Keywords:**
+Ratio, Pixel, Meter, Bodyweight, BW
+
+### **Syntax:**
+```
+from *pixelratios* import *bw2pix*
+
+mag2pix = *bw2pix*(pix2m, bw, bwpermeter=8)
+```
+### **Description:**<br/>
+Calculate ratio of body weight to pixels in the video/image.
+
+![bw2pix Example](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/pix2m_ratio.png)<br/>
+Figure: Example of how adjusting bwpermeter argument changes force vector length
+
+### **Arguments:**
+
+#### *Inputs*
+
+   * **pix2m:** FLOAT64 ratio of pixels:meter 
+   * **bw:** FLOAT64 body weight of individual
+   * **bwpermeter**: INT number of body weights in one meter (default=8)
+   
+#### *Outputs*
+
+   * **mag2pix:** FLOAT64 ratio of bodyweight:pixel
+   
+### **Examples:**
+Helpful examples
+
+[Back to Table of Contents](#table-of-contents)
 
 
 ## Script: pixelratios
