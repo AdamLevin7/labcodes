@@ -35,7 +35,7 @@ pix2m = *pix2m_fromplate*(plate_area, plate_dim)
 ### **Description:**<br/>
 Use the force plate dimensions from function *findplate* which selects the 4 corners of a forceplate to determine the number of pixels in a meter in the horizontal and vertical directions.
 
-![DataFrame Input](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/FindPlates_CornersExample.PNG)<br/>
+![Pix2M Example](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/pix2m_ratio.png)<br/>
 Figure: Example pixel to meter ratio 
 
 ### **Arguments:**
@@ -152,7 +152,7 @@ Force, Plate, Identify, Corners, Find
 ### **Description:**<br/>
 Identify 4 corners of a force plate(s) in an image.<br/>
 
-![DataFrame Input](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/FindPlates_CornersExample.PNG)<br/>
+![DataFrame Input](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/findplate_platecorners.png)<br/>
 Figure: Example of 2 force plates with corners selected in the CCW direction starting from top left <br/>  
 
 ### **Arguments:**
