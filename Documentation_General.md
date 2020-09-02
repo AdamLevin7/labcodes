@@ -15,10 +15,44 @@ Maybe have a section to explain how environment works
 ### [findplate](#function-findplate)
 ### findpoint
 ### pixelratios
+#### [pix2m_fromplate](#function-pix2m_fromplate)
+####
 ### projectiletraj
 
 
+## Script: pixelratios
+### Function pix2m_fromplate
 
+### **Keywords:**
+Force, Plate, Ratio, Pixel, Meter
+
+### **Syntax:**
+```
+from *pixelratios* import *pix2m_fromplate*
+
+pix2m = *pix2m_fromplate*(plate_area, plate_dim)
+```
+### **Description:**<br/>
+Use the force plate dimensions from function *findplate* which selects the 4 corners of a forceplate to determine the number of pixels in a meter in the horizontal and vertical directions.
+
+![DataFrame Input](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/FindPlates_CornersExample.PNG)<br/>
+Figure: Example pixel to meter ratio 
+
+### **Arguments:**
+
+#### *Inputs*
+
+   * **plate_area:** DICT plate dimension in pixels (preferably from findplate.py)  
+   * **plate_dim:** TUPLE dimension of plate in meters [(x, z) in image reference)]  
+   
+#### *Outputs*
+
+   * **pix2m:** DICT ratio of pixels:meter
+   
+### **Examples:**
+Helpful examples
+
+[Back to Table of Contents](#table-of-contents)
 
 
 ## Script: ImportForce_TXT
