@@ -2,6 +2,9 @@
 
 ## vectoroverlay: _vectoroverlay_
 
+### **Examples:**
+[Tutorial for Creating Vector Overlay](https://github.com/USCBiomechanicsLab/labcodes/blob/master/VectorOverlay/Example_VectorOverlay.md)
+
 ### **Keywords:**
 Vector, Overlay, Force, Vector
 
@@ -38,6 +41,5 @@ Add a colored vector to the video to represent the ground reaction force.
 ![Vector Overlay](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/VectorOverlayExample.PNG)<br/>
 Figure 1: Example of Vector Overlay 
 
-### **Examples:**
-Helpful examples
+
 
