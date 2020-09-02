@@ -42,10 +42,7 @@ transform_data = convertdata(data, mag2pix, pix2m, view = "fy",
 ### **Description:**<br/>
 Series of modules to transform force data into video reference system.  
 Run 'main' function (convertdata) to use all modules
-
-![bw2pix Example](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/pix2m_ratio.png)<br/>
-Figure: 
-
+ 
 ### **Arguments:**
 
 #### *Inputs*
@@ -55,18 +52,18 @@ Figure:
    * **pix2m**: DICT pixel:meter ratio separated into x and y from pix2m_fromplate
    * **view**: STRING which dimension is parallel to image X (defalt='fy')  
   
-  Insert picture here
+![View Arg](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/View_ConvertData.png)<br/>
+Figure: Examples of different "view" options which puts force data in video reference system.
    
    * **mode:** STRING keep plates separate or join into single vecotr (default='ind')  
-   Insert picture here
+![Mode Arg](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/Mode_ConvertData.png)<br/>
+Figure: Examples of how forces can be combined or left separate.
    
-   * **platelocs:** DICT plate corner locations obtained from findplate.py (default=None)  
-   
-   Insert picture here
-   
+   * **platelocs:** DICT plate corner locations obtained from findplate.py (default=None)   
    * **flip:** DICT Indicating how data should be flipped in video reference system
    
-   Insert picture here
+![Flip Arg](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/Flip_convertData.png)<br/>
+Figure: Examples of how forces can be combined or left separate.
    
 #### *Outputs*
 
@@ -93,7 +90,7 @@ mag2pix = bw2pix(pix2m, bw, bwpermeter=8)
 ### **Description:**<br/>
 Calculate ratio of body weight to pixels in the video/image.
 
-![bw2pix Example](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/pix2m_ratio.png)<br/>
+![bw2pix Example](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/mag2pix_VectorChange.png)<br/>
 Figure: Example of how adjusting bwpermeter argument changes force vector length
 
 ### **Arguments:**
