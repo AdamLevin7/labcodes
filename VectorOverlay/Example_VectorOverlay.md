@@ -5,10 +5,6 @@
 For a video that walks you through creating a vector overlay for the PAC12 Steady State Running 
 [Click Here](https://drive.google.com/drive/folders/1bKA8pVp695KqJMAeGPvVXo6gOT0loFao)
 
-## Functions Used in this Code
-[ImportForce_TXT](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Documentation_General.md#function-importforce_txt)
-
-
 ## Process for Vector Overlay: Basketball Jump Shot Example
 
 ### Import Package and Modules
@@ -21,6 +17,9 @@ from pixelratios import pix2m_fromplate, bw2pix
 from dataconversion_force import convertdata
 from VectorOverlay.vectoroverlay import vectoroverlay
 ```
+## Functions Used in this Code
+[ImportForce_TXT](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Documentation_General.md#function-importforce_txt)
+
 
 ### Set Path (MODIFY for your project)<br/>
 This is the path on your computer where the video and corresponding force file will be stored.<br/>
@@ -78,6 +77,9 @@ bw = 607
 samp = 1200
 ```
 
+Functions Used in this Section  
+[ImportForce_TXT](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Documentation_General.md#function-importforce_txt)
+
 ### Find Contact Intervals <br/>
 Uses the FindContactIntervals function to find where the reaction force crosses a specific threshold. Typically we use Vertical GRF.<br/>
 The threshold should be ideally less than 20N and can be set using the argument "thresh" within the function.
@@ -88,6 +90,9 @@ ci_f1 = FindContactIntervals((data_f1_raw['Attila49 9286BA_Fz'] +data_f1_raw['Ry
 
 *Insert a picture of the contact intervals*
 
+Functions Used in this Section  
+[FindContactIntervals](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Documentation_General.md#function-findcontactintervals)
+
 ### Find Plate Corners
 Find the location of the force plate corners using the function findplate. You can use framestart to select another frame in the video to use for the selection (ie. if person is on the plate and blocks one of the corners). Use the label argument to add a message that you want to remember (ie. Select both plates with Atttila49 FIRST). Corners should be selected in a CW direction starting with the TOP LEFT CORNER.
 
@@ -97,6 +102,9 @@ plate_area = findplate(os.path.join(path_video, file1_video),framestart=0,
 ```
 
 * Insert a picture of how to select the corners of the plates properly
+
+Functions Used in this Section  
+[findplate](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Documentation_General.md#function-findplate)
 
 ### Crop Data
 Find the region of the force data that you would like to overlay on the video. 
