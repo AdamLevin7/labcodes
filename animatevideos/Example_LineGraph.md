@@ -1,6 +1,10 @@
 # Example Line Graph Video
 ## This file will provide the step by step process for using the functions in the labcodes repository to generate a video with data below it with a vertical line marking the time sync.
 
+Example:
+![Linegraph Example](https://github.com/USCBiomechanicsLab/labcodes/tree/master/DocMaterials/GraphVid_Example.png)  
+Figure: Example of vertical line overlayed on plotted data and synced with video.
+
 ## Process for Line Graph Videos
 
 ### Import Package and Modules
@@ -11,6 +15,7 @@ from animatevideos.animationgraph import
 ```
 
 ## Functions Used in this Code
+[linegraph](https://github.com/USCBiomechanicsLab/labcodes/blob/master/animatevideos/Documentation_AnimateVids.md#function-linegraph)
 
 ### Set Parameters
 
@@ -54,10 +59,13 @@ samp_factor = int(samp_force / samp_vid)
 ### Plot Data
 Plot the data that will be visualized in the video 
 
+Read in the data
 ```
-# read in data
 data_plot = pd.read_csv(graph_data)
-# plot data
+```
+
+Plot the data (This is an example plot, you will need to modify for your data)
+```
 fig, ax1 = plt.subplots()
 ax1.plot(data_plot['time'], data_plot['fz'], label='Vertical Reaction Force')
 ax1.plot([data_plot['time'].iloc[0], data_plot['time'].iloc[-1]], [0, 0], 'k--')
