@@ -171,16 +171,17 @@ Functions Used in this Section
 This argument of the convertdata function helps to put the force data in the __video__ reference system. 
 If FP1 needs to be adjusted you can use 0 within the dictionary. 
 
-* Insert a picture illustrating the flips*
+![Flip](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/Flip_convertData.png)  
+Figure: Illustrating how flips impact how force is displayed for the vector overlay.
 ```
 flip = {0: ['fy','ax'],
         1: ['fy','ay']}
 ```
 
 An object called _transform_data_ is created using the previously defined arguments.  
-The argument _mode_ is used to determine if 1 or 2 vectors should be plotted.
-If you want one force vector use _combine_.
-If you have two force plates and want 2 force vectors use _ind_ for the input argument.
+*The argument _mode_ is used to determine if 1 or 2 vectors should be plotted:
+* One force vector use "combine"
+* Two (or more) force vectors use "ind" 
 
 ```
 transform_data = convertdata(data_f1, mag2pix, pix2m, view = "fx",
@@ -189,13 +190,13 @@ transform_data = convertdata(data_f1, mag2pix, pix2m, view = "fx",
 ```                             
                            
 
-Run the data2pix function to convert the force data to pixels in the video reference system.
+Run the data2pix function within dataconversion_force script to convert the force data to pixels in the video reference system.
 
 ```
 transform_data.data2pix()
 ```
 
-Run the extract data function
+Pulls the force plate data in pixels from the transform_data structure and places it into a new variable.
 ```
 data_pix_f1 = transform_data.data_fp
 ```
@@ -204,7 +205,7 @@ Functions Used in this Section
 [convertdata](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Documentation_General.md#function-convertdata)
 
 ### Run Vector Overlay
-Run the vector overlay function after setting up all of the appropriate variables above.  
+Run the vector overlay function after setting up all of the appropriate variables/input arguments.  
 The video will be saved in the same path that was specified for the original video defined by path_video and file1_video
 
 ```
