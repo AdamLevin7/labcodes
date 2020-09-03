@@ -5,6 +5,9 @@
 ### [Vector Overlay](https://github.com/USCBiomechanicsLab/labcodes/tree/master/VectorOverlay) <br/>
 * [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/VectorOverlay/Documentation_VectorOverlay.md)
 
+### [Animate Videos](https://github.com/USCBiomechanicsLab/labcodes/tree/master/animatevideos)  
+* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/animatevideos/Documentation_AnimateVids.md)
+
 ### [Strobe Images/Videos](https://github.com/USCBiomechanicsLab/labcodes/tree/master/Strobe) <br/>
 * [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Strobe/Documentation_Strobe.md)
 
