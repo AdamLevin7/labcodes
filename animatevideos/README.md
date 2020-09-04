@@ -1,8 +1,11 @@
 # Documentation- Animated Vieos
 
+### [Line Graph Tutorial](https://github.com/USCBiomechanicsLab/labcodes/blob/master/animatevideos/Example_LineGraph.md)
+
 ## Table of Contents
 
-### [animationgraph]
+
+### animationgraph
 #### [linegraph](#function-linegraph)
 
 End Table of Contents  
@@ -11,7 +14,7 @@ End Table of Contents
 ## Script: animationgraph
 ### Function linegraph
 
-![Linegraph Example](https://github.com/USCBiomechanicsLab/labcodes/tree/master/DocMaterials/GraphVid_Example.png)  
+![LineGraphEx](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/GraphVid_Example.png)  
 Figure: Example of vertical line overlayed on plotted data and synced with video.
 
 

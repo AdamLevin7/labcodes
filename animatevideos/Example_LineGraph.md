@@ -2,7 +2,7 @@
 ## This file will provide the step by step process for using the functions in the labcodes repository to generate a video with data below it with a vertical line marking the time sync.
 
 Example:
-![Linegraph Example](https://github.com/USCBiomechanicsLab/labcodes/tree/master/DocMaterials/GraphVid_Example.png)  
+![LinegraphExample](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/GraphVid_Example.png)  
 Figure: Example of vertical line overlayed on plotted data and synced with video.
 
 ## Process for Line Graph Videos
@@ -86,4 +86,8 @@ Use the function _linegraph_ to create the video
 linegraph(filename, fig, ax1, data_plot['time'], video_file,
           graph_start=graph_start, samp_factor=samp_factor)
 ```
+
+Functions Used in this Section  
+[linegraph](https://github.com/USCBiomechanicsLab/labcodes/blob/master/animatevideos/Documentation_AnimateVids.md#function-linegraph)
+
 
