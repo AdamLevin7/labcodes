@@ -33,7 +33,9 @@ def linegraph(filename, fig, ax, t, video_file, graph_start=0, samp_factor=10):
     def animate(samp, i):
         if int(i*samp) < len(t):
             sc.set_xdata(x=t.iloc[int(i)*samp])
-            
+        else:
+            sc.set_xdata(x=None)
+        
     
     """ initialize graph line """
     sc = ax.axvline()
@@ -41,8 +43,8 @@ def linegraph(filename, fig, ax, t, video_file, graph_start=0, samp_factor=10):
     
     """ create animation """
     ani = matplotlib.animation.FuncAnimation(fig, animate, fargs=(int(samp_factor), ),
-                                  frames=len(t), interval=0, repeat=True) 
-    ani.save('anim_temp.mp4', fps=30, extra_args=['-vcodec', 'libx264'])
+                                  frames=len(t), interval=0, repeat=False) 
+    ani.save('anim_temp.mp4', fps=1, extra_args=['-vcodec', 'libx264'])
     
     
     """ create video """
