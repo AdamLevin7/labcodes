@@ -109,7 +109,7 @@ plt.ylabel('Thigh Angle (deg)')
 plt.title('Shank-Thigh Coordination')
 plt.savefig('24281 Trial 024_angang_shankthigh.png')
 ```
-![ShankThigh](https://github.com/USCBiomechanicsLab/labcodes/tree/master/DocMaterials/angang_shankthigh.png)
+![ShankThigh](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/angang_shankthigh.png)  
 Figure: Example of Shank-Thigh Angle-Angle plot demonstrating coordination patterns.
 
 Angle-angle plot that shows the coordination between the knee and hip joints.
@@ -122,7 +122,7 @@ plt.title('Knee-Hip Coordination')
 plt.savefig('24281 Trial 024_angang_kneehip.png')
 ```
 
-![KneeHip](https://github.com/USCBiomechanicsLab/labcodes/tree/master/DocMaterials/angang_kneehip.png)
+![KneeHip](https://github.com/USCBiomechanicsLab/labcodes/tree/master/DocMaterials/angang_kneehip.png)  
 Figure: Example of Knee-Hip Angle-Angle plot demonstrating coordination patterns.
 
 
