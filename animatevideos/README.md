@@ -1,8 +1,11 @@
 # Documentation- Animated Vieos
 
+### [Line Graph Tutorial](https://github.com/USCBiomechanicsLab/labcodes/blob/master/animatevideos/Example_LineGraph.md)
+
 ## Table of Contents
 
-### [animationgraph]
+
+### animationgraph
 #### [linegraph](#function-linegraph)
 
 End Table of Contents  
