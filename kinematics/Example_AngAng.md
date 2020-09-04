@@ -122,7 +122,7 @@ plt.title('Knee-Hip Coordination')
 plt.savefig('24281 Trial 024_angang_kneehip.png')
 ```
 
-![KneeHip](https://github.com/USCBiomechanicsLab/labcodes/tree/master/DocMaterials/angang_kneehip.png)  
+![KneeHip](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/angang_kneehip.png)  
 Figure: Example of Knee-Hip Angle-Angle plot demonstrating coordination patterns.
 
 
