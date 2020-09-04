@@ -74,6 +74,9 @@ This calculates the angle between two adjacent segments (ie. knee angle would be
 angles_joint = jointangle(data_digi, segments)
 ```
 
+#### Functions Used in this Section
+[calc_segmentangle](https://github.com/USCBiomechanicsLab/labcodes/blob/master/kinematics/README.md#function-calc_segmentangle)
+
 ### Convert to Degrees
 
 Convert both sets of angles from radians to degrees. 
