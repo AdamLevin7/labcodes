@@ -10,15 +10,140 @@ Maybe have a section to explain how environment works
 ### capture_area
 ### dataconversion_digi
 ### data_conversion_force
+#### [convertdata](#function-convertdata)
 ### derivative
 ### findframe
 ### [findplate](#function-findplate)
 ### findpoint
 ### pixelratios
-### projectiletraj
+#### [pix2m_fromplate](#function-pix2m_fromplate)
+#### [bw2pix](#function-bw2pix)
+### projectiletraj  
+
+End Table of Contents  <br/>
+
+  
+   
+## Script: data_conversion_force
+### Function convertdata
+
+### **Keywords:**
 
 
+### **Syntax:**
+```
+from dataconversion_force import convertdata
 
+transform_data = convertdata(data, mag2pix, pix2m, view = "fy",
+                             mode= "ind",
+                              platelocs =None, flip =None )
+                              
+```
+### **Description:**<br/>
+Series of modules to transform force data into video reference system.  
+Run 'main' function (convertdata) to use all modules
+ 
+### **Arguments:**
+
+#### *Inputs*
+
+   * **data:** DATAFRAME force data read in from Bioware (preferred from ImportForce_TXT.py)
+   * **mag2pix:** FLOAT64 magnitudeBW:pixel ratio obtained from bw2pix.py
+   * **pix2m**: DICT pixel:meter ratio separated into x and y from pix2m_fromplate
+   * **view**: STRING which dimension is parallel to image X (defalt='fy')  
+  
+![View Arg](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/View_ConvertData.png)<br/>
+Figure: Examples of different "view" options which puts force data in video reference system.
+   
+   * **mode:** STRING keep plates separate or join into single vecotr (default='ind')  
+![Mode Arg](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/Mode_ConvertData.png)<br/>
+Figure: Examples of how forces can be combined or left separate.
+   
+   * **platelocs:** DICT plate corner locations obtained from findplate.py (default=None)   
+   * **flip:** DICT Indicating how data should be flipped in video reference system
+   
+![Flip Arg](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/Flip_convertData.png)<br/>
+Figure: Examples of how forces can be combined or left separate.
+   
+#### *Outputs*
+
+   * **data_out:** DICT force data in video reference system (fx, fy, ax, ay).
+        Size dependent on number of plates/vectors.
+   
+### **Examples:**
+Helpful examples
+
+[Back to Table of Contents](#table-of-contents)     
+     
+## Script: pixelratios
+### Function bw2pix
+
+### **Keywords:**
+Ratio, Pixel, Meter, Bodyweight, BW
+
+### **Syntax:**
+```
+from pixelratios import bw2pix
+
+mag2pix = bw2pix(pix2m, bw, bwpermeter=8)
+```
+### **Description:**<br/>
+Calculate ratio of body weight to pixels in the video/image.
+
+![bw2pix Example](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/mag2pix_VectorChange.png)<br/>
+Figure: Example of how adjusting bwpermeter argument changes force vector length
+
+### **Arguments:**
+
+#### *Inputs*
+
+   * **pix2m:** FLOAT64 ratio of pixels:meter 
+   * **bw:** FLOAT64 body weight of individual
+   * **bwpermeter**: INT number of body weights in one meter (default=8)
+   
+#### *Outputs*
+
+   * **mag2pix:** FLOAT64 ratio of bodyweight:pixel
+   
+### **Examples:**
+Helpful examples
+
+[Back to Table of Contents](#table-of-contents)
+
+
+## Script: pixelratios
+### Function pix2m_fromplate
+
+### **Keywords:**
+Force, Plate, Ratio, Pixel, Meter
+
+### **Syntax:**
+```
+from pixelratios import pix2m_fromplate
+
+pix2m = pix2m_fromplate(plate_area, plate_dim)
+```
+### **Description:**<br/>
+Use the force plate dimensions from function *findplate* which selects the 4 corners of a forceplate to determine the number of pixels in a meter in the horizontal and vertical directions.
+
+![Pix2M Example](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/pix2m_ratio.png)<br/>
+Figure: Example pixel to meter ratio 
+
+### **Arguments:**
+
+#### *Inputs*
+
+   * **plate_area:** DICT plate dimension in pixels (preferably from findplate.py)  
+   * **plate_dim:** TUPLE dimension of plate in meters [(x, z) in image reference)]  
+   
+#### *Outputs*
+
+   * **pix2m:** DICT ratio of pixels:meter
+   
+### **Examples:**
+Helpful examples
+
+[Back to Table of Contents](#table-of-contents)
 
 
 ## Script: ImportForce_TXT
@@ -28,11 +153,11 @@ Maybe have a section to explain how environment works
 Import, Force, Text file, Bodyweight, BW, Sampling Rate, Rezero
 
 ### **Syntax:**
+```
+from ImportForce_TXT import ImportForce_TXT 
 
-* from *ImportForce_TXT* import *ImportForce_TXT *
-
-* data, sample, weight = *ImportForce_TXT*(file, rezero=None) 
-
+data, sample, weight = ImportForce_TXT(file, rezero=None) 
+```
 ### **Description:**<br/>
 Import force data from text file. <br/>
 Bodyweight values and sampling rate of force plate can also be pulled from the text file.<br/>
@@ -72,11 +197,11 @@ Helpful examples
 Contact, Intervals, Force, Threshold, Vertical 
 
 ### **Syntax:**
+```
+from FindContactIntervals import FindContactIntervals
 
-* from *FindContactIntervals* import *FindContactIntervals*
-
-* CI = *FindContactIntervals*(data, samp=1200, thresh=50) 
-
+CI = FindContactIntervals(data, samp=1200, thresh=50) 
+```
 ### **Description:**<br/>
 Finds the beginning and end of contact intervals when provided a single column vertical force data based on an input threshold.
 
@@ -110,15 +235,15 @@ Helpful examples
 Force, Plate, Identify, Corners, Find
 
 ### **Syntax:**
+```
+from findplate import findplate
 
-* from *findplate* import *findplate*
-
-* plate = *findplate*(file, framestart=0, label='') 
-
+plate = findplate(file, framestart=0, label='') 
+```
 ### **Description:**<br/>
-Identify 4 corners of a force plate(s) in an image.<br/>
+Identify 4 corners of a force plate(s) in an image.  
 
-![DataFrame Input](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/FindPlates_CornersExample.PNG)<br/>
+![DataFrame Input](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/findplate_platecorners.png)<br/>
 Figure: Example of 2 force plates with corners selected in the CCW direction starting from top left <br/>  
 
 ### **Arguments:**
