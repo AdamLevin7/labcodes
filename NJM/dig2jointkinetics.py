@@ -96,11 +96,11 @@ class dig2jk:
         w = fc / (self.samp_dig / 2)
         b, a = signal.butter(N/2, w, 'low')
         # digitized data
-        self.data_dig_filt = pd.DataFrame({'time': self.data_dig.iloc[:,0]}).join(self.data_dig.iloc[:, 1:].apply(lambda x: x.interpolate(method='spline', order=3)).apply(lambda x: signal.filtfilt(b, a, x)))
+        self.data_dig_filt = pd.DataFrame({'time': self.data_dig.iloc[:,0]}).join(self.data_dig.iloc[:, 1:].apply(lambda x: x.interpolate(method='spline', order=3).fillna(method='bfill')).apply(lambda x: signal.filtfilt(b, a, x)))
         # center of mass data
-        self.data_cm_filt = pd.DataFrame({'time': self.data_cm.iloc[:,0]}).join(self.data_cm.iloc[:, 1:].apply(lambda x: x.interpolate(method='spline', order=3)).apply(lambda x: signal.filtfilt(b, a, x)))
+        self.data_cm_filt = pd.DataFrame({'time': self.data_cm.iloc[:,0]}).join(self.data_cm.iloc[:, 1:].apply(lambda x: x.interpolate(method='spline', order=3).fillna(method='bfill')).apply(lambda x: signal.filtfilt(b, a, x)))
         # segment length
-        self.data_seglength_filt = pd.DataFrame({'time': data_seglength.iloc[:,0]}).join(data_seglength.iloc[:, 1:].apply(lambda x: x.interpolate(method='spline', order=3)).apply(lambda x: signal.filtfilt(b, a, x)))
+        self.data_seglength_filt = pd.DataFrame({'time': data_seglength.iloc[:,0]}).join(data_seglength.iloc[:, 1:].apply(lambda x: x.interpolate(method='spline', order=3).fillna(method='bfill')).apply(lambda x: signal.filtfilt(b, a, x)))
         
         ### interpolate kinematic data
         # digitized data
@@ -179,13 +179,13 @@ class dig2jk:
         w = fc / (self.samp_force / 2)
         b, a = signal.butter(N/2, w, 'low')
         # center of mass velocities
-        self.data_cm_vel = centraldiff(self.data_cm_interp, (1/self.samp_force))
+        data_cm_vel = centraldiff(self.data_cm_interp, (1/self.samp_force))
         # filter center of mass velocities
-        self.data_cm_vel_filt = pd.DataFrame({'time': self.xvals}).join(self.data_cm_vel.iloc[:, 1:].apply(lambda x: x.interpolate(method='spline', order=3).fillna(method='bfill')).apply(lambda x: signal.filtfilt(b, a, x)))
+        self.data_cm_vel_filt = pd.DataFrame({'time': self.xvals}).join(data_cm_vel.iloc[:, 1:].apply(lambda x: x.interpolate(method='spline', order=3).fillna(method='bfill')).apply(lambda x: signal.filtfilt(b, a, x)))
         # center of mass accelerations
-        self.data_cm_acc = centraldiff(self.data_cm_vel_filt, (1/self.samp_force))
+        data_cm_acc = centraldiff(self.data_cm_vel_filt, (1/self.samp_force))
         # filter center of mass accelerations
-        self.data_cm_acc_filt = pd.DataFrame({'time': self.xvals}).join(self.data_cm_acc.iloc[:, 1:].apply(lambda x: x.interpolate(method='spline', order=3).fillna(method='bfill')).apply(lambda x: signal.filtfilt(b, a, x)))
+        self.data_cm_acc_filt = pd.DataFrame({'time': self.xvals}).join(data_cm_acc.iloc[:, 1:].apply(lambda x: x.interpolate(method='spline', order=3).fillna(method='bfill')).apply(lambda x: signal.filtfilt(b, a, x)))
     
     
     #%%    
