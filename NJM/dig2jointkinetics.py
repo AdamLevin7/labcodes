@@ -390,13 +390,13 @@ class dig2jk_format:
         
         
     def data_reformat(self, view="fy", mode="combined", flipy_digi='no',
-                      con_num=0, zero_thresh=16, plate_area=None,
+                      con_num=0, zero_thresh=16, plate_area=None, ci_thresh=16,
                       plate_dim=(0.9, 0.6), bwpermeter=2, samp_vid=240, samp_force=1200):
         
         """ find contact interval for force and digitized data """
         con_plate_fz = [s + '_Fz' for s in self.con_plate]
         # contact interval for force data
-        ci_force = FindContactIntervals(self.data_force[con_plate_fz].sum(axis=1), samp_force, thresh=16)
+        ci_force = FindContactIntervals(self.data_force[con_plate_fz].sum(axis=1), samp_force, thresh=ci_thresh)
         # find contact duration in digitized data
         frame_finalcont = self.con_frame + int((ci_force['End'][con_num] - ci_force['Start'][con_num]) / (samp_force / samp_vid)) + 1
         # set contact interval for digitized data
@@ -435,17 +435,19 @@ class dig2jk_format:
         if plate_area == None:
             # identify force plate location in image
             plate_area = findplate(self.file_vid, label="Select all plates in order in force file")
+        # save to object
+        self.plate_area = plate_area
         
         
         """ calculate pix2m and mag2pix """
-        pix2m = pix2m_fromplate(plate_area, plate_dim)
-        mag2pix = bw2pix(pix2m['x'], self.bw, bwpermeter=bwpermeter)
+        self.pix2m = pix2m_fromplate(self.plate_area, plate_dim)
+        self.mag2pix = bw2pix(self.pix2m['x'], self.bw, bwpermeter=bwpermeter)
         
         
         """ convert force data pixels """
         # create object
-        transform_data = convertdata(data_force_crop, mag2pix, pix2m, view=view, mode=mode,
-                                     platelocs=plate_area, flip=self.flip)
+        transform_data = convertdata(data_force_crop, self.mag2pix, self.pix2m, view=view, mode=mode,
+                                     platelocs=self.plate_area, flip=self.flip)
         # run function to convert to meters in video reference system
         transform_data.data2meter(file_vid=self.file_vid)
         # [0] is selecting the first contact interval
@@ -466,9 +468,9 @@ class dig2jk_format:
         
         """ convert to meters """
         # convert digitized data to meters
-        self.data_digi_crop_m = pd.DataFrame(data_digi_crop.iloc[:,0]).join(data_digi_crop.iloc[:,1:] * pix2m['x'])
+        self.data_digi_crop_m = pd.DataFrame(data_digi_crop.iloc[:,0]).join(data_digi_crop.iloc[:,1:] * self.pix2m['x'])
         # convert center of mass data to meters
-        self.data_cm_crop_m = pd.DataFrame(data_cm_crop.iloc[:,0]).join(data_cm_crop.iloc[:,1:] * pix2m['x'])
+        self.data_cm_crop_m = pd.DataFrame(data_cm_crop.iloc[:,0]).join(data_cm_crop.iloc[:,1:] * self.pix2m['x'])
         
         
         """ format data """
