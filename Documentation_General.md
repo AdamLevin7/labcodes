@@ -9,6 +9,7 @@ Maybe have a section to explain how environment works
 ### Impulse_Velocity
 ### capture_area
 ### dataconversion_digi
+#### [dltdv_import](#function-dltdv_import)
 ### data_conversion_force
 #### [convertdata](#function-convertdata)
 ### derivative
@@ -21,6 +22,44 @@ Maybe have a section to explain how environment works
 ### projectiletraj  
 
 End Table of Contents  <br/>
+
+
+## Script: dataconversion_digi
+### Function dltdv_import
+
+### **Keywords:**
+Digitize, Load, Data, DLTV, MATLAB, Body, Points
+
+
+### **Syntax:**
+```
+from dataconversion_digi import dltdv_import
+
+data_digi, frame_digi_start, frame_digi_end  = dltdv_import(file_digi, file_vid=file_video, flipy='yes')
+                              
+```
+### **Description:**<br/>
+Module for importing digitized data from MATLAB DLTdv code created by group at UNC Chapel Hill.   
+[DLTdv Website Link](http://biomech.web.unc.edu/dltdv/)
+ 
+### **Arguments:**
+
+#### *Inputs*
+
+   * **file:** STRING full file path of digitized data using DLTdv 
+   * **file_vid:** STRING full file path of digitized video 
+   * **flipy**: STRING 'yes' to flip y-axis of digitized and center of mass data
+   
+#### *Outputs*
+
+   * **data_digi:** DATAFRAME Digitized data in pandas dataframe
+   * **frame_digi_start:** INT First frame where all data is non nan
+   * **frame_digi_end:** INT Last frame where all data is not nan
+   
+### **Examples:**
+Helpful examples
+
+[Back to Table of Contents](#table-of-contents)  
 
   
    
