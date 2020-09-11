@@ -11,7 +11,7 @@ End Table of Contents  <br/>
 
 ## Script: segdim_deleva
 ### Function segmentdim
-[Link to segdim_deleva Code](https://github.com/USCBiomechanicsLab/labcodes/blob/master/CalcCOM/segdim_deleva.py)
+[Link to Code: segdim_deleva](https://github.com/USCBiomechanicsLab/labcodes/blob/master/CalcCOM/segdim_deleva.py)
 
 ### **Keywords:**
 Deleva, Segments, Mass, Length, Percent, Weight 
