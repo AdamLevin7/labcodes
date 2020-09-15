@@ -9,10 +9,11 @@ Maybe have a section to explain how environment works
 ### Impulse_Velocity
 ### capture_area
 ### dataconversion_digi
+#### [dltdv_import](#function-dltdv_import)
 ### data_conversion_force
 #### [convertdata](#function-convertdata)
 ### derivative
-### findframe
+### [findframe](#function-findframe)
 ### [findplate](#function-findplate)
 ### findpoint
 ### pixelratios
@@ -21,6 +22,96 @@ Maybe have a section to explain how environment works
 ### projectiletraj  
 
 End Table of Contents  <br/>
+
+
+## Script: findframe
+### Function findframe
+[Link to findframe Code](https://github.com/USCBiomechanicsLab/labcodes/blob/master/findframe.py)
+
+### **Keywords:**
+Find, Frame, Sync, Video, Data
+
+
+### **Syntax:**
+```
+from findframe import findframe
+
+cnt, key = findframe(file, label, framestart)
+                              
+```
+### Dependencies 
+* **cv2:** opencv 
+
+### **Description:**<br/>
+Exports frame number of last frame identified. User manually moves through video
+    searching for frame of interest. When frame is found, click 'q' or 'esc' to exit.   
+
+The following buttons shift the current frame by:  
+    k : -100  
+    m : -10  
+    , : -1  
+    . : +1  
+    / : +10  
+    ; : +100  
+    
+If the trackbar was manually moved, user must press a key before it will update.  
+   
+ 
+### **Arguments:**
+
+#### *Inputs*
+
+   * **file:** STR full file name of video 
+   * **label:** STR text to be displayed in window (default: Find Frame)
+   * **framestart**: INT start search at this frame (default: 0)
+   
+#### *Outputs*
+
+   * **cnt:** INT frame number when video was closed
+   * **key:** INT key identifier for last selected key
+   
+### **Examples:**
+Helpful examples
+
+[Back to Table of Contents](#table-of-contents)  
+
+
+## Script: dataconversion_digi
+### Function dltdv_import
+
+### **Keywords:**
+Digitize, Load, Data, DLTV, MATLAB, Body, Points
+
+
+### **Syntax:**
+```
+from dataconversion_digi import dltdv_import
+
+data_digi, frame_digi_start, frame_digi_end  = dltdv_import(file_digi, file_vid=file_video, flipy='yes')
+                              
+```
+### **Description:**<br/>
+Module for importing digitized data from MATLAB DLTdv code created by group at UNC Chapel Hill.   
+[DLTdv Website Link](http://biomech.web.unc.edu/dltdv/)
+ 
+### **Arguments:**
+
+#### *Inputs*
+
+   * **file:** STRING full file path of digitized data using DLTdv 
+   * **file_vid:** STRING full file path of digitized video 
+   * **flipy**: STRING 'yes' to flip y-axis of digitized and center of mass data
+   
+#### *Outputs*
+
+   * **data_digi:** DATAFRAME Digitized data in pandas dataframe
+   * **frame_digi_start:** INT First frame where all data is non nan
+   * **frame_digi_end:** INT Last frame where all data is not nan
+   
+### **Examples:**
+Helpful examples
+
+[Back to Table of Contents](#table-of-contents)  
 
   
    
