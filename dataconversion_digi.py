@@ -10,47 +10,86 @@ import numpy as np
 import cv2
 
 #%%
-def dlc_import(file, filetype='h5', thresh=0.95, file_vid=None, flipy='yes'):
+def dlc_import(file, filetype='h5', thresh=0.95, file_vid=None, flipy='yes', madlc='no'):
     import os
     
     
     if filetype == 'h5':
-        """ load data """
-        data_in = pd.read_hdf(file)
+        # if multi-animal DLC
+        if madlc == 'yes':
+            """ load data """
+            data_in = pd.read_hdf(file)
+            
+            """ add the coordinate to the location name """
+            colnames = []
+            colnames_og = data_in.columns
+            for cnt in range(len(colnames_og)):
+                colnames.append(colnames_og[cnt][2] + '_' + colnames_og[cnt][3])
+            
+            """ convert into new data frame """
+            # remove header rows and set column names
+            data = pd.DataFrame(data_in.values, columns=colnames)
+            
+            """ flip y-axis of digitized and center of mass data """
+            if flipy == 'yes':
+                # find height of image (max y value)
+                cap = cv2.VideoCapture(file_vid)
+                frame_height = int(cap.get(4))
+                cap.release()
+                # subtract digitzed loction from frame height (only y columns)
+                data.iloc[:,data.columns.str.contains('_y')] = frame_height - data.filter(regex = '_y')
+            
+            """ subset digitized location and likelihood scores """
+            # likelihood scores
+            data_like = data.filter(regex = 'likelihood')
+            # digitized data
+            data_out = data.iloc[:,~data.columns.str.contains('likelihood', regex=False)]
+            
+            """ create frame column and join with digitized data """
+            data_out = pd.DataFrame({'frame': range(0,len(data_out))}).join(data_out)
         
-        """ add the coordinate to the location name """
-        colnames = []
-        colnames_og = data_in.columns
-        for cnt in range(len(colnames_og)):
-            colnames.append(colnames_og[cnt][2] + '_' + colnames_og[cnt][3])
+            """ estimate when body is in view based on likelihood scores """
+            # find first frame where all data is above threshold
+            frame_first = np.max((data_like > thresh).idxmax())
+            # find last frame where all data is above threshold (flipped data)
+            frame_last = np.min((data_like.iloc[::-1] > thresh).idxmax())
+        else:
+            """ load data """
+            data_in = pd.read_hdf(file)
+            
+            """ add the coordinate to the location name """
+            colnames = []
+            colnames_og = data_in.columns
+            for cnt in range(len(colnames_og)):
+                colnames.append(colnames_og[cnt][1] + '_' + colnames_og[cnt][2])
+            
+            """ convert into new data frame """
+            # remove header rows and set column names
+            data = pd.DataFrame(data_in.values, columns=colnames)
+            
+            """ flip y-axis of digitized and center of mass data """
+            if flipy == 'yes':
+                # find height of image (max y value)
+                cap = cv2.VideoCapture(file_vid)
+                frame_height = int(cap.get(4))
+                cap.release()
+                # subtract digitzed loction from frame height (only y columns)
+                data.iloc[:,data.columns.str.contains('_y')] = frame_height - data.filter(regex = '_y')
+            
+            """ subset digitized location and likelihood scores """
+            # likelihood scores
+            data_like = data.filter(regex = 'likelihood')
+            # digitized data
+            data_out = data.iloc[:,~data.columns.str.contains('likelihood', regex=False)]
+            
+            """ create frame column and join with digitized data """
+            data_out = pd.DataFrame({'frame': range(0,len(data_out))}).join(data_out)
         
-        """ convert into new data frame """
-        # remove header rows and set column names
-        data = pd.DataFrame(data_in.values, columns=colnames)
-        
-        """ flip y-axis of digitized and center of mass data """
-        if flipy == 'yes':
-            # find height of image (max y value)
-            cap = cv2.VideoCapture(file_vid)
-            frame_height = int(cap.get(4))
-            cap.release()
-            # subtract digitzed loction from frame height (only y columns)
-            data.iloc[:,data.columns.str.contains('_y')] = frame_height - data.filter(regex = '_y')
-        
-        """ subset digitized location and likelihood scores """
-        # likelihood scores
-        data_like = data.filter(regex = 'likelihood')
-        # digitized data
-        data_out = data.iloc[:,~data.columns.str.contains('likelihood', regex=False)]
-        
-        """ create frame column and join with digitized data """
-        data_out = pd.DataFrame({'frame': range(0,len(data_out))}).join(data_out)
-    
-        """ estimate when body is in view based on likelihood scores """
-        # find first frame where all data is above threshold
-        frame_first = np.max((data_like > thresh).idxmax())
-        # find last frame where all data is above threshold (flipped data)
-        frame_last = np.min((data_like.iloc[::-1] > thresh).idxmax())
+            """ estimate when body is in view based on likelihood scores """
+            # find first frame where all data is above threshold
+            frame_first = np.max((data_like > thresh).idxmax())
+            # find last frame where all data is above threshold (flipped data)
+            frame_last = np.min((data_like.iloc[::-1] > thresh).idxmax())
     
     elif filetype == 'csv':
         """ load data """
@@ -161,12 +200,13 @@ def dltdv_import(file, file_vid=None, flipy='no'):
     
     """ flip y-axis of digitized and center of mass data """
     if flipy == 'yes':
+        print("this should be working")
         # find height of image (max y value)
         cap = cv2.VideoCapture(file_vid)
         frame_height = int(cap.get(4))
         cap.release()
         # subtract digitzed loction from frame height (only y columns)
-        data_out.iloc[:,data_out.columns.str.contains('_y')] = frame_height - data_out.filter(regex = '_y')
+        data_out[data_out.columns[data_out.columns.str.contains('_y')]] = frame_height - data_out.filter(regex = '_y')
     
     """ estimate when body is in view based on likelihood scores """
     # find rows where all columns are nan
@@ -185,7 +225,7 @@ class convertdigi:
     
     def __init__(self, file, thresh=0.95, idfilt=None):
         """ give user notice that it will be removed in future """
-        display("WARNING: This is using an old version. Please see dataconversion_digi.py's docs to see how to use updated version.")
+        print("WARNING: This is using an old version. Please see dataconversion_digi.py's docs to see how to use updated version.")
         """ initialize variables """
         self.file = file
         self.thresh = thresh
