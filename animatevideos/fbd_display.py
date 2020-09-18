@@ -70,6 +70,8 @@ class fbd_vis():
         # maximize figure
         manager = plt.get_current_fig_manager()
         manager.window.showMaximized()
+        # manually set window size
+        self.fig.set_size_inches(1920/self.fig.dpi, 960/self.fig.dpi)
         # create 3x2 with second column double the width
         gs = self.fig.add_gridspec(3,2, width_ratios=[1,2])
         self.f_ax1 = self.fig.add_subplot(gs[0:, 0])
@@ -315,6 +317,8 @@ class fbd_vis():
         
         """ create animation """
         ani = matplotlib.animation.FuncAnimation(self.fig, animate, fargs=( ),
-                                                 frames=len(self.data_njm), interval=0, repeat=False) 
-        ani.save(filename, fps=1, extra_args=['-vcodec', 'libx264'])
+                                                 frames=len(self.data_njm), interval=1, repeat=False)
+        dpi = int(self.fig.dpi)
+        writer = matplotlib.animation.writers['ffmpeg'](fps=30)
+        ani.save(filename, writer=writer, dpi=dpi)
             
