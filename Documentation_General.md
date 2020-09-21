@@ -2,26 +2,243 @@
 
 ## Table of Contents 
 
-### Environment
-Maybe have a section to explain how environment works
+### [Environment](https://github.com/USCBiomechanicsLab/labcodes/blob/master/uscbrl_env.yaml)  
+* .yaml file
+
 ### [FindContactIntervals](#function-findcontactintervals)
 ### [ImportForce_TXT](#function-importforce_txt)
 ### Impulse_Velocity
+* #### [imp_vel](#function-imp_vel)
 ### capture_area
+* #### [findarea](#function-findarea)
 ### dataconversion_digi
-#### [dltdv_import](#function-dltdv_import)
-### data_conversion_force
-#### [convertdata](#function-convertdata)
+* #### [dltdv_import](#function-dltdv_import)
+### dataconversion_force
+* #### [convertdata](#function-convertdata)
 ### derivative
+* #### [centraldiff](#function-centraldiff)
 ### [findframe](#function-findframe)
 ### [findplate](#function-findplate)
 ### findpoint
+* #### [clickpoint](#function-clickpoint)
 ### pixelratios
-#### [pix2m_fromplate](#function-pix2m_fromplate)
-#### [bw2pix](#function-bw2pix)
+* #### [pix2m_fromplate](#function-pix2m_fromplate)
+* #### [bw2pix](#function-bw2pix)
 ### projectiletraj  
+* #### [flighttraj](#function-flighttraj)
 
 End Table of Contents  <br/>
+
+## Script: projectiletraj
+### Function flighttraj
+[Link to projectiletraj Code](https://github.com/USCBiomechanicsLab/labcodes/blob/master/projectiletraj.py)
+
+### **Keywords:**
+Projectile, Trajectory, Position, Flight, X, Y, Position
+
+### **Syntax:**
+```
+from projectiletraj import flighttraj
+
+pos = flighttraj(x_i, y_i, vx_i, vy_i, t_flight, samp)                              
+```
+### Dependencies 
+* **pd:** pandas 
+* **np:** numpy 
+
+### **Description:**<br/>
+Create data frame containing time, x, and y position of object during flight.
+Uses equations of projectile motion.
+   
+### **Arguments:**
+
+#### *Inputs*
+
+   * **x_i:** FLOAT initial x position (m)
+   * **y_i:** FLOAT initial y position (m)
+   * **vx_i:** FLOAT initial x velocity (m/s)
+   * **vy_i:** FLOAT initial y velocity (m/s)
+   * **t_flight:** FLOAT flight time (s)
+   * **samp:** FLOAT sampling rate of video (Hz)
+
+#### *Outputs*
+
+   * **pos:** DATAFRAME contains array of time, x, and y position during flight
+   
+### **Examples:**
+Helpful examples
+
+[Back to Table of Contents](#table-of-contents)
+
+
+## Script: derivative
+### Function centraldiff
+[Link to derivative Code](https://github.com/USCBiomechanicsLab/labcodes/blob/master/derivative.py)
+
+### **Keywords:**
+Derivative, Central Difference, CentralDiff, Signal, Derive
+
+### **Syntax:**
+```
+from derivative import central_diff
+
+d = central_diff(f, dt)                              
+```
+### Dependencies 
+* **pd:** pandas 
+* **np:** numpy 
+
+### **Description:**<br/>
+Uses the central difference method for all frames except the first and last
+        frame. It uses the forward and backward difference method for the first
+        and last frame, respectively.
+   
+### **Arguments:**
+
+#### *Inputs*
+
+   * **f:** DATAFRAME data signal to be derived
+   * **dt:** FLOAT time step
+   
+#### *Outputs*
+
+   * **d:** DATAFRAME derived data signal
+   
+### **Examples:**
+Helpful examples
+
+[Back to Table of Contents](#table-of-contents)
+
+
+## Script: Impulse_Velocity
+### Function imp_vel
+[Link to Impulse_Velocity Code](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Impulse_Velocity.py)
+
+### **Keywords:**
+Impulse, Velocity, Duration, Contact Interval
+
+### **Syntax:**
+```
+from Impulse_Velocity import imp_vel
+
+imp, velD = imp_vel(data, bw, samp)                              
+```
+### Dependencies 
+* **pd:** pandas 
+
+### **Description:**<br/>
+Calculate impulse and change in velocity throughout duration.
+   
+### **Arguments:**
+
+#### *Inputs*
+
+   * **data:** DATAFRAME Mx3 dataframe of force data (includes X, Y, and Z !) 
+   * **bw:** FLOAT participant's body weight in Newtons
+   * **samp:** INT sampling rate of force plate (default: 1200)
+   
+#### *Outputs*
+
+   * **imp:** DATAFRAME net impulse of X, Y, Z, and positive impulse Z (Ns)
+   * **velD:** DATAFRAME change in velocity of X, Y, and Z (m/s)
+   
+### **Examples:**
+Helpful examples
+
+[Back to Table of Contents](#table-of-contents)
+
+
+## Script: capture_area
+### Function findarea
+[Link to capture_area Code](https://github.com/USCBiomechanicsLab/labcodes/blob/master/capture_area.py)
+
+### **Keywords:**
+Find, Area, Image, Box, Region, Select
+
+### **Syntax:**
+```
+from capture_area import findarea
+
+ref_point = findarea(video, label, frame)                              
+```
+### Dependencies 
+* **cv2:** opencv 
+
+### **Description:**<br/>
+Outputs the area of the image that is selected.
+
+Steps:
+1) Click-drag over the area you want selected.
+2) If area selection is good, press 'c' to view cropped image
+    * If area selection is poor, press 'r' to recrop, and repeat Step 2 
+       
+ 
+### **Arguments:**
+
+#### *Inputs*
+
+   * **video:** STR full file name of video 
+   * **label:** STR Label to be displayed in window (default='')
+   * **frame**: INT frame number of the video to use a selection imgage (default=0)
+   
+#### *Outputs*
+
+   * **ref_point:** LIST contains two tuple with x,y location of top-left and bottom-right
+        location of the selected area
+   
+### **Examples:**
+Helpful examples
+
+[Back to Table of Contents](#table-of-contents)
+
+
+
+
+## Script: findpoint
+### Function clickpoint
+[Link to findpoint Code](https://github.com/USCBiomechanicsLab/labcodes/blob/master/findpoint.py)
+
+### **Keywords:**
+Find, Point, Click, Double
+
+
+### **Syntax:**
+```
+from findpoint import clickpoint
+
+ix1, iy1 = clickpoint(file, label, framestart)                              
+```
+### Dependencies 
+* **cv2:** opencv 
+* **capture_area:** [USCBRL Function](#function-findarea) 
+
+### **Description:**<br/>
+Identifies x and y locations of mouse point that was double clicked.
+
+Steps:  
+1) Crop original image to zoom into plate(s) by click, hold and drag over area  
+2) If cropped image is good, press 'c', then press 'esc' on next window  
+   * If cropped image is not good, press 'r' with green box present, or 'o'  if new image is up    
+3) Double-click the location(s) of interest. You may identify objects.   
+       
+ 
+### **Arguments:**
+
+#### *Inputs*
+
+   * **file:** STR full file name of video 
+   * **label:** STR a label to be displayed in window (default='')
+   * **framestart**: INT frame number to use as selection image (default=0)
+   
+#### *Outputs*
+
+   * **cnt:** LIST x location of each double-click (pixels)
+   * **key:** LIST y location of each double-click (pixels)
+   
+### **Examples:**
+Helpful examples
+
+[Back to Table of Contents](#table-of-contents)
 
 
 ## Script: findframe
@@ -36,8 +253,7 @@ Find, Frame, Sync, Video, Data
 ```
 from findframe import findframe
 
-cnt, key = findframe(file, label, framestart)
-                              
+cnt, key = findframe(file, label, framestart)                            
 ```
 ### Dependencies 
 * **cv2:** opencv 
@@ -87,8 +303,7 @@ Digitize, Load, Data, DLTV, MATLAB, Body, Points
 ```
 from dataconversion_digi import dltdv_import
 
-data_digi, frame_digi_start, frame_digi_end  = dltdv_import(file_digi, file_vid=file_video, flipy='yes')
-                              
+data_digi, frame_digi_start, frame_digi_end  = dltdv_import(file_digi, file_vid=file_video, flipy='yes')                              
 ```
 ### **Description:**<br/>
 Module for importing digitized data from MATLAB DLTdv code created by group at UNC Chapel Hill.   
@@ -127,8 +342,7 @@ from dataconversion_force import convertdata
 
 transform_data = convertdata(data, mag2pix, pix2m, view = "fy",
                              mode= "ind",
-                              platelocs =None, flip =None )
-                              
+                              platelocs =None, flip =None )                              
 ```
 ### **Description:**<br/>
 Series of modules to transform force data into video reference system.  
