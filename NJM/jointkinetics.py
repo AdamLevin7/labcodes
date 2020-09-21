@@ -62,7 +62,7 @@ def calcnjm(segname, m, ax, ay, Rxd, Ryd, r_d, r_p, Icm, alpha, njm_d):
     
     #%% proximal-distal net joint moments
     # distal moment
-    m_d = np.cross(np.stack((Rxd, Ryd), axis=1), r_d,)
+    m_d = np.cross(np.stack((Rxd, Ryd), axis=1), r_d)
     # proximal moment
     m_p = np.cross(np.stack((Rxp, Ryp), axis=1), r_p)
     
