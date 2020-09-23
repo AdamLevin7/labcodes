@@ -5,19 +5,21 @@ Created on Tue Sep 22 23:04:16 2020
 pulleventdata_njm
     Pull the variables needed to calculate NJMs from Python structures for a specific event using the time.
     
+Modules:
+    find_nearest: Function pulled from internet for finding value closest to input value
+    pulleventvars: Module that extracts data for an event to calculate NJMs by hand. 
+    
 Inputs
     time: NUM Numerical value of the time of interest
     data_reformat_obj: OBJ Python structure with data of interest
     data_njm: DATAFRAME pandas dataframe with njm variables
         
 Outputs
-    ** TBD 
-    eventvars: ?? Probably an object with all the values in it?
+    eventvars: LIST containing all data needed to calculate NJM
     
 Dependencies
     pandas
     numpy
-    ** TBD
     
 Syntax
     eventvarstest = pulleventvars(time=0.053, data_reformat_obj=data_reformat_obj, data_njm=data_njm)
@@ -54,13 +56,15 @@ def pulleventvars(time, data_reformat_obj, data_njm):
     # Find the NJM variables for the event
     njm_event = data_njm.iloc[ind2]
     
+    # Pull the segment parameters (mass and radius of gyration)
+    segparams = data_reformat_obj.segments
+    
     # Create object that contains all necessary variables
     ## Should definitely create a class and fix this but feeling lazy for now*
     
-    eventvars = [endptlocs_event, cmlocs_event, force_event, njm_event]
+    eventvars = [endptlocs_event, cmlocs_event, force_event, njm_event, segparams]
         
     return eventvars
-
 
 
 
