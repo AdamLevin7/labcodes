@@ -40,6 +40,9 @@ if creating visual at one instant...
 (you will need to manually save image if that is what is wanted)
 """
 fbd_obj.fbd_update()
+# change to diferent time
+fbd_obj.cnt = 4423
+fbd_obj.fbd_update()
 
 """
 if create full animation video...
