@@ -75,32 +75,62 @@ class fbd_vis():
         # create 3x2 with second column double the width
         gs = self.fig.add_gridspec(3,2, width_ratios=[1,2])
         self.f_ax1 = self.fig.add_subplot(gs[0:, 0])
+        self.f_ax1.xaxis.set_visible(False)
+        self.f_ax1.yaxis.set_visible(False)
         self.f_ax2 = self.fig.add_subplot(gs[0,-1])
         self.f_ax3 = self.fig.add_subplot(gs[1,-1])
         self.f_ax4 = self.fig.add_subplot(gs[-1,-1])
         
         """ plot moment time curves and move time tracer along x-axis """
         ### foot
-        self.f_ax4.plot(self.data_njm['time'], self.data_njm['foot_md'], '#BEBCC5', label='Distal NJF Moment')
-        self.f_ax4.plot(self.data_njm['time'], self.data_njm['foot_mp'], '#F4D4D4', label='Proximal NJF Moment')
-        self.f_ax4.plot(self.data_njm['time'], self.data_njm['foot_njmd'], '#DCB69F', label='Distal NJM Moment')
-        self.f_ax4.plot(self.data_njm['time'], self.data_njm['foot_njmp'], '#342A1F', label='Proximal NJM Moment')
+        self.f_ax4.plot(self.data_njm['time'], self.data_njm['foot_md'],
+                        '#BEBCC5', label='Distal NJF Moment')
+        self.f_ax4.plot(self.data_njm['time'], self.data_njm['foot_mp'],
+                        '#F4D4D4', label='Proximal NJF Moment')
+        self.f_ax4.plot(self.data_njm['time'], self.data_njm['foot_njmd'],
+                        '#DCB69F', label='Distal NJM Moment')
+        self.f_ax4.plot(self.data_njm['time'], self.data_njm['foot_njmp'],
+                        '#342A1F', label='Proximal NJM Moment')
+        self.f_ax4.plot(self.data_njm['time'], self.data_njm['foot_icm']*self.data_njm['foot_alpha'],
+                        '#342A1F', linestyle='--', label='Icm * alpha')
+        self.f_ax4.hlines(0, xmin=self.data_njm['time'].iloc[0],
+                          xmax=self.data_njm['time'].iloc[-1], color='k')
         self.f_ax4.set_ylim(-600, 600)
         self.f_ax4.set_title('Foot')
+        self.f_ax4.set_ylabel('Moment (Nm)')
+        self.f_ax4.set_xlabel('Time (s)')
         ### shank
-        self.f_ax3.plot(self.data_njm['time'], self.data_njm['shank_md'], '#BEBCC5', label='Distal NJF Moment')
-        self.f_ax3.plot(self.data_njm['time'], self.data_njm['shank_mp'], '#F4D4D4', label='Proximal NJF Moment')
-        self.f_ax3.plot(self.data_njm['time'], self.data_njm['shank_njmd'], '#DCB69F', label='Distal NJM Moment')
-        self.f_ax3.plot(self.data_njm['time'], self.data_njm['shank_njmp'], '#342A1F', label='Proximal NJM Moment')
+        self.f_ax3.plot(self.data_njm['time'], self.data_njm['shank_md'],
+                        '#BEBCC5', label='Distal NJF Moment')
+        self.f_ax3.plot(self.data_njm['time'], self.data_njm['shank_mp'],
+                        '#F4D4D4', label='Proximal NJF Moment')
+        self.f_ax3.plot(self.data_njm['time'], self.data_njm['shank_njmd'],
+                        '#DCB69F', label='Distal NJM Moment')
+        self.f_ax3.plot(self.data_njm['time'], self.data_njm['shank_njmp'],
+                        '#342A1F', label='Proximal NJM Moment')
+        self.f_ax3.plot(self.data_njm['time'], self.data_njm['shank_icm']*self.data_njm['shank_alpha'],
+                        '#342A1F', linestyle='--', label='Icm * alpha')
+        self.f_ax3.hlines(0, xmin=self.data_njm['time'].iloc[0],
+                          xmax=self.data_njm['time'].iloc[-1], color='k')
         self.f_ax3.set_ylim(-600, 600)
         self.f_ax3.set_title('Shank')
+        self.f_ax3.set_ylabel('Moment (Nm)')
         ### thigh
-        self.f_ax2.plot(self.data_njm['time'], self.data_njm['thigh_md'], '#BEBCC5', label='Distal NJF Moment')
-        self.f_ax2.plot(self.data_njm['time'], self.data_njm['thigh_mp'], '#F4D4D4', label='Proximal NJF Moment')
-        self.f_ax2.plot(self.data_njm['time'], self.data_njm['thigh_njmd'], '#DCB69F', label='Distal NJM Moment')
-        self.f_ax2.plot(self.data_njm['time'], self.data_njm['thigh_njmp'], '#342A1F', label='Proximal NJM Moment')
+        self.f_ax2.plot(self.data_njm['time'], self.data_njm['thigh_md'],
+                        '#BEBCC5', label='Distal NJF Moment')
+        self.f_ax2.plot(self.data_njm['time'], self.data_njm['thigh_mp'],
+                        '#F4D4D4', label='Proximal NJF Moment')
+        self.f_ax2.plot(self.data_njm['time'], self.data_njm['thigh_njmd'],
+                        '#DCB69F', label='Distal NJM Moment')
+        self.f_ax2.plot(self.data_njm['time'], self.data_njm['thigh_njmp'],
+                        '#342A1F', label='Proximal NJM Moment')
+        self.f_ax2.plot(self.data_njm['time'], self.data_njm['thigh_icm']*self.data_njm['thigh_alpha'],
+                        '#342A1F', linestyle='--', label='Icm * alpha')
+        self.f_ax2.hlines(0, xmin=self.data_njm['time'].iloc[0],
+                          xmax=self.data_njm['time'].iloc[-1], color='k')
         self.f_ax2.set_ylim(-600, 600)
         self.f_ax2.set_title('Thigh')
+        self.f_ax2.set_ylabel('Moment (Nm)')
         # add legends
         self.f_ax4.legend()
         self.f_ax3.legend()
@@ -124,6 +154,19 @@ class fbd_vis():
         
         import matplotlib.pyplot as plt
         import matplotlib.patheffects as pe
+        
+        """ add vertical time line """
+        if hasattr(self, 'line4'):
+            #var_exists = True
+            (self.line4).remove()
+            (self.line3).remove()
+            (self.line2).remove()
+        self.line4 = self.f_ax4.vlines(self.data_njm['time'][self.cnt],
+                                       ymin=-600, ymax=600, color='k')
+        self.line3 = self.f_ax3.vlines(self.data_njm['time'][self.cnt],
+                                       ymin=-600, ymax=600, color='k')
+        self.line2 = self.f_ax2.vlines(self.data_njm['time'][self.cnt],
+                                       ymin=-600, ymax=600, color='k')
         
         """ identify labels for segments """
         toe_x = 'toe_' + self.side + '_x'
@@ -159,6 +202,14 @@ class fbd_vis():
         offset_thigh_x = offset_shank_x + 0
         offset_shank_y = 0.3
         offset_thigh_y = offset_shank_y + 0.3
+        
+        #### create legend for positive/negative moments
+        circ_pos = plt.Circle((-99, -99), 0.1, color='tab:orange')
+        self.f_ax1.add_artist(circ_pos)
+        circ_neg = plt.Circle((-99, -99), 0.1, color='tab:purple')
+        self.f_ax1.add_artist(circ_neg)
+        self.f_ax1.legend([circ_pos, circ_neg], ['Positive', 'Negative'])
+        
         
         #### foot
         # plot line from ankle to toe
