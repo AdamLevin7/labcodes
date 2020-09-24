@@ -62,9 +62,9 @@ def calcnjm(segname, m, ax, ay, Rxd, Ryd, r_d, r_p, Icm, alpha, njm_d):
     
     #%% proximal-distal net joint moments
     # distal moment
-    m_d = np.cross(np.stack((Rxd, Ryd), axis=1), r_d)
+    m_d = np.cross(r_d, np.stack((Rxd, Ryd), axis=1))
     # proximal moment
-    m_p = np.cross(np.stack((Rxp, Ryp), axis=1), r_p)
+    m_p = np.cross(r_p, np.stack((Rxp, Ryp), axis=1))
     
     #%% calculate net joint moment
     # M = Icma
@@ -156,9 +156,9 @@ def njm_full(dig, cm, cm_acc, icm, segang_acc, forcedata, mass, seg_sequence, se
         
         #%% find r (perpendicular distances)
         # distance from center of pressure to center of mass
-        r_d = seg_cm_loc - joint_d_loc
+        r_d = joint_d_loc - seg_cm_loc
         # distance from joint to center of mass
-        r_p = seg_cm_loc - joint_p_loc
+        r_p = joint_p_loc - seg_cm_loc
         
         #%% calculate njm and other variables
         data_njm, njm_dj, njf_x, njf_y = calcnjm(seg_sequence[cnt], m, ax, ay,
