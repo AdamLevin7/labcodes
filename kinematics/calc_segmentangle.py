@@ -33,7 +33,14 @@ def calc_angle(segname, origin, other, allpositive='no'):
     theta = np.arctan2(origin['y'] - other['y'], origin['x'] - other['x'])
     # make angle positive if instructed to do so
     if 'yes' in allpositive:
-        theta = theta + 2*np.pi
+        def negative_clean_up(value):
+            # convert negative value to positive
+            if value<0:
+                return(value + 2*np.pi)
+            else:
+                return(value)
+        
+        theta = theta.apply(negative_clean_up)
     # store as dataframe
     seg_angle = pd.DataFrame({segname: theta})
     
