@@ -1,6 +1,8 @@
-# Documentation- Animated Vieos
+# Documentation- Animated Videos
 
-### [Line Graph Tutorial](https://github.com/USCBiomechanicsLab/labcodes/blob/master/animatevideos/Example_LineGraph.md)
+## Tutorials:
+### [General Line Animation Tutorial](https://github.com/USCBiomechanicsLab/labcodes/blob/master/animatevideos/Example_LineGraph.md)
+### [FBD/NJM Animation Tutorial](https://github.com/USCBiomechanicsLab/labcodes/blob/master/animatevideos/fbd_example.py)
 
 ## Table of Contents
 
@@ -74,7 +76,7 @@ Currently only for LOWER BODY.
 ### Function linegraph
 
 ![LineGraphEx](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/GraphVid_Example.png)  
-Figure: Example of vertical line overlayed on plotted data and synced with video.
+Figure: Example of vertical line overlaid on plotted data and synced with video.
 
 
 ### **Keywords:**
