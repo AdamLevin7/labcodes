@@ -11,7 +11,8 @@ Modules:
     
 Inputs
     time: NUM Numerical value of the time of interest
-    data: OBJ Python structure with data of interest for calculating NJMs
+    data_raw: OBJ Python structure with data of interest for calculating NJMs
+    data_njm_py: DATAFRAME dataframe containing NJM calculations over time, can use to check values
         
 Outputs
     eventvars: OBJ containing all data needed to calculate NJM
@@ -21,7 +22,7 @@ Dependencies
     numpy
     
 Syntax
-    eventvarstest = pulleventvars(time=0.053, data= jk_obj)
+    eventvarstest = pulleventvars(time=0.053, data_raw= jk_obj, data_njm_py = data_njm)
 
 @author: hestewar, Harper Stewart, hestewar@usc.edu
 """
@@ -35,22 +36,24 @@ def find_nearest(array, value):
     return array[idx], idx
 
 
-def pulleventvars(time, data):
+def pulleventvars(time, data_raw, data_njm_py):
     # Finds nearest time and index
-    neartime1, ind1 = find_nearest(data.data_dig_njm["time"],time)
+    neartime1, ind1 = find_nearest(data_raw.data_dig_njm["time"],time)
 
     # Finds the endpoint loctations and COM locations
-    endptlocs_event = data.data_dig_njm.iloc[ind1]
-    cmlocs_event = data.data_cm_njm.iloc[ind1]
+    dig_njm_event = data_raw.data_dig_njm.iloc[ind1]
+    cm_njm_event = data_raw.data_cm_njm.iloc[ind1]
     
     # Find the data_force info
-    force_event = data.data_force.iloc[ind1]
+    force_event = data_raw.data_force.iloc[ind1]
     
     # Find the NJM variables for the event
-    njm_event = data.iloc[ind1]
+    cm_acc_njm_event = data_raw.data_cm_acc_njm.iloc[ind1]
+    njm_event = data_njm_py.iloc[ind1]
     
     # Pull the segment parameters (mass and radius of gyration parameters)
-    segparams = data.segments
+    segparams = data_raw.segments
+    segang_acc_njm_event = data_raw.data_segang_acc_njm.iloc[ind1]
 
     # Return the dataframes/key information or combine into one output
-    return endptlocs_event, cmlocs_event, force_event, njm_event, segparams
+    return dig_njm_event, cm_njm_event, force_event, segparams, segang_acc_njm_event, cm_acc_njm_event, njm_event
