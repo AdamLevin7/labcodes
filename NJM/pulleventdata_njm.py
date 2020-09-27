@@ -11,22 +11,17 @@ Modules:
     
 Inputs
     time: NUM Numerical value of the time of interest
-    data_reformat_obj: OBJ Python structure with data of interest
-    data_njm: DATAFRAME pandas dataframe with njm variables
+    data: OBJ Python structure with data of interest for calculating NJMs
         
 Outputs
-    eventvars: LIST containing all data needed to calculate NJM
+    eventvars: OBJ containing all data needed to calculate NJM
     
 Dependencies
     pandas
     numpy
     
 Syntax
-    eventvarstest = pulleventvars(time=0.053, data_reformat_obj=data_reformat_obj, data_njm=data_njm)
-
-Things to Improve:
-     Could be good to create a smaller module that pulls all needed info for specified segment
-# Then repeatedly use it for whatever segments are needed
+    eventvarstest = pulleventvars(time=0.053, data= jk_obj)
 
 @author: hestewar, Harper Stewart, hestewar@usc.edu
 """
@@ -40,32 +35,22 @@ def find_nearest(array, value):
     return array[idx], idx
 
 
-def pulleventvars(time, data_reformat_obj, data_njm):
-    # Finds nearest time and index for digitized data
-    neartime1, ind1 = find_nearest(data_reformat_obj.data_dig["time"],time)
-    # Find nearest time and index for njm/force data
-    neartime2, ind2 = find_nearest(data_njm["time"],time)
-    
+def pulleventvars(time, data):
+    # Finds nearest time and index
+    neartime1, ind1 = find_nearest(data.data_dig_njm["time"],time)
+
     # Finds the endpoint loctations and COM locations
-    endptlocs_event = data_reformat_obj.data_dig.iloc[ind1]
-    cmlocs_event = data_reformat_obj.data_cm.iloc[ind1]
+    endptlocs_event = data.data_dig_njm.iloc[ind1]
+    cmlocs_event = data.data_cm_njm.iloc[ind1]
     
     # Find the data_force info
-    force_event = data_reformat_obj.data_force.iloc[ind2]
+    force_event = data.data_force.iloc[ind1]
     
     # Find the NJM variables for the event
-    njm_event = data_njm.iloc[ind2]
+    njm_event = data.iloc[ind1]
     
-    # Pull the segment parameters (mass and radius of gyration)
-    segparams = data_reformat_obj.segments
-    
-    # Create object that contains all necessary variables
-    ## Should definitely create a class and fix this but feeling lazy for now*
-    
-    eventvars = [endptlocs_event, cmlocs_event, force_event, njm_event, segparams]
-        
-    return eventvars
+    # Pull the segment parameters (mass and radius of gyration parameters)
+    segparams = data.segments
 
-
-
- 
+    # Return the dataframes/key information or combine into one output
+    return endptlocs_event, cmlocs_event, force_event, njm_event, segparams
