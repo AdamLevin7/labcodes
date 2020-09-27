@@ -4,11 +4,70 @@
 
 ## Table of Contents
 
-
 ### animationgraph
 #### [linegraph](#function-linegraph)
+### fbd_display
+#### [fbd_vis](#function-fbd_vis)
 
 End Table of Contents  
+
+## Script: fbd_display
+### Function fbd_vis
+
+[FBD_Visual](https://github.com/USCBiomechanicsLab/labcodes/blob/master/animatevideos/fbd_example.py)  
+Figure: Example of FBD and NJMs video over time.
+
+
+### **Keywords:**
+FBD, Display, Video, NJM, Curves, Instant, Segments, Lower Body
+
+### **Syntax:**
+```
+from animatevideos.fbd_display import fbd_vis
+
+fbd_obj = fbd_vis(data_force, data_digi, data_cm, data_njm, side, cnt)
+
+fbd_obj.fbd_update()
+
+fbd_obj.fbd_animate(filename='fbd_animate_example.mp4')                           
+```
+### **Description:**  
+Create a visual displaying free body diagrams (FBDs) at an instance along with the 
+the net joint moment (NJM) curves of the segment.  
+Currently only for LOWER BODY.
+
+### **Dependencies:**
+* **pd:** pandas
+
+### **Arguments:**
+
+#### *Inputs*
+
+   * **data_force:** DATAFRAME
+            force data (fx, fy, ax, ay) (N, N, m, m).
+   * **data_digi:** DATAFRAME
+            digitized data (m).
+   * **data_cm**: DATAFRAME
+            center of mass data for segments and body (m).
+            format matches that of NJM.dig2jointkinetics.dig2jk.main().
+   * **data_njm**: DATAFRAME
+            contains calculated variables for segment's joint kinetics.
+   * **side**: STRING
+            which side of the body. (ex. 'left')
+   * **cnt:** INT, optional
+            counter - index of data to be visualized.
+            The default is None, but will be reset to the first index of data
+     
+#### *Outputs*
+
+   * **No return but if module fbd_animate is used, a video will be created with the specified filename**
+   
+### **Examples:**
+[Helpful_example](https://github.com/USCBiomechanicsLab/labcodes/blob/master/animatevideos/fbd_example.py)  
+
+
+
+[Back to Table of Contents](#table-of-contents) 
 
 
 ## Script: animationgraph

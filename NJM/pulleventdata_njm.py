@@ -15,7 +15,7 @@ Inputs
     data_njm_py: DATAFRAME dataframe containing NJM calculations over time, can use to check values
         
 Outputs
-    eventvars: OBJ containing all data needed to calculate NJM
+    eventvars: TUPLE containing all data needed to calculate NJM
     
 Dependencies
     pandas
