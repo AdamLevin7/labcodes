@@ -16,6 +16,8 @@ End Table of Contents
 ## Script: fbd_display
 ### Function fbd_vis
 
+[Link to fbd_display code](https://github.com/USCBiomechanicsLab/labcodes/blob/master/animatevideos/fbd_display.py)
+
 [FBD_Visual](https://github.com/USCBiomechanicsLab/labcodes/blob/master/animatevideos/fbd_example.py)  
 Figure: Example of FBD and NJMs video over time.
 
@@ -75,9 +77,10 @@ Currently only for LOWER BODY.
 ## Script: animationgraph
 ### Function linegraph
 
+[Link to animationgraph code](https://github.com/USCBiomechanicsLab/labcodes/blob/master/animatevideos/animationgraph.py)
+
 ![LineGraphEx](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/GraphVid_Example.png)  
 Figure: Example of vertical line overlaid on plotted data and synced with video.
-
 
 ### **Keywords:**
 Line, Graph, Animation, Data, Vertical Line, Time, Sync
