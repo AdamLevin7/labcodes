@@ -129,11 +129,14 @@ data_njm = jk_obj.main()
 
 ### Output Interactive NJM Video
 This function will output a video showing how the moments change over time on the FBDs for the lower extremity.
+[fbd_display](https://github.com/USCBiomechanicsLab/labcodes/blob/master/animatevideos/fbd_display.py)
 
-* Add this !!
+This is an example of how to use the function.
+[Example Link](https://github.com/USCBiomechanicsLab/labcodes/blob/master/animatevideos/fbd_example.py)
 
 ### Example for NJM Plots
-Example code for generating moments over time.
+Example code for generating plots to show moments over time.
+Can do this if you don't want to creat the video of the FBD and NJMs over time.
 
 Foot, Ankle, and Reaction Force Moments
 ```
