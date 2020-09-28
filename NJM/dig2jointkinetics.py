@@ -391,7 +391,7 @@ class dig2jk_format:
         
     def data_reformat(self, view="fy", mode="combined", flipy_digi='no',
                       con_num=0, zero_thresh=16, plate_area=None, ci_thresh=16,
-                      plate_dim=(0.9, 0.6), bwpermeter=2, samp_vid=240, samp_force=1200):
+                      plate_dim=(0.6, 0.4), bwpermeter=2, samp_vid=240, samp_force=1200):
         
         """ find contact interval for force and digitized data """
         con_plate_fz = [s + '_Fz' for s in self.con_plate]
