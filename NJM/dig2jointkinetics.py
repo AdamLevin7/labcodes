@@ -210,7 +210,7 @@ class dig2jk:
         dig2jk.cm_velocityacceleration(self)
         
         ### calculate segmental angles
-        self.data_segang = segangle(self.data_dig_interp, self.segments, allpositive='yes')
+        self.data_segang = segangle(self.data_dig_interp, self.segments, allpositive='no')
         
         ### calculate segmental angular velocities
         # segmental angular velocities
