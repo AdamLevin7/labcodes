@@ -30,7 +30,10 @@ def calc_angle(segname, origin, other, allpositive='no'):
     other.columns = ['x', 'y']
     # calculate segment angle
     # atan2( (y2 - y1) / (x2 - x1) )
-    theta = np.arctan((origin['y'] - other['y']) / (origin['x'] - other['x']))
+    if 'foot' in segname:
+        theta = np.arctan((origin['y'] - other['y']) / (origin['x'] - other['x']))
+    else:
+        theta = np.arctan2((origin['y'] - other['y']), (origin['x'] - other['x']))
     # make angle positive if instructed to do so
     if 'yes' in allpositive:
         def negative_clean_up(value):
