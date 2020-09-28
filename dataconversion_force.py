@@ -28,13 +28,14 @@ import cv2
 class convertdata:
     
     def __init__(self, data, mag2pix, pix2m, view='fy', mode='ind',
-                 platelocs=None, flip=None):
+                 plate_dim=(0.6, 0.4), platelocs=None, flip=None):
         # initialize variables
         self.data = data
         self.mag2pix = mag2pix
         self.pix2m = pix2m
         self.view = view
         self.mode = mode
+        self.plate_dim = plate_dim
         self.platelocs = platelocs
         self.flip = flip
         
@@ -150,13 +151,26 @@ class convertdata:
                                             'ay': ay})
     
     
-    def data2meter(self, flipy_cp='yes', file_vid=None):
+    def data2meter(self, flipy_cp='yes', file_vid=None, scale_y='yes'):
         ### select data
         convertdata.selectdata(self)
         ### find plate origin
         convertdata.plateorigin(self)
         ### flip data to video reference system
         convertdata.flipdata(self)
+        
+        """ scale ay to match video """
+        if scale_y == 'yes':
+            # find plate length in y in pixels
+            y_pix = self.platelocs[0][1]['y'] - self.platelocs[0][0]['y']
+            # find plate length in y in meters
+            y_m = y_pix * self.pix2m['x']
+            # calculate conversion
+            y_m_conv = self.plate_dim[1] / y_m
+            # loop through number of plates
+            for cnt in range(len(self.data_fp)):
+                # scale ay
+                self.data_fp[cnt]['ay'] = self.data_fp[cnt]['ay'] / y_m_conv
         
         """ move center of pressure data to relative to plate origin """
         # loop through number of plates
