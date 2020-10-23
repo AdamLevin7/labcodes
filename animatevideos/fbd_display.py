@@ -12,7 +12,7 @@ Created on Mon Sep 14 17:03:38 2020
 class fbd_vis():
     
     #%%
-    def __init__(self, data_force, data_digi, data_cm, data_njm, side, cnt=None):
+    def __init__(self, data_force, data_digi, data_cm, data_njm, side, cnt=None, colorlegend='flexext'):
         """
         Initialize class to create free body diagram visual.
 
@@ -29,10 +29,16 @@ class fbd_vis():
             contains calculated variables for segment's joint kinetics.
         side : STRING
             which side of the body.
-            (ex: 'left').
+            (ex: 'left')
         cnt : INT, optional
             counter - index of data to be visualized.
             The default is None, but will be reset to the first index of data
+        colorlegend : STRING, optional (default: 'flexext')
+            What do positive/negative values represent?
+            Possible inputs:
+                'flexext': positive = extensor moment; negative = flexor moment
+                'posneg': positive = positive moment w/r reference frame; negative = negative moment w/r reference frame
+
 
         Returns
         -------
@@ -48,6 +54,7 @@ class fbd_vis():
             self.cnt = data_njm.first_valid_index()
         else:
             self.cnt = cnt
+        self.colorlegend = colorlegend
         fbd_vis.fig_init(self)
         
     #%%
@@ -206,7 +213,10 @@ class fbd_vis():
         self.f_ax1.add_artist(circ_pos)
         circ_neg = plt.Circle((-99, -99), 0.1, color='tab:purple')
         self.f_ax1.add_artist(circ_neg)
-        self.f_ax1.legend([circ_pos, circ_neg], ['Positive', 'Negative'])
+        if self.colorlegend is 'posneg':
+            self.f_ax1.legend([circ_pos, circ_neg], ['Positive', 'Negative'])
+        elif self.colorlegend is 'flexext':
+            self.f_ax1.legend([circ_pos, circ_neg], ['Extension', 'Flexion'])
 
 
         #### ground
@@ -328,7 +338,7 @@ class fbd_vis():
             moment_color_d = 'tab:purple'
         circ_d = plt.Circle((self.data_digi[knee_x][self.cnt]-offset_x+offset_thigh_x, self.data_digi[knee_y][self.cnt]-offset_y+offset_thigh_y),
                             abs(self.data_njm['thigh_njmd'][self.cnt])*rf_scale,
-                            color=moment_color_p, zorder=10)
+                            color=moment_color_d, zorder=10)
         self.f_ax1.add_artist(circ_d)
     
     #%%
