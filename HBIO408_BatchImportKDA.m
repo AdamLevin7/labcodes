@@ -15,6 +15,11 @@ endRow = 7206;
 [file,path] = uigetfile('.KDA','Select KDA file','MultiSelect','on');
 sampRate = 1200;
 
+%% Adjusting file variable from string to cell
+if ~iscell(file)
+    file = {file};
+end
+
 %% Force Plate Information
 % Assuming this is for B10 using Kistler 9281EA Force Plates ??
 % Dimensions 600x400x100 mm
