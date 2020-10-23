@@ -168,3 +168,54 @@ def njm_full(dig, cm, cm_acc, icm, segang_acc, forcedata, mass, seg_sequence, se
         dataout = dataout.join(data_njm.set_index(dataout.index))
     
     return dataout
+
+
+def convert_to_flexext_ref(data_in, anterior='right'):
+
+    """
+    Initialize class to create free body diagram visual.
+
+    Parameters
+    ----------
+    data_in : DATAFRAME
+        contains calculated variables for segment's joint kinetics.
+        THIS ASSUMES THE NJM CALCULATIONS WERE IN THE REFERENCE SYSTEM WHERE CCW IS POSITIVE
+    anterior : STRING, optional (default: 'right')
+        Which direction is anterior for the individual?
+        This sets how positive/negative values will be determined as flexor or extensor moments.
+        Possible inputs:
+            'right': individual is facing right in the current reference system
+            'left': individual is facing left in the current reference system
+
+
+    Returns
+    -------
+    dataout : DATAFRAME
+        contains reorientated calculated variables for segment's joint kinetics.
+
+    """
+
+    """ set copy """
+    dataout = data_in.copy()
+
+    """ set extensors as positive and flexors as negative for given direction """
+    ## if individual is facing right
+    if anterior is 'right':
+        dataout.foot_md = dataout.foot_md * -1
+        dataout.foot_njmd = dataout.foot_njmd * -1
+        dataout.foot_mp = dataout.foot_mp * -1
+        dataout.foot_njmp = dataout.foot_njmp * -1
+        dataout.thigh_md = dataout.thigh_md * -1
+        dataout.thigh_njmd = dataout.thigh_njmd * -1
+        dataout.thigh_mp = dataout.thigh_mp * -1
+        dataout.thigh_njmp = dataout.thigh_njmp * -1
+
+    ## if individual is facing left
+    elif anterior is 'left':
+        dataout.shank_md = dataout.shank_md * -1
+        dataout.shank_njmd = dataout.shank_njmd * -1
+        dataout.shank_mp = dataout.shank_mp * -1
+        dataout.shank_njmp = dataout.shank_njmp * -1
+
+
+    return dataout
