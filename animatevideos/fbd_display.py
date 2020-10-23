@@ -67,9 +67,6 @@ class fbd_vis():
         """ initialize figure """
         # create subplots of figure
         self.fig = plt.figure(constrained_layout=True)
-        # maximize figure
-        manager = plt.get_current_fig_manager()
-        manager.window.showMaximized()
         # manually set window size
         self.fig.set_size_inches(1920/self.fig.dpi, 960/self.fig.dpi)
         # create 3x2 with second column double the width
@@ -154,6 +151,7 @@ class fbd_vis():
         
         import matplotlib.pyplot as plt
         import matplotlib.patheffects as pe
+        import numpy as np
         
         """ add vertical time line """
         if hasattr(self, 'line4'):
@@ -196,8 +194,8 @@ class fbd_vis():
         self.f_ax1.set_title('Time (s): ' + str(round(self.data_njm['time'][self.cnt], 4)))
         
         # set offsets
-        offset_x = self.data_cm[foot_x][self.cnt]
-        offset_y = self.data_cm[foot_y][self.cnt]
+        offset_x = np.mean(self.data_force['ax'])
+        offset_y = np.mean(self.data_force['ay'])
         offset_shank_x = 0
         offset_thigh_x = offset_shank_x + 0
         offset_shank_y = 0.3
@@ -209,7 +207,11 @@ class fbd_vis():
         circ_neg = plt.Circle((-99, -99), 0.1, color='tab:purple')
         self.f_ax1.add_artist(circ_neg)
         self.f_ax1.legend([circ_pos, circ_neg], ['Positive', 'Negative'])
-        
+
+
+        #### ground
+        self.f_ax1.hlines(0,xmin=-2, xmax=2, color=(0, 0, 0, 0.75))
+
         
         #### foot
         # plot line from ankle to toe

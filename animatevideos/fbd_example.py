@@ -28,7 +28,7 @@ side = 'left'
 """ set cnt (counter):
     This is the index of the data in which you'd like to display
 """
-cnt = 4326 
+cnt = 4326
 
 """
 create object
