@@ -123,7 +123,7 @@ for i = 1:length(file)
     plot(ForceDataP.time, ForceDataP.FP2_x+ForceDataP.FP1_x)
     legend('y','z','x')
     title('Combined FP1 and FP2') 
-    suptitle(sprintf('Graph of %s', file{i}));
+    sgtitle(sprintf('Graph of %s', file{i}));
 
     % Write the data to a .csv file
     newFilename = [ filename(1:end-4) '_1200Hz' '.csv']; 
