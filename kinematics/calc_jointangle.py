@@ -104,17 +104,14 @@ def jointangle(datain, segments):
             point_c = datain.filter(regex = segments.loc[joints['other'][cnt]]['other'])
             # find point a (joint intersection)
             point_a = datain.filter(regex = segments.loc[joints['origin'][cnt]]['other'])
-            # if both hips were located, use average
-            if len(point_a.columns) > 2:
+            # if all point locations exist
+            if ((len(point_b.columns)>0 and len(point_c.columns)>0) and
+                (len(point_a.columns)>0)):
                 # find if left and right joints were specified
                 point_a_l = point_a.filter(regex = 'left')
                 point_a_r = point_a.filter(regex = 'right')
                 point_c_l = point_c.filter(regex = 'left')
                 point_c_r = point_c.filter(regex = 'right')
-            
-            # if all point locations exist
-            if ((len(point_b.columns)>0 and len(point_c.columns)>0) and
-                (len(point_a.columns)>0)):
                 # if left joint exists
                 if len(point_a.filter(regex = 'left').columns)>0:
                     # calculate joint angle
