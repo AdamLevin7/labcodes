@@ -348,24 +348,31 @@ class dig2jk:
     def main(self):
         ### filter and interpoloate data
         dig2jk.datainterp(self)
+        print('Completed datainterp')
         
         ### calculate center of mass velocity and acceleration
         dig2jk.cm_velocityacceleration(self)
+        print('Completed cm_velocityacceleration')
         
         ### calculate segment angle, angular velocity, and angular acceleration
         dig2jk.segmentangle_vel_acc(self)
+        print('Completed segmentangle_vel_acc')
         
         ### calculate joint angle and angular velocity
         dig2jk.jointangle_vel(self)
+        print('Completed jointangle_vel')
         
         ### calculate segment moment of inertia
         data_i = momentinertia(self.data_seglength_interp, self.segments, self.mass)
+        print('Completed momentinertia')
         
         ### select data to be used in joint kinetics calculations
         dig2jk.selectdata(self)
+        print('Completed selectdata')
         
         ### calculate joint kinetics
         data_njm = njm_full(self.data_dig_njm, self.data_cm_njm, self.data_cm_acc_njm, self.data_i_njm, self.data_segang_acc_njm, self.data_force, self.mass, self.seg_sequence, self.segments)
+        print('Completed njm_full')
         
         
         return data_njm
@@ -424,11 +431,10 @@ class dig2jk_format:
         
         """ truly zero force plates """
         # set values below 16 to 0
-        for cntf in range(len(data_force_crop[0])):
-            if (data_force_crop[0].iloc[cntf,3] < zero_thresh):
-                data_force_crop[0].iloc[cntf,1:] = 0
-            if (data_force_crop[1].iloc[cntf,3] < zero_thresh):
-                data_force_crop[1].iloc[cntf,1:] = 0
+        for cntfp in range(len(data_force_crop)):
+            for cntf in range(len(data_force_crop[0])):
+                if (data_force_crop[cntfp].iloc[cntf,3] < zero_thresh):
+                    data_force_crop[cntfp].iloc[cntf,1:] = 0
         
         
         """ find plates """
