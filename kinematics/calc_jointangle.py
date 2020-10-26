@@ -116,21 +116,21 @@ def jointangle(datain, segments):
             if ((len(point_b.columns)>0 and len(point_c.columns)>0) and
                 (len(point_a.columns)>0)):
                 # if left joint exists
-                if len(point_a_l.columns)>0:
+                if len(point_a.filter(regex = 'left').columns)>0:
                     # calculate joint angle
                     joint_ang_l = calc_angle((joints.iloc[cnt,:]).name + '_left',
                                              point_a_l, point_b, point_c_l)
                     # add column to data out
                     dataout = dataout.join(joint_ang_l)
                 # if right joint exists
-                if len(point_a_r.columns)>0:
+                if len(point_a.filter(regex = 'right').columns)>0:
                     # calculate joint angle
                     joint_ang_r = calc_angle((joints.iloc[cnt,:]).name + '_right',
                                              point_a_r, point_b, point_c_r)
                     # add column to data out
                     dataout = dataout.join(joint_ang_r)
                 # if neither left or right joints exists
-                if (len(point_a_l.columns)==0) and (len(point_a_r.columns)==0):
+                if (len(point_a.filter(regex = 'left').columns)==0) and (len(point_a.filter(regex = 'right').columns)==0):
                     # calculate joint angle
                     joint_ang = calc_angle((joints.iloc[cnt,:]).name,
                                            point_a, point_b, point_c)
@@ -157,25 +157,25 @@ def jointangle(datain, segments):
                 point_c_r = point_c.filter(regex = 'right')
                 
                 # if left joint exists
-                if ((len(point_a_l.columns) > 0) and (len(point_b_l.columns) > 0) and
-                    (len(point_c_l.columns) > 0)):
+                if ((len(point_a.filter(regex = 'left').columns) > 0) and (len(point_b.filter(regex = 'left').columns) > 0) and
+                    (len(point_c.filter(regex = 'left').columns) > 0)):
                     # calculate joint angle
                     joint_ang_l = calc_angle((joints.iloc[cnt,:]).name + '_left',
                                              point_a_l, point_b_l, point_c_l)
                     # add column to data out
                     dataout = dataout.join(joint_ang_l)
                 # if right joint exists
-                if ((len(point_a_r.columns) > 0) and (len(point_b_r.columns) > 0) and
-                    (len(point_c_r.columns) > 0)):
+                if ((len(point_a.filter(regex = 'right').columns) > 0) and (len(point_b.filter(regex = 'right').columns) > 0) and
+                    (len(point_c.filter(regex = 'right').columns) > 0)):
                     # calculate joint angle
                     joint_ang_r = calc_angle((joints.iloc[cnt,:]).name + '_right',
                                              point_a_r, point_b_r, point_c_r)
                     # add column to data out
                     dataout = dataout.join(joint_ang_r)
                 # if neither left or right joint exists
-                if ((len(point_a_l.columns)==0) and (len(point_a_r.columns)==0) and
-                    (len(point_b_l.columns)==0) and (len(point_b_r.columns)==0) and
-                    (len(point_c_l.columns)==0) and (len(point_c_r.columns)==0)):
+                if ((len(point_a.filter(regex = 'left').columns)==0) and (len(point_a.filter(regex = 'right').columns)==0) and
+                    (len(point_b.filter(regex = 'left').columns)==0) and (len(point_b.filter(regex = 'right').columns)==0) and
+                    (len(point_c.filter(regex = 'left').columns)==0) and (len(point_c.filter(regex = 'right').columns)==0)):
                     # calculate joint angle
                     joint_ang = calc_angle((joints.iloc[cnt,:]).name,
                                            point_a, point_b, point_c)
