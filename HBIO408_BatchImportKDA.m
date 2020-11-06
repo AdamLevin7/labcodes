@@ -68,8 +68,8 @@ for i = 1:length(file)
     ForceDataP.Mx1_top = ForceDataP.Mx1 + ForceDataP.FP1_y  .* az0;
     ForceDataP.Mx2_top = ForceDataP.Mx2 + ForceDataP.FP2_y .* az0;
 %     My' = My - Fx*az0 Plate moment about top plate surface 
-    ForceDataP.My1_top = ForceDataP.My1 + ForceDataP.FP1_x .* az0;
-    ForceDataP.My2_top = ForceDataP.My2 + ForceDataP.FP2_x .* az0;
+    ForceDataP.My1_top = ForceDataP.My1 - ForceDataP.FP1_x .* az0;
+    ForceDataP.My2_top = ForceDataP.My2 - ForceDataP.FP2_x .* az0;
 %     ax = -My' / Fz X-Coordinate of force application point (COP)
     ForceDataP.Ax1 = -ForceDataP.My1_top ./ ForceDataP.FP1_z;
     ForceDataP.Ax2 = -ForceDataP.My2_top ./ ForceDataP.FP2_z;
@@ -88,10 +88,12 @@ for i = 1:length(file)
         ForceDataP.FP2_z.^2);
 
     %% Create a table with the data
+    % Ax and Ay are negated so that they are consistent with the global GRF
+    % reference system instead of the force applied to the plate
     ForceTable = table(ForceDataP.time,ForceDataP.FP1_x,ForceDataP.FP1_y,ForceDataP.FP1_z,...
-        ForceDataP.FRes1, ForceDataP.Ax1,ForceDataP.Ay1,...
+        ForceDataP.FRes1, -ForceDataP.Ax1,-ForceDataP.Ay1,...
         ForceDataP.FP2_x,ForceDataP.FP2_y,ForceDataP.FP2_z,...
-        ForceDataP.FRes2, ForceDataP.Ax2,ForceDataP.Ay2);
+        ForceDataP.FRes2, -ForceDataP.Ax2,-ForceDataP.Ay2);
 
     ForceTable.Properties.VariableNames = {'Time' 'FP1_Fx' 'FP1_Fy' 'FP1_Fz' 'FP1_Fres' 'FP1_Ax' 'FP1_Ay' 'FP2_Fx' 'FP2_Fy' 'FP2_Fz' 'FP2_Fres' 'FP2_Ax', 'FP2_Ay'};
 
