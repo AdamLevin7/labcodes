@@ -12,7 +12,7 @@ Output:
     acc_df: DATAFRAME accelerometer data from all sensors (x, y, z)
     gyro_df: DATAFRAME gyroscope data from all sensors (x, y, z)
     mag_df: DATAFRAME magnetometer data from all sensors (x, y, z)
-    quat_df: DATAFRAME quaternion data from all sensors (r, x, y, z)
+    orient_df: DATAFRAME quaternion data from all sensors (r, x, y, z)
         [real (scalar), x (complex), y (complex), z (complex)]
 
 Created on Wed Oct  7 10:01:02 2020
@@ -41,7 +41,7 @@ def apdm_import(filename):
         acc = f['Sensors'][s]['Accelerometer'][:]
         gyro = f['Sensors'][s]['Gyroscope'][:]
         mag = f['Sensors'][s]['Magnetometer'][:]
-        quat = f['Processed'][s]['Orientation'][:]
+        orient = f['Processed'][s]['Orientation'][:]
         samp = f['Sensors'][s]['Configuration'].attrs['Sample Rate']
 
         """ reformat label name so it could be a part of column name """
@@ -55,11 +55,11 @@ def apdm_import(filename):
             acc_df = t.join(pd.DataFrame(acc, columns=[label + x for x in ['_x', '_y', '_z']]))
             gyro_df = t.join(pd.DataFrame(gyro, columns=[label + x for x in ['_x', '_y', '_z']]))
             mag_df = t.join(pd.DataFrame(mag, columns=[label + x for x in ['_x', '_y', '_z']]))
-            quat_df = t.join(pd.DataFrame(quat, columns=[label + x for x in ['_r', '_x', '_y', '_z']]))
+            orient_df = t.join(pd.DataFrame(orient, columns=[label + x for x in ['_r', '_x', '_y', '_z']]))
         else:
             acc_df = acc_df.join(pd.DataFrame(acc, columns=[label + x for x in ['_x', '_y', '_z']]))
             gyro_df = gyro_df.join(pd.DataFrame(gyro, columns=[label + x for x in ['_x', '_y', '_z']]))
             mag_df = mag_df.join(pd.DataFrame(mag, columns=[label + x for x in ['_x', '_y', '_z']]))
-            quat_df = quat_df.join(pd.DataFrame(quat, columns=[label + x for x in ['_r', '_x', '_y', '_z']]))
+            orient_df = quat_df.join(pd.DataFrame(orient, columns=[label + x for x in ['_r', '_x', '_y', '_z']]))
 
-    return acc_df, gyro_df, mag_df, quat_df
+    return acc_df, gyro_df, mag_df, orient_df
