@@ -12,7 +12,7 @@ Created on Mon Sep 14 17:03:38 2020
 class fbd_vis():
     
     #%%
-    def __init__(self, data_force, data_digi, data_cm, data_njm, side, cnt=None, colorlegend='flexext'):
+    def __init__(self, data_force, data_digi, data_cm, data_njm, side, cnt=None, colorlegend='flexext', rf_scale=0.0002):
         """
         Initialize class to create free body diagram visual.
 
@@ -38,6 +38,8 @@ class fbd_vis():
             Possible inputs:
                 'flexext': positive = extensor moment; negative = flexor moment
                 'posneg': positive = positive moment w/r reference frame; negative = negative moment w/r reference frame
+        rf_scale : INT, optional (default: 0.0002)
+            It scales the force and moments ONLY IN THE VISUAL.
 
 
         Returns
@@ -55,6 +57,7 @@ class fbd_vis():
         else:
             self.cnt = cnt
         self.colorlegend = colorlegend
+        self.rf_scale = rf_scale
         fbd_vis.fig_init(self)
         
     #%%
@@ -141,14 +144,13 @@ class fbd_vis():
         self.f_ax2.legend()
         
     #%%
-    def fbd_update(self, rf_scale=0.0002):
+    def fbd_update(self):
         """
         Refreshes and displays the free body diagram at the instant of choice.
         
         Parameters
         ----------
-        rf_scale : FLOAT, optional
-            Scaling of the reaction force vector. The default is 0.0002.
+        None.
 
         Returns
         -------
@@ -242,11 +244,11 @@ class fbd_vis():
         
         # plot reaction force
         self.f_ax1.arrow(self.data_force['ax'][self.cnt]-offset_x, self.data_force['ay'][self.cnt]-offset_y,
-                         self.data_njm['foot_rxd'][self.cnt]*rf_scale, self.data_njm['foot_ryd'][self.cnt]*rf_scale,
+                         self.data_njm['foot_rxd'][self.cnt]*self.rf_scale, self.data_njm['foot_ryd'][self.cnt]*self.rf_scale,
                          ec='tab:blue', zorder=15)
         # plot NJF at ankle
         self.f_ax1.arrow(self.data_digi[ank_x][self.cnt]-offset_x, self.data_digi[ank_y][self.cnt]-offset_y,
-                         self.data_njm['foot_rxp'][self.cnt]*rf_scale, self.data_njm['foot_ryp'][self.cnt]*rf_scale,
+                         self.data_njm['foot_rxp'][self.cnt]*self.rf_scale, self.data_njm['foot_ryp'][self.cnt]*self.rf_scale,
                          ec='tab:blue', zorder=15)
         
         # plot moment
@@ -256,7 +258,7 @@ class fbd_vis():
         else:
             moment_color = 'tab:purple'
         circ = plt.Circle((self.data_digi[ank_x][self.cnt]-offset_x, self.data_digi[ank_y][self.cnt]-offset_y),
-                          abs(self.data_njm['foot_njmp'][self.cnt])*rf_scale,
+                          abs(self.data_njm['foot_njmp'][self.cnt])*self.rf_scale,
                           color=moment_color, zorder=10)
         self.f_ax1.add_artist(circ)
         
@@ -273,11 +275,11 @@ class fbd_vis():
         
         # plot NJF at knee
         self.f_ax1.arrow(self.data_digi[ank_x][self.cnt]-offset_x+offset_shank_x, self.data_digi[ank_y][self.cnt]-offset_y+offset_shank_y,
-                         self.data_njm['shank_rxd'][self.cnt]*rf_scale, self.data_njm['shank_ryd'][self.cnt]*rf_scale,
+                         self.data_njm['shank_rxd'][self.cnt]*self.rf_scale, self.data_njm['shank_ryd'][self.cnt]*self.rf_scale,
                          ec='tab:blue', zorder=15)
         # plot NJF at ankle
         self.f_ax1.arrow(self.data_digi[knee_x][self.cnt]-offset_x+offset_shank_x, self.data_digi[knee_y][self.cnt]-offset_y+offset_shank_y,
-                         self.data_njm['shank_rxp'][self.cnt]*rf_scale, self.data_njm['shank_ryp'][self.cnt]*rf_scale,
+                         self.data_njm['shank_rxp'][self.cnt]*self.rf_scale, self.data_njm['shank_ryp'][self.cnt]*self.rf_scale,
                          ec='tab:blue', zorder=15)
         
         # plot proximal moment
@@ -287,7 +289,7 @@ class fbd_vis():
         else:
             moment_color_p = 'tab:purple'
         circ_p = plt.Circle((self.data_digi[knee_x][self.cnt]-offset_x+offset_shank_x, self.data_digi[knee_y][self.cnt]-offset_y+offset_shank_y),
-                            abs(self.data_njm['shank_njmp'][self.cnt])*rf_scale, color=moment_color_p)
+                            abs(self.data_njm['shank_njmp'][self.cnt])*self.rf_scale, color=moment_color_p)
         self.f_ax1.add_artist(circ_p)
         # plot distal moment
         # if positive, plot green...if negative, plot red
@@ -296,7 +298,7 @@ class fbd_vis():
         else:
             moment_color_d = 'tab:purple'
         circ_d = plt.Circle((self.data_digi[ank_x][self.cnt]-offset_x+offset_shank_x, self.data_digi[ank_y][self.cnt]-offset_y+offset_shank_y),
-                            abs(self.data_njm['shank_njmd'][self.cnt])*rf_scale, color=moment_color_d)
+                            abs(self.data_njm['shank_njmd'][self.cnt])*self.rf_scale, color=moment_color_d)
         self.f_ax1.add_artist(circ_d)
         
         
@@ -313,11 +315,11 @@ class fbd_vis():
         
         # plot NJF at hip
         self.f_ax1.arrow(self.data_digi[knee_x][self.cnt]-offset_x+offset_thigh_x, self.data_digi[knee_y][self.cnt]-offset_y+offset_thigh_y,
-                         self.data_njm['thigh_rxd'][self.cnt]*rf_scale, self.data_njm['thigh_ryd'][self.cnt]*rf_scale,
+                         self.data_njm['thigh_rxd'][self.cnt]*self.rf_scale, self.data_njm['thigh_ryd'][self.cnt]*self.rf_scale,
                          ec='tab:blue', zorder=15)
         # plot NJF at knee
         self.f_ax1.arrow(self.data_digi[hip_x][self.cnt]-offset_x+offset_thigh_x, self.data_digi[hip_y][self.cnt]-offset_y+offset_thigh_y,
-                         self.data_njm['thigh_rxp'][self.cnt]*rf_scale, self.data_njm['thigh_ryp'][self.cnt]*rf_scale,
+                         self.data_njm['thigh_rxp'][self.cnt]*self.rf_scale, self.data_njm['thigh_ryp'][self.cnt]*self.rf_scale,
                          ec='tab:blue', zorder=15)
         
         # plot proximal moment
@@ -327,7 +329,7 @@ class fbd_vis():
         else:
             moment_color_p = 'tab:purple'
         circ_p = plt.Circle((self.data_digi[hip_x][self.cnt]-offset_x+offset_thigh_x, self.data_digi[hip_y][self.cnt]-offset_y+offset_thigh_y),
-                            abs(self.data_njm['thigh_njmp'][self.cnt])*rf_scale,
+                            abs(self.data_njm['thigh_njmp'][self.cnt])*self.rf_scale,
                             color=moment_color_p, zorder=10)
         self.f_ax1.add_artist(circ_p)
         # plot distal moment
@@ -337,12 +339,12 @@ class fbd_vis():
         else:
             moment_color_d = 'tab:purple'
         circ_d = plt.Circle((self.data_digi[knee_x][self.cnt]-offset_x+offset_thigh_x, self.data_digi[knee_y][self.cnt]-offset_y+offset_thigh_y),
-                            abs(self.data_njm['thigh_njmd'][self.cnt])*rf_scale,
+                            abs(self.data_njm['thigh_njmd'][self.cnt])*self.rf_scale,
                             color=moment_color_d, zorder=10)
         self.f_ax1.add_artist(circ_d)
     
     #%%
-    def fbd_animate(self, filename='fbd_animate.mp4'):
+    def fbd_animate(self, filename='fbd_animate.mp4', ):
         """
         Create an animated video of the free body diagram at every instant in
         contact phase.
