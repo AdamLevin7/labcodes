@@ -450,7 +450,7 @@ class dig2jk_format:
         self.mag2pix = bw2pix(self.pix2m['x'], self.bw, bwpermeter=bwpermeter)
         
         
-        """ convert force data pixels """
+        """ convert force data to video reference system """
         # create object
         transform_data = convertdata(data_force_crop, self.mag2pix, self.pix2m, view=view, mode=mode,
                                      platelocs=self.plate_area, flip=self.flip)
