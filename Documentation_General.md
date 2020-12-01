@@ -6,9 +6,14 @@
 * .yaml file
 
 ### [FindContactIntervals](#function-findcontactintervals)
+### Import KDA Files 
+* #### [HBIO408_BatchImportKDA](#function-HBIO408_BatchImportKDA)
+* #### [importForce_KDA](#function-importForce_KDA)
 ### [ImportForce_TXT](#function-importforce_txt)
 ### Impulse_Velocity
 * #### [imp_vel](#function-imp_vel)
+### apdm_load
+* #### [apdm_import](#function-apdm_import)
 ### capture_area
 * #### [findarea](#function-findarea)
 ### dataconversion_digi
@@ -28,6 +33,119 @@
 * #### [flighttraj](#function-flighttraj)
 
 End Table of Contents  <br/>
+
+## Script: apdm_load
+### Function apdm_import
+[Link to apdm_load Code](https://github.com/USCBiomechanicsLab/labcodes/blob/master/apdm_load.py)
+
+### **Keywords:**
+APDM, quaternion, acceleration, gyrocope, magnetometer
+
+### **Syntax:**
+```
+from apdm_load import apdm_import
+
+acc_df, gyro_df, mag_df, orient_df = apdm_import(filename)                              
+```
+### Dependencies 
+* **pd:** pandas 
+* **np:** numpy 
+* **h5py:** h5py
+
+### **Description:**<br/>
+Import data from APDM sensor .h5 file to get the following dataframes
+* Accelerometer
+* Gyroscope 
+* Magnetometer 
+* Quaternion 
+Uses the sampling rate of the sensors set at the time of collection.
+   
+### **Arguments:**
+
+#### *Inputs*
+
+   * **filename:** STR filename of the h5 file to be loaded
+
+#### *Outputs*
+
+   * **acc_df:** DATAFRAME accelerometer data from all sensors (x, y, z)
+   * **gyro_df:** DATAFRAME gyroscope data from all sensors (x, y, z)
+   * **mag_df:** DATAFRAME magnetometer data from all sensors (x, y, z)
+   * **orient_df:** DATAFRAME quaternion data from all sensors (r, x, y, z)
+        [real (scalar), x (complex), y (complex), z (complex)]
+   
+### **Examples:**
+Helpful examples
+
+[Back to Table of Contents](#table-of-contents)
+
+## Script: importForce_KDA.m
+### Function importForce_KDA
+[Link to importForce_KDA Code](https://github.com/USCBiomechanicsLab/labcodes/blob/master/importForce_KDA.m)
+
+### **Keywords:**
+KDA, Import, B10, Force, Data, Files
+
+### **Syntax:**
+```
+[ForceFile] = importForce_KDA('_000.KDA',6, 7206);                   
+```
+### Dependencies 
+* MATLAB fxn, make sure it is in your working directory
+
+### **Description:**<br/>
+Import force data from a KDA file in B10.
+   
+### **Arguments:**
+
+#### *Inputs*
+
+   * **filename** Filename from KDA file
+   * **gain** Gain of the amplifier
+   * **startRow** INT First row for reading in .txt data
+   * **endRow** Select KDA file (or multiple)
+
+#### *Outputs*
+
+   * **ForceFile:** DATAFRAME with force data and COP data
+
+### **Examples:**
+Helpful examples
+
+[Back to Table of Contents](#table-of-contents)
+
+## Script: HBIO408_BatchImportKDA.m
+### Function HBIO408_BatchImportKDA
+[Link to HBIO408_BatchImport Code](https://github.com/USCBiomechanicsLab/labcodes/blob/master/HBIO408_BatchImportKDA.m)
+
+### **Keywords:**
+KDA, Batch, Import, B10, Force, Data, Files
+
+### **Syntax:**
+```
+Run the HBIO408_BatchImport_Code in MATLAB                      
+```
+### Dependencies 
+* MATLAB fxn, make sure it is in your working directory
+
+### **Description:**<br/>
+Batch import force data from a KDA file in B10. Can do one or multiple files.
+   
+### **Arguments:**
+
+#### *Inputs*
+
+   * **Input** Select KDA file (or multiple)
+
+#### *Outputs*
+
+   * **.csv:** FILE with force data (FP1x, FP1y, FP1z, FP2x, FP2y, FP2z) and COP data
+   * **.jpeg:** IMG force vs time curve to check against .avi overlay
+
+### **Examples:**
+Helpful examples
+
+[Back to Table of Contents](#table-of-contents)
 
 ## Script: projectiletraj
 ### Function flighttraj
