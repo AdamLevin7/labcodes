@@ -60,6 +60,6 @@ def apdm_import(filename):
             acc_df = acc_df.join(pd.DataFrame(acc, columns=[label + x for x in ['_x', '_y', '_z']]))
             gyro_df = gyro_df.join(pd.DataFrame(gyro, columns=[label + x for x in ['_x', '_y', '_z']]))
             mag_df = mag_df.join(pd.DataFrame(mag, columns=[label + x for x in ['_x', '_y', '_z']]))
-            orient_df = quat_df.join(pd.DataFrame(orient, columns=[label + x for x in ['_r', '_x', '_y', '_z']]))
+            orient_df = orient_df.join(pd.DataFrame(orient, columns=[label + x for x in ['_r', '_x', '_y', '_z']]))
 
     return acc_df, gyro_df, mag_df, orient_df
