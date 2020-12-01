@@ -2,35 +2,24 @@
 
 ## Table of Contents 
 
-### [Environment](https://github.com/USCBiomechanicsLab/labcodes/blob/master/uscbrl_env.yaml)  
-* .yaml file
-
-### [FindContactIntervals](#function-findcontactintervals)
-### Import KDA Files 
-* #### [HBIO408_BatchImportKDA](#function-HBIO408_BatchImportKDA)
-* #### [importForce_KDA](#function-importForce_KDA)
-### [ImportForce_TXT](#function-importforce_txt)
-### Impulse_Velocity
-* #### [imp_vel](#function-imp_vel)
-### apdm_load
-* #### [apdm_import](#function-apdm_import)
-### capture_area
-* #### [findarea](#function-findarea)
-### dataconversion_digi
-* #### [dltdv_import](#function-dltdv_import)
-### dataconversion_force
-* #### [convertdata](#function-convertdata)
-### derivative
-* #### [centraldiff](#function-centraldiff)
-### [findframe](#function-findframe)
-### [findplate](#function-findplate)
-### findpoint
-* #### [clickpoint](#function-clickpoint)
-### pixelratios
-* #### [pix2m_fromplate](#function-pix2m_fromplate)
-* #### [bw2pix](#function-bw2pix)
-### projectiletraj  
-* #### [flighttraj](#function-flighttraj)
+| Discription | Script |Functions |
+| ------------- | ------------- | ------------- |
+| Environment **.yaml** files)  | [Environment](https://github.com/USCBiomechanicsLab/labcodes/blob/master/uscbrl_env.yaml)||
+| Import **.kda** Force Files from B10  |  | [HBIO408_BatchImportKDA](#function-HBIO408_BatchImportKDA)  |
+|   |   | [importForce_KDA](#function-importForce_KDA)  |
+| Import **.txt** Force Data  |   | [ImportForce_TXT](#function-importforce_txt)  |
+| Calculate **impulse and velocity**  |   | [imp_vel](#function-imp_vel)  |
+| Load **APDM** data  | apdm_load  | [apdm_import](#function-apdm_import)|
+| Find an **area**  | capture_area  | [findarea](#function-findarea)  |
+|Convert **digitized data**|dataconversion_digi|[dltdv_import](#function-dltdv_import)|
+|Convert **force data**|dataconversion_force|[convertdata](#function-convertdata)|
+|Derivative: **Central Difference** Method| derivative|[centraldiff](#function-centraldiff)|
+|Find a **frame** | | [findframe](#function-findframe)|
+|Find **force plate**| |[findplate](#function-findplate)|
+|Find a **point**|findpoint|[clickpoint](#function-clickpoint)|
+|Pixel ratios|pixelratios|[pix2m_fromplate](#function-pix2m_fromplate)|
+| |pixelratios |[pix2m_fromplate](#function-pix2m_fromplate)|
+|Plot flight trajectory|projectiletraj |[flighttraj](#function-flighttraj)|
 
 End Table of Contents  <br/>
 
@@ -57,7 +46,7 @@ Import data from APDM sensor .h5 file to get the following dataframes
 * Accelerometer
 * Gyroscope 
 * Magnetometer 
-* Quaternion 
+* Quaternion   
 Uses the sampling rate of the sensors set at the time of collection.
    
 ### **Arguments:**
