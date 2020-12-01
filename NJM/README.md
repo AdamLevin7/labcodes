@@ -1,28 +1,24 @@
 # Documentation- Net Joint Moment Functions
 
 ## Table of Contents 
+| Description | Script |Functions |
+| ------------- | ------------- | ------------- |
+| Digi to Joint Kinetics  | dig2jointkinetics| [main](#function-main dig2jointkinetics)|
+|  | dig2jointkinetics| [filtdata](#function-filtdata)|
+|   | dig2jointkinetics| [interpdatasig](#function-interpdatasig)|
+|   | dig2jointkinetics| [datainterp](#function-datainterp)|
+|  | dig2jointkinetics| [cm_angularimpulse](#function-cm_angularimpulse)|
+|  | dig2jointkinetics| [cm_velocityacceleration](#function-cm_velocityacceleration)|
+|  | dig2jointkinetics| [segmentangle_vel_acc](#function-segmentangle_vel_acc)|
+|  | dig2jointkinetics| [jointangle_vel](#function-jointangle_vel)|
+|  | dig2jointkinetics| [selectdata](#function-selectdata)|
+| Joint Kinetics | jointkinetics| [calcnjm](#function-calcnjm)|
+|  | jointkinetics| [njm_full](#function-njm-full)|
+| Power and work | power_work| [main](#function-main power_work)|
+|  | power_work| [power](#function-power)|
+|  | power_work| [work](#function-work)|
 
-### dig2jointkinetics
-* #### [main](#function-main dig2jointkinetics)
-* #### [filtdata](#function-filtdata)
-* #### [interpdatasig](#function-interpdatasig)
-* #### [datainterp](#function-datainterp)
-* #### [cm_angularimpulse](#function-cm_angularimpulse)
-* #### [cm_velocityacceleration](#function-cm_velocityacceleration)
-* #### [segmentangle_vel_acc](#function-segmentangle_vel_acc)
-* #### [jointangle_vel](#function-jointangle_vel)
-* #### [selectdata](#function-selectdata)
-
-### jointkinetics
-* #### [calcnjm](#function-calcnjm)
-* #### [njm_full](#function-njm-full)
-
-### power_work
-* #### [power](#function-power)
-* #### [work](#function-work)
-* #### [main](#function-main power_work)
-
-End Table of Contents  <br/>
+### End Table of Contents  <br/>
 
 ## Script: projectiletraj
 ### Function flighttraj

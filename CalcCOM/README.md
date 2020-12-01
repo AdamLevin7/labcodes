@@ -1,13 +1,13 @@
 # Documentation- CalcCOM 
 
 ## Table of Contents 
+| Description | Script |Functions |
+| ------------- | ------------- | ------------- |
+| Calculate **COM** | calc_centermass| |
+| Overlay **Skeleton** on Video | displayskeleton| |
+| Calc **segments with Deleva** | segdim_deleva| [segmentdim](#function-segmentdim) |
 
-### calc_centermass
-### displayskeleton
-### segdim_deleva
-#### [segmentdim](#function-segmentdim)
-
-End Table of Contents  <br/>
+### End Table of Contents  <br/>
 
 ## Script: segdim_deleva
 ### Function segmentdim

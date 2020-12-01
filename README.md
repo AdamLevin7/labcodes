@@ -16,10 +16,9 @@
 
 ### [Kinematics](https://github.com/USCBiomechanicsLab/labcodes/tree/master/kinematics) <br/>
 
-### General Codes <br/>
-* [Code Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Documentation_General.md)
+### [General Codes](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Documentation_General.md)
 
 
 ### Plotting
 
-#### [Angle-Angle Diagrams](https://github.com/USCBiomechanicsLab/labcodes/blob/master/kinematics/Example_AngAng.md)
+* #### [Angle-Angle Diagrams](https://github.com/USCBiomechanicsLab/labcodes/blob/master/kinematics/Example_AngAng.md)

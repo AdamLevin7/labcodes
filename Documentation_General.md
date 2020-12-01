@@ -2,7 +2,7 @@
 
 ## Table of Contents 
 
-| Discription | Script |Functions |
+| Description | Script |Functions |
 | ------------- | ------------- | ------------- |
 | Environment **.yaml** files)  | [Environment](https://github.com/USCBiomechanicsLab/labcodes/blob/master/uscbrl_env.yaml)||
 | Import **.kda** Force Files from B10  |  | [HBIO408_BatchImportKDA](#function-HBIO408_BatchImportKDA)  |
@@ -21,7 +21,7 @@
 | |pixelratios |[pix2m_fromplate](#function-pix2m_fromplate)|
 |Plot flight trajectory|projectiletraj |[flighttraj](#function-flighttraj)|
 
-End Table of Contents  <br/>
+### End Table of Contents  <br/>
 
 ## Script: apdm_load
 ### Function apdm_import

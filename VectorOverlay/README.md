@@ -1,9 +1,16 @@
 # Documentation- Vector Overlay Functions
-
-## vectoroverlay: _vectoroverlay_
-
 ### **Examples:**
 [Tutorial for Creating Vector Overlay](https://github.com/USCBiomechanicsLab/labcodes/blob/master/VectorOverlay/Example_VectorOverlay.md)
+
+
+## Table of Contents 
+| Description | Script |Functions |
+| ------------- | ------------- | ------------- |
+| Vector Overlay | | vectoroverlay |
+
+### End Table of Contents  <br/>
+
+## vectoroverlay: _vectoroverlay_
 
 ### **Keywords:**
 Vector, Overlay, Force, Vector

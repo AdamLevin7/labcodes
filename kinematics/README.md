@@ -1,12 +1,12 @@
 # Documentation- Kinematics 
 
 ## Table of Contents 
+| Description | Script |Functions |
+| ------------- | ------------- | ------------- |
+| Calc segment angles | calc_segmentangle | [calc_segmentangle](#function-calc_segmentangle) |
 
+### End Table of Contents  <br/>
 
-### [calc_segmentangle]
-#### [calc_segmentangle](#function-calc_segmentangle)
-
-End Table of Contents  <br/>
 
 
 ## Script: calc_segmentangle
