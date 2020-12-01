@@ -1,11 +1,19 @@
 # Example Vector Overlay
-## This file will provide the step by step process for using the functions in the labcodes repository to generate a vector overlay.
-
-
+## Steps for using labcodes modules to generate a force vector overlay.
 For a video that walks you through creating a vector overlay for the PAC12 Steady State Running 
 [Click Here](https://drive.google.com/drive/folders/1bKA8pVp695KqJMAeGPvVXo6gOT0loFao)
 
-## Process for Vector Overlay: Basketball Jump Shot Example
+
+#### To create a Vector Overlay you will need:
+* Force data
+    * Sampling Rate (ie. 1200 Hz)
+* Video 
+    * Sampling Rate (ie. 240 Hz)
+* Contact frame in video 
+* Bodyweight of the participant
+
+## Process for Vector Overlay:
+ ### Example Created using a Basketball Jump Shot
 
 ### Import Package and Modules
 ```
@@ -23,7 +31,7 @@ from VectorOverlay.vectoroverlay import vectoroverlay
 
 ### Set Path (MODIFY for your project)<br/>
 This is the path on your computer where the video and corresponding force file will be stored.<br/>
-Note: In Python, "r" stands for "raw" so it causes backslashes to be interpreted as actual backslashes instead of special characters
+* Note: In Python, "r" stands for "raw" so it causes backslashes to be interpreted as actual backslashes instead of special characters
 
 ```
 path_force = r'F:\USC Biomechanics Research\HBIO 408\Tasks\Baskball- Jump Shot\Force'
@@ -52,16 +60,18 @@ __Typical Sampling Rates__:<br/>
 *Panasonic Cameras- 120, 240 Hz<br/>
 *Older Video- 30-60 Hz<br/>
 
-```sampvid_f1 = 120```
+```
+sampvid_f1 = 120
+```
 
-### Identify Video Sync Frame   
-Note: Python is a zero based coding language so if the sync frame is 120, in Python the frame should be 119
+### Identify Video Sync Frame  
+Video sync frame is a point in the video where you know what the force is,
+typically this will be initial contact but will sometimes be the first frame (0) if the participant is already on the plate. 
+* Note: Python is a zero based coding language so if the sync frame is 120, in Python the frame should be 119
 
 ```
 contactframe_f1 = 163-1 
 ```
-
-*Insert a picture of the sync frame*
 
 ### Load the Force Data <br/>
 Use the ImportForce_TXT function to import force data from Bioware. You can also create a pandas dataframe if the force data is in another format.<br/>
@@ -95,17 +105,13 @@ Functions Used in this Section
 [FindContactIntervals](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Documentation_General.md#function-findcontactintervals)
 
 ### Find Plate Corners
-Find the location of the force plate corners using the function _findplate_.  
-You can use framestart to select another frame in the video to use for the selection (ie. if person is on the plate and blocks one of the corners).  
-Use the _label_ argument to add a message that you want to remember (ie. Select both plates with Atttila49 FIRST).  
-Corners should be selected in a CW direction starting with the TOP LEFT CORNER.
 
+Find the location of the force plate corners using the function _findplate_. 
+**See the _findplate_ documentation for visual and directions for how to run this function**
 ```
 plate_area = findplate(os.path.join(path_video, file1_video),framestart=0,
                        label = 'Insert image here')
 ```
-
-* Insert a picture of how to select the corners of the plates properly
 
 Functions Used in this Section  
 [findplate](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Documentation_General.md#function-findplate)
@@ -113,17 +119,20 @@ Functions Used in this Section
 ### Crop Data
 Find the region of the force data that you would like to overlay on the video. 
 
-Method 1: Overlay a specific contact region  
+**Method 1: Overlay a specific contact region**  
 Use this method when you only want to display a specific contact region on for the Vector Overlay
+Substitute the index of the contact interval output from FindContactIntervals (see above for documentation)
+You will need to adjust the numbers specified in ci_f1['Start'] or ci_f1['End'] depending on the contact interval 
+you are interested in.
 ```
 ### Crop Data
-data_f1 = {0: data_f1_raw.filter(regex = fp1).iloc[ci_f1['Start'][2]:ci_f1['End'][2],:],
-           1: data_f1_raw.filter(regex = fp2).iloc[ci_f1['Start'][2]:ci_f1['End'][2],:]}
+data_f1 = {0: data_f1_raw.filter(regex = fp1).iloc[ci_f1['Start'][0]:ci_f1['End'][0],:],
+           1: data_f1_raw.filter(regex = fp2).iloc[ci_f1['Start'][0]:ci_f1['End'][0],:]}
 ```
 
 * Insert a picture of choosing one region to overlay
 
-Method 2: Start vector overlay from a certain region of force data  
+**Method 2: Start vector overlay from a certain region of force data**  
 Use this method when the person is already in contact with the plate when the video begins
 ```
 # Identify the sync frame in the force data
@@ -131,16 +140,15 @@ sync_frame_force = ci_f1['End'][1]
 # Identify the sync frame in the video
 sync_frame_vid = 162
 # Find the point in the force data where the video would begin
-init_frame_force = sync_frame_force - (sync_frame_vid * (samp/sampvid_f1))
+init_frame_force = int(sync_frame_force - (sync_frame_vid * (samp/sampvid_f1)))
                              
-
 ### Crop Data
 data_f1 = {0: data_f1_raw.filter(regex = fp1).iloc[init_frame_force:ci_f1['End'][2],:],
            1: data_f1_raw.filter(regex = fp2).iloc[init_frame_force:ci_f1['End'][2],:]}
 ```
 
 ### Zero Force Plates<br/>
-__Note:__ This doesn't necessarily have to be done but can help reduce noice from FP vectors.
+__Note:__ This doesn't necessarily have to be done but can help reduce noise from FP vectors.
 
 ```
 # # # Set values below 16N to 0 
@@ -172,7 +180,8 @@ This argument of the convertdata function helps to put the force data in the __v
 If FP1 needs to be adjusted you can use 0 within the dictionary. 
 
 ![Flip](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/Flip_convertData.png)  
-Figure: Illustrating how flips impact how force is displayed for the vector overlay.
+Figure: Illustrating how flips impact how force is displayed for the vector overlay. 
+The sections shows how to convert the force vector to match the **top left corner.**
 ```
 flip = {0: ['fy','ax'],
         1: ['fy','ay']}

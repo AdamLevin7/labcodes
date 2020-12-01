@@ -368,7 +368,8 @@ Figure: Examples of how forces can be combined or left separate.
    * **flip:** DICT Indicating how data should be flipped in video reference system
    
 ![Flip Arg](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/Flip_convertData.png)<br/>
-Figure: Examples of how forces can be combined or left separate.
+Figure: The sections shows how to flip the force vector to match the **top left corner.**
+
    
 #### *Outputs*
 
@@ -550,6 +551,13 @@ Identify 4 corners of a force plate(s) in an image.
 
 ![DataFrame Input](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/findplate_platecorners.png)<br/>
 Figure: Example of 2 force plates with corners selected in the CCW direction starting from top left <br/>  
+
+#### Directions:
+* Drag and select a large region including the force plates (green box)
+* Press ESC if you are satisfied with the region selected
+* Double click the corners of each FP in a **CCW direction starting at the TOP LEFT CORNER**
+* Repeat for the second FP if necessary
+* When satisfied press ESC to commit the coordinates of the plate
 
 ### **Arguments:**
 
