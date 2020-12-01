@@ -3,7 +3,7 @@
 ## Table of Contents 
 | Description | Script |Functions |
 | ------------- | ------------- | ------------- |
-| Digi to Joint Kinetics  | dig2jointkinetics| [main](#function-main dig2jointkinetics)|
+| Digi to Joint Kinetics  | dig2jointkinetics| [main](#function-main_dig2jointkinetics)|
 |  | dig2jointkinetics| [filtdata](#function-filtdata)|
 |   | dig2jointkinetics| [interpdatasig](#function-interpdatasig)|
 |   | dig2jointkinetics| [datainterp](#function-datainterp)|
@@ -14,7 +14,7 @@
 |  | dig2jointkinetics| [selectdata](#function-selectdata)|
 | Joint Kinetics | jointkinetics| [calcnjm](#function-calcnjm)|
 |  | jointkinetics| [njm_full](#function-njm-full)|
-| Power and work | power_work| [main](#function-main power_work)|
+| Power and work | power_work| [main](#function-main_power_work)|
 |  | power_work| [power](#function-power)|
 |  | power_work| [work](#function-work)|
 
