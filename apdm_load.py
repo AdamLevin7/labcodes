@@ -14,6 +14,7 @@ Output:
     mag_df: DATAFRAME magnetometer data from all sensors (x, y, z)
     orient_df: DATAFRAME quaternion data from all sensors (r, x, y, z)
         [real (scalar), x (complex), y (complex), z (complex)]
+    temp: FLOAT Temperature of the sensor during collection
 
 Created on Wed Oct  7 10:01:02 2020
 
@@ -42,13 +43,13 @@ def apdm_import(filename):
         gyro = f['Sensors'][s]['Gyroscope'][:]
         mag = f['Sensors'][s]['Magnetometer'][:]
         orient = f['Processed'][s]['Orientation'][:]
-        samp = f['Sensors'][s]['Configuration'].attrs['Sample Rate']
-
+        #samp = f['Sensors'][s]['Configuration'].attrs['Sample Rate']
+        t['time'] = f['Sensors'][s]['Time'][:]
+       # Not sure why this isn't working 
+       #pressure = f['Sensors'][s]['Barometer'][:]
+        
         """ reformat label name so it could be a part of column name """
         label = label.decode("utf-8").replace(" ", "")
-
-        """ create time data frame """
-        t = pd.DataFrame(np.arange(0, len(acc)) / samp, columns=['time'])
 
         """ convert data to data frame """
         if i == 1:
@@ -61,5 +62,9 @@ def apdm_import(filename):
             gyro_df = gyro_df.join(pd.DataFrame(gyro, columns=[label + x for x in ['_x', '_y', '_z']]))
             mag_df = mag_df.join(pd.DataFrame(mag, columns=[label + x for x in ['_x', '_y', '_z']]))
             orient_df = orient_df.join(pd.DataFrame(orient, columns=[label + x for x in ['_r', '_x', '_y', '_z']]))
+            
+    """ get temp and sampling rate from last sensor in collection"""        
+    temp = f['Sensors'][s]['Temperature'][:][0]  
+    #samp = f['Sensors'][s]['Configuration'].attrs['Sample Rate']
 
-    return acc_df, gyro_df, mag_df, orient_df
+    return acc_df, gyro_df, mag_df, orient_df, temp #, samp
