@@ -74,7 +74,9 @@ contactframe_f1 = 163-1
 ```
 
 ### Load the Force Data <br/>
-Use the ImportForce_TXT function to import force data from Bioware. You can also create a pandas dataframe if the force data is in another format.<br/>
+Use the ImportForce_TXT function to import force data from Bioware.  
+You can also create a pandas dataframe if the force data is in another format (make sure the column names are 'Time', 'Fx', 'Fy', 'Fz'
+because the function will seach for this capitalized format.  
 bw is the Body weight of the participant from that session. This is sometimes messed up during collections and can be hard coded if needed.<br/>
 samp is the sampling rate of the force plate. (Can be hard coded if needed but is typically 1200 Hz for most collections)
 
