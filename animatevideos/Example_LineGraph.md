@@ -11,7 +11,7 @@ Figure: Example of vertical line overlayed on plotted data and synced with video
 ```
 import pandas as pd
 import matplotlib.pyplot as plt
-from animatevideos.animationgraph import 
+from animatevideos.animationgraph import linegraph
 ```
 
 ## Functions Used in this Code
@@ -29,42 +29,49 @@ Output animated video:
 filename = 'exampledata/191118_1004055_graphvid.mp4'
 ```
 
-Load previously processed data
+Load previously processed data 
+Can also use [ImportForce_TXT](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Documentation_General.md#function-importforce_txt) function to get data.
+Format should be:
+Column 1- Time
+Column 2- Whatever data you are interested in plotting
+Column 3- etc.
+
 ```
 graph_data = 'exampledata/data.csv'
 ```
-Sampling rate of the force data in Hz
+Sampling rate of the data for your plot in Hz
 ```
-samp_force = 1200
+samp_data = 1200
 ```
 
-Sampling rate of the video in Hz
+Sampling rate of the video you are adding the graph to in Hz 
 ```
 samp_vid = 120
 ```
-Set video frame number when graph animation should start
+Set video frame number when graph animation should start, this is typically initial contact
 
 ```
 graph_start = 0
 ```
 
-
 ### Set Sampling Factor
 This is the ratio of the sampling rate of the data being plotted and the video sampling rate
 
 ```
-samp_factor = int(samp_force / samp_vid)
+samp_factor = int(samp_data / samp_vid)
 ```
 
 ### Plot Data
 Plot the data that will be visualized in the video 
 
-Read in the data
+Read in the data (Remember you can use other functions or use a dataframe already imported instead of this line).
 ```
 data_plot = pd.read_csv(graph_data)
 ```
 
 Plot the data (This is an example plot, you will need to modify for your data)
+It is important to follow this format in order for the data to be correctly input into the linegraph function.
+This example is a double axis plot with Force Data and CM Velocity.
 ```
 fig, ax1 = plt.subplots()
 ax1.plot(data_plot['time'], data_plot['fz'], label='Vertical Reaction Force')
