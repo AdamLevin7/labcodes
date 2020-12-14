@@ -44,3 +44,54 @@ def flighttraj(x_i, y_i, vx_i, vy_i, t_flight, samp):
     
     
     return pos
+
+
+#%%
+"""
+"""
+def flighttraj_pixels(x_i, y_i, vx_i, vy_i, frame_start, frame_end, pix2m, samp,
+                      thresh=0.2, flip_x='no', flip_y='yes'):
+    
+    """ flight time """
+    t_flight = (frame_end - frame_start ) / samp
+    
+    """ find exact rows of each frame """
+    # find row of start frame
+    frameloc_start = data['frame'].isin([frame_start]).idxmax()
+    # find row of end frame
+    frameloc_end = data['frame'].isin([frame_end]).idxmax()
+    
+    """ calculate  trajectory """
+    # find position during flight ACTUAL FLIGHT
+    pos = flighttraj(x_i, y_i, vx_i, vy_i, t_flight, samp)
+    # join with frame number and convert back to pixels
+    pos_pix = pd.DataFrame({'frame': np.arange(frame_start, frame_end)}).join(pos[['x','y']] / pix2m)
+    
+    
+    """ calculate max range trajectory """
+    # find position during flight MAX RANGE
+    pos_max = flighttraj(x_i, y_i, vx_i+thresh, vy_i+thresh, t_flight, samp)
+    # join with frame number and convert back to pixels
+    pos_pix_max = pd.DataFrame({'frame': np.arange(frame_start, frame_end)}).join(pos_max[['x','y']] / pix2m)
+    
+    
+    """ calculate min range trajectory """
+    # find position during flight MIN RANGE
+    pos_min = flighttraj(x_i, y_i, vx_i-thresh, vy_i-thresh, t_flight, samp)
+    # join with frame number and convert back to pixels
+    pos_pix_min = pd.DataFrame({'frame': np.arange(frame_start, frame_end)}).join(pos_min[['x','y']] / pix2m)
+    
+    
+    """ flip x """
+    if flip_x == 'yes':
+        pos_pix['x'] = pos_pix['x'][0] - (pos_pix['x'] - pos_pix['x'][0])
+        pos_pix_max['x'] = pos_pix_max['x'][0] - (pos_pix_max['x'] - pos_pix_max['x'][0])
+        pos_pix_min['x'] = pos_pix_min['x'][0] - (pos_pix_min['x'] - pos_pix_min['x'][0])
+    """ flip y """
+    if flip_y == 'yes':
+        pos_pix['y'] = pos_pix['y'][0] - (pos_pix['y'] - pos_pix['y'][0])
+        pos_pix_max['y'] = pos_pix_max['y'][0] - (pos_pix_max['y'] - pos_pix_max['y'][0])
+        pos_pix_min['y'] = pos_pix_min['y'][0] - (pos_pix_min['y'] - pos_pix_min['y'][0])
+    
+    
+    return pos_pix, pos_pix_max, pos_pix_min
