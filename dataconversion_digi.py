@@ -25,19 +25,41 @@ def dlc_import(file, filetype='h5', thresh=0.95, file_vid=None, flipy='yes', mad
             colnames_og = data_in.columns
             for cnt in range(len(colnames_og)):
                 colnames.append(colnames_og[cnt][2] + '_' + colnames_og[cnt][3])
-            
+
             """ convert into new data frame """
             # remove header rows and set column names
             data = pd.DataFrame(data_in.values, columns=colnames)
-            
+
+            """ replace positions surrounded by nans """
+            for col in data.columns:
+                for cntl in data.index[1:-1]:
+                    if np.isnan(data.loc[cntl - 1, col]) and np.isnan(data.loc[cntl + 1, col]):
+                        data.loc[cntl, col] = np.nan
+
             """ flip y-axis of digitized and center of mass data """
             if flipy == 'yes':
                 # find height of image (max y value)
                 cap = cv2.VideoCapture(file_vid)
+                frame_width = int(cap.get(3))
                 frame_height = int(cap.get(4))
                 cap.release()
                 # subtract digitzed loction from frame height (only y columns)
                 data.iloc[:,data.columns.str.contains('_y')] = frame_height - data.filter(regex = '_y')
+
+            """ set likelihood to 0 if location is outside image """
+            # loop through data columns in groups of 3 (_x, _y, _likelihood)
+            for cntg in range(round(len(data.columns)/3)):
+                xlab = data.columns[cntg*3]
+                ylab = data.columns[cntg*3+1]
+                llab = data.columns[cntg*3+2]
+                # if either x or y is outside image, set likelihood to 0
+                data[llab][data[xlab] < 0] = 0
+                data[llab][data[ylab] < 0] = 0
+                data[llab][data[xlab] > frame_width] = 0
+                data[llab][data[ylab] > frame_height] = 0
+                # if likelihood is less than threshold, set marker to nan
+                data[xlab][data[llab] < thresh] = np.nan
+                data[ylab][data[llab] < thresh] = np.nan
             
             """ subset digitized location and likelihood scores """
             # likelihood scores
@@ -51,8 +73,12 @@ def dlc_import(file, filetype='h5', thresh=0.95, file_vid=None, flipy='yes', mad
             """ estimate when body is in view based on likelihood scores """
             # find first frame where all data is above threshold
             frame_first = np.max((data_like > thresh).idxmax())
-            # find last frame where all data is above threshold (flipped data)
-            frame_last = np.min((data_like.iloc[::-1] > thresh).idxmax())
+            # find last frame where all data is above threshold
+            # work backwards until ALL points have likelihood above threshold
+            for cntl in range(len(data_like)-1, 0, -1):
+                if (data_like.iloc[cntl,:] > thresh).all():
+                    frame_last = cntl
+                    break
         else:
             """ load data """
             data_in = pd.read_hdf(file)
@@ -353,3 +379,77 @@ class convertdigi:
         self.frame_last = temp.iloc[temp.idxmin()+1:].idxmax()
         
         return self.data_out, self.frame_first, self.frame_last
+
+
+"""
+remove_switches
+    Removes potential marker switches
+
+Input:
+    data_in: DATAFRAME data to be checked for possible switching
+        FIRST COLUMN SHOULD BE FRAME/TIME
+        Must contain left and right sets
+    thresh: FLOAT threshold to check if markers are within set distance (default: 0.1) [m]
+    buffer: INT remove point x number before and after (default: 1)
+        for instances where marker was "moving in the direction of the other"
+    pix2m: FLOAT pixel to meter ratio, if given it will multiply the dataset to convert to meters (default: None)
+
+Output:
+    df: DATAFRAME data with any marker's within threshold removed
+        units are the same are original dataframe (data_in)
+
+Dependencies:
+    numpy
+"""
+def remove_switches(data_in, thresh=0.1, buffer=1, sdfactor=5, pix2m=None):
+    import numpy as np
+
+    df = data_in.copy()
+
+    " set in meters to keep constant comparison "
+    if pix2m is not None:
+        df.iloc[:, 1:] = df.iloc[:, 1:] * pix2m
+
+    """ for now, hard-code which markers should be checked for switching
+        leave out vertex, c7, shoulder & hip markers (since the natural close proximity)
+    """
+    markers = ['elbow', 'wrist', 'knee', 'ankle', 'heel', 'mtp', 'toes']
+
+    " loop through rows "
+    for cntr in df.index:
+        " loop through markers "
+        for mar in markers:
+            with np.errstate(invalid='ignore'):
+                if (abs(df.loc[cntr, mar + '_left_x'] - df.loc[cntr, mar + '_right_x']) < thresh and abs(df.loc[cntr, mar + '_left_y'] - df.loc[cntr, mar + '_right_y']) < thresh):
+                    # set all positions as nan
+                    if cntr > df.index[0]:
+                        df.loc[cntr-buffer, mar + '_left_x'] = np.nan
+                        df.loc[cntr-buffer, mar + '_right_x'] = np.nan
+                        df.loc[cntr-buffer, mar + '_left_y'] = np.nan
+                        df.loc[cntr-buffer, mar + '_right_y'] = np.nan
+                    df.loc[cntr, mar + '_left_x'] = np.nan
+                    df.loc[cntr, mar + '_right_x'] = np.nan
+                    df.loc[cntr, mar + '_left_y'] = np.nan
+                    df.loc[cntr, mar + '_right_y'] = np.nan
+                    if cntr < df.index[-1]:
+                        df.loc[cntr+buffer, mar + '_left_x'] = np.nan
+                        df.loc[cntr+buffer, mar + '_right_x'] = np.nan
+                        df.loc[cntr+buffer, mar + '_left_y'] = np.nan
+                        df.loc[cntr+buffer, mar + '_right_y'] = np.nan
+
+    """ remove last frames skip if present """
+    # for col in range(1, len(df.columns)):
+    #     # fill any possible nans and find difference
+    #     tempdiff = np.diff((df.iloc[:,col]).interpolate(method='spline', order=3))
+    #     # find std of difference
+    #     sdthresh = np.std(tempdiff) * sdfactor
+    #     with np.errstate(invalid='ignore'):
+    #         if abs(tempdiff[-1]) > sdthresh:
+    #             # add previous change in location to previous point (estimating where it would be)
+    #             df.iloc[len(df)-1, col] = df.iloc[-2, col] + tempdiff[-2]
+
+    " reset to pixels if it was originally "
+    if pix2m is not None:
+        df.iloc[:, 1:] = df.iloc[:, 1:].copy() / pix2m
+
+    return df
