@@ -12,7 +12,8 @@ Created on Mon Sep 14 17:03:38 2020
 class fbd_vis():
     
     #%%
-    def __init__(self, data_force, data_digi, data_cm, data_njm, side, cnt=None, colorlegend='flexext', rf_scale=0.0002):
+    def __init__(self, data_force, data_digi, data_cm, data_njm, side,
+                 cnt=None, ylim=[-600,600], colorlegend='flexext', rf_scale=0.0002):
         """
         Initialize class to create free body diagram visual.
 
@@ -33,6 +34,8 @@ class fbd_vis():
         cnt : INT, optional
             counter - index of data to be visualized.
             The default is None, but will be reset to the first index of data
+        ylim : LIST, optional (default: [-600, 600])
+            limits for y-axis of the graph
         colorlegend : STRING, optional (default: 'flexext')
             What do positive/negative values represent?
             Possible inputs:
@@ -56,6 +59,7 @@ class fbd_vis():
             self.cnt = data_njm.first_valid_index()
         else:
             self.cnt = cnt
+        self.ylim = ylim
         self.colorlegend = colorlegend
         self.rf_scale = rf_scale
         fbd_vis.fig_init(self)
@@ -102,7 +106,7 @@ class fbd_vis():
                         '#342A1F', linestyle='--', label='Icm * alpha')
         self.f_ax4.hlines(0, xmin=self.data_njm['time'].iloc[0],
                           xmax=self.data_njm['time'].iloc[-1], color='k')
-        self.f_ax4.set_ylim(-600, 600)
+        self.f_ax4.set_ylim(self.ylim[0], self.ylim[1])
         self.f_ax4.set_title('Foot')
         self.f_ax4.set_ylabel('Moment (Nm)')
         self.f_ax4.set_xlabel('Time (s)')
@@ -119,7 +123,7 @@ class fbd_vis():
                         '#342A1F', linestyle='--', label='Icm * alpha')
         self.f_ax3.hlines(0, xmin=self.data_njm['time'].iloc[0],
                           xmax=self.data_njm['time'].iloc[-1], color='k')
-        self.f_ax3.set_ylim(-600, 600)
+        self.f_ax3.set_ylim(self.ylim[0], self.ylim[1])
         self.f_ax3.set_title('Shank')
         self.f_ax3.set_ylabel('Moment (Nm)')
         ### thigh
@@ -135,7 +139,7 @@ class fbd_vis():
                         '#342A1F', linestyle='--', label='Icm * alpha')
         self.f_ax2.hlines(0, xmin=self.data_njm['time'].iloc[0],
                           xmax=self.data_njm['time'].iloc[-1], color='k')
-        self.f_ax2.set_ylim(-600, 600)
+        self.f_ax2.set_ylim(self.ylim[0], self.ylim[1])
         self.f_ax2.set_title('Thigh')
         self.f_ax2.set_ylabel('Moment (Nm)')
         # add legends
@@ -169,29 +173,29 @@ class fbd_vis():
             (self.line3).remove()
             (self.line2).remove()
         self.line4 = self.f_ax4.vlines(self.data_njm['time'][self.cnt],
-                                       ymin=-600, ymax=600, color='k')
+                                       ymin=self.ylim[0], ymax=self.ylim[1], color='k')
         self.line3 = self.f_ax3.vlines(self.data_njm['time'][self.cnt],
-                                       ymin=-600, ymax=600, color='k')
+                                       ymin=self.ylim[0], ymax=self.ylim[1], color='k')
         self.line2 = self.f_ax2.vlines(self.data_njm['time'][self.cnt],
-                                       ymin=-600, ymax=600, color='k')
+                                       ymin=self.ylim[0], ymax=self.ylim[1], color='k')
         
         """ identify labels for segments """
-        toe_x = 'toe_' + self.side + '_x'
-        toe_y = 'toe_' + self.side + '_y'
-        heel_x = 'heel_' + self.side + '_x'
-        heel_y = 'heel_' + self.side + '_y'
-        foot_x = 'foot_' + self.side + '_x'
-        foot_y = 'foot_' + self.side + '_y'
-        ank_x = 'ankle_' + self.side + '_x'
-        ank_y = 'ankle_' + self.side + '_y'
-        shank_x = 'shank_' + self.side + '_x'
-        shank_y = 'shank_' + self.side + '_y'
-        knee_x = 'knee_' + self.side + '_x'
-        knee_y = 'knee_' + self.side + '_y'
-        thigh_x = 'thigh_' + self.side + '_x'
-        thigh_y = 'thigh_' + self.side + '_y'
-        hip_x = 'hip_' + self.side + '_x'
-        hip_y = 'hip_' + self.side + '_y'
+        toe_x = [col for col in self.data_digi.columns if ('toe' in col and self.side in col and '_x' in col)][0]
+        toe_y = [col for col in self.data_digi.columns if ('toe' in col and self.side in col and '_y' in col)][0]
+        heel_x = [col for col in self.data_digi.columns if ('heel' in col and self.side in col and '_x' in col)][0]
+        heel_y = [col for col in self.data_digi.columns if ('heel' in col and self.side in col and '_y' in col)][0]
+        foot_x = [col for col in self.data_cm.columns if ('foot' in col and self.side in col and '_x' in col)][0]
+        foot_y = [col for col in self.data_cm.columns if ('foot' in col and self.side in col and '_y' in col)][0]
+        ank_x = [col for col in self.data_digi.columns if ('ankle' in col and self.side in col and '_x' in col)][0]
+        ank_y = [col for col in self.data_digi.columns if ('ankle' in col and self.side in col and '_y' in col)][0]
+        shank_x = [col for col in self.data_cm.columns if ('shank' in col and self.side in col and '_x' in col)][0]
+        shank_y = [col for col in self.data_cm.columns if ('shank' in col and self.side in col and '_y' in col)][0]
+        knee_x = [col for col in self.data_digi.columns if ('knee' in col and self.side in col and '_x' in col)][0]
+        knee_y = [col for col in self.data_digi.columns if ('knee' in col and self.side in col and '_y' in col)][0]
+        thigh_x = [col for col in self.data_cm.columns if ('thigh' in col and self.side in col and '_x' in col)][0]
+        thigh_y = [col for col in self.data_cm.columns if ('thigh' in col and self.side in col and '_y' in col)][0]
+        hip_x = [col for col in self.data_digi.columns if ('hip' in col and self.side in col and '_x' in col)][0]
+        hip_y = [col for col in self.data_digi.columns if ('hip' in col and self.side in col and '_y' in col)][0]
         
         # refresh subplot and set FBD axis limits
         self.f_ax1.clear()
@@ -386,4 +390,3 @@ class fbd_vis():
         dpi = int(self.fig.dpi)
         writer = matplotlib.animation.writers['ffmpeg'](fps=30)
         ani.save(filename, writer=writer, dpi=dpi)
-            
