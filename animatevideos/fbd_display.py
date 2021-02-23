@@ -390,3 +390,184 @@ class fbd_vis():
         dpi = int(self.fig.dpi)
         writer = matplotlib.animation.writers['ffmpeg'](fps=30)
         ani.save(filename, writer=writer, dpi=dpi)
+
+
+
+
+def fbd_overlay(file_vid, data_force, data_digi, data_cm, data_njm, side, frame_start,
+                samp_vid=240, samp_force=1200, colorlegend="flexext", rf_scale=0.1, imout=False,
+                flipy="yes", file_vid_n="fbd_overlay.mp4"):
+    """
+    Initialize class to create free body diagram overlay.
+
+    Parameters
+    ----------
+    file_vid : STR
+        full path file name of the video to overlay the free body diagram visual
+    data_force : DATAFRAME
+        force data (fx, fy, ax, ay) (N, N, m, m).
+    data_digi : DATAFRAME
+        digitized data (m).
+    data_cm : DATAFRAME
+        center of mass data for segments and body (m).
+        format mathces that of NJM.dig2jointkinetics.dig2jk.main().
+    data_njm : DATAFRAME
+        contains calculated variables for segment's joint kinetics.
+    side : STRING
+        which side of the body.
+        (ex: 'left')
+    frame_start : INT
+        frame number when the net joint moment calculations begin (i.e., contact frame)
+        this is zero-based
+    samp_vid : INT, optional (default: 240)
+        sampling rate of the video
+    samp_force : INT, optional (default: 1200)
+        sampling rate of the force data
+    colorlegend : STRING, optional (default: 'flexext')
+        What do positive/negative values represent?
+        Possible inputs:
+            'flexext': positive = extensor moment; negative = flexor moment
+            'posneg': positive = positive moment w/r reference frame; negative = negative moment w/r reference frame
+    rf_scale : INT, optional (default: 0.1)
+        It scales the force and moments ONLY IN THE VISUAL.
+    imout : BOOLEAN, optional (default: False)
+        export still frame images for the entire video
+    flipy : STR, optional (default: "yes")
+        yes/no to flip the digitized data to match video reference system
+    file_vid_n : STR (default: "fbd_overlay.mp4)
+        the name of the new video output
+
+
+    Returns
+    -------
+    None.
+
+    """
+
+    import cv2
+    import pandas as pd
+    import numpy as np
+
+    """ convert njm data to match digitized data """
+    # find sampling factor
+    samp_fact = int(samp_force / samp_vid)
+    # keep every other samp_fact row
+    data_njm_crop = data_njm.copy().iloc[::samp_fact, :]
+    # set index to match digitized data
+    data_njm_crop = data_njm_crop.set_index(pd.Index(range(frame_start, len(data_njm.iloc[::samp_fact, :])+frame_start)))
+
+    """ filter digitized endpoints and center of mass to only side that njm was calculated """
+    data_digi_side = data_digi.copy().filter(regex = side)
+    data_cm_side = data_cm.copy().filter(regex = side)
+
+    """ sync net joint moment data with the video """
+    samp_fact = samp_force / samp_vid
+
+    """ set up location for new images """
+    if imout is True:
+        # if just file name was given
+        if os.path.dirname(file_vid) == '':
+            savefolder = 'FBD_OL'
+        else:
+            savefolder = os.path.join(os.path.dirname(file_vid), 'FBD_OL')
+        # if folder does not exist
+        if not os.path.exists(savefolder):
+            os.makedirs(savefolder)
+
+    """ load video file and initialize new video """
+    # load current video
+    cap = cv2.VideoCapture(file_vid)
+    # default resolutions of the frame are obtained.The default resolutions are system dependent.
+    # we convert the resolutions from float to integer.
+    frame_width, frame_height = int(cap.get(3)), int(cap.get(4))
+    # define the codec and create VideoWriter object
+    vid_out = cv2.VideoWriter(file_vid_n, cv2.VideoWriter_fourcc('M', 'P', '4', 'V'),
+                              samp_vid / 4, (frame_width, frame_height))
+
+    """ flip y axis of digitized data to match video reference system """
+    if flipy == 'yes':
+        # digitized data
+        data_digi_side.loc[:, data_digi_side.columns.str.contains('_y')] = frame_height - data_digi_side.loc[:, data_digi_side.columns.str.contains('_y')]
+        # center of mass data
+        data_cm_side.loc[:, data_cm_side.columns.str.contains('_y')] = frame_height - data_cm_side.loc[:, data_cm_side.columns.str.contains('_y')]
+
+    """ create video """
+    # find all frame numbers
+    frame_num_list = data_digi['frame']
+    # create frame counter
+    frame_cnt = 0
+    # create njm counter
+    njm_cnt = 0
+
+    while (True):
+        ret, frame = cap.read()
+        if ret == True:
+
+            # %% apply skeleton on each image
+            # if current frame is in data
+            if any(data_njm_crop.index.isin([frame_cnt])):
+
+                # find what index current frame is
+                frameloc = np.where(frame_num_list == frame_cnt)[0][0]
+
+                """ hip """
+                # create njm tuple location
+                njm_loc = tuple(data_digi_side.filter(regex='hip').loc[frameloc, :].astype(int))
+                # create njm magnitude
+                njm_mag = abs(int(data_njm_crop["thigh_njmp"][frame_cnt] * rf_scale))
+                # if positive, plot "coral"...if negative, plot "mediumorchid"
+                if data_njm_crop['thigh_njmp'][frame_cnt] >= 0:
+                    moment_color_p = (80, 127, 255)
+                else:
+                    moment_color_p = (211, 85, 186)
+                # display net joint moment
+                frame = cv2.circle(frame, njm_loc, njm_mag, moment_color_p, 2)
+
+                """ knee """
+                # create njm tuple location
+                njm_loc = tuple(data_digi_side.filter(regex='knee').loc[frameloc, :].astype(int))
+                # create njm magnitude
+                njm_mag = abs(int(data_njm_crop["shank_njmp"][frame_cnt] * rf_scale))
+                # if positive, plot "coral"...if negative, plot "mediumorchid"
+                if data_njm_crop['shank_njmp'][frame_cnt] >= 0:
+                    moment_color_p = (80, 127, 255)
+                else:
+                    moment_color_p = (211, 85, 186)
+                # display net joint moment
+                frame = cv2.circle(frame, njm_loc, njm_mag, moment_color_p, 2)
+
+                """ ankle """
+                # create njm tuple location
+                njm_loc = tuple(data_digi_side.filter(regex='ankle').loc[frameloc, :].astype(int))
+                # create njm magnitude
+                njm_mag = abs(int(data_njm_crop["foot_njmp"][frame_cnt] * rf_scale))
+                # if positive, plot "coral"...if negative, plot "mediumorchid"
+                if data_njm_crop['foot_njmp'][frame_cnt] >= 0:
+                    moment_color_p = (80,127,255)
+                else:
+                    moment_color_p = (211,85,186)
+                # display net joint moment
+                frame = cv2.circle(frame, njm_loc, njm_mag, moment_color_p, 2)
+
+                """ iterate counter """
+                njm_cnt += 1
+
+            # %% save frame and add to video
+            if imout is True:
+                # create frame name
+                framename = os.path.join(savefolder,
+                                         os.path.basename(file_vid)[:-4] + '_' + str(frame_cnt) + '.png')
+                cv2.imwrite(framename, frame)
+
+            # write the frame into the file
+            vid_out.write(frame)
+            # iterate frame number
+            frame_cnt += 1
+        else:
+            break
+
+    # %% when everything done, release the video capture and video write objects
+    cap.release()
+    vid_out.release()
+    # closes all the frames
+    cv2.destroyAllWindows()
