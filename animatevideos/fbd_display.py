@@ -395,8 +395,8 @@ class fbd_vis():
 
 
 def fbd_overlay(file_vid, data_force, data_digi, data_cm, data_njm, side, frame_start,
-                samp_vid=240, samp_force=1200, colorlegend="flexext", rf_scale=0.1, imout=False,
-                flipy="yes", file_vid_n="fbd_overlay.mp4"):
+                samp_vid=240, samp_force=1200, colorlegend="flexext", body_mass=None, rf_scale=0.1, imout=False,
+                flipy="yes", innercirc_mag=5, legend_loc="topleft", file_vid_n="fbd_overlay.mp4"):
     """
     Initialize class to create free body diagram overlay.
 
@@ -428,12 +428,18 @@ def fbd_overlay(file_vid, data_force, data_digi, data_cm, data_njm, side, frame_
         Possible inputs:
             'flexext': positive = extensor moment; negative = flexor moment
             'posneg': positive = positive moment w/r reference frame; negative = negative moment w/r reference frame
+    body_mass : FLOAT, optinal (default: None)
+        body mass of individual. this will be used to scale the circles
     rf_scale : INT, optional (default: 0.1)
         It scales the force and moments ONLY IN THE VISUAL.
     imout : BOOLEAN, optional (default: False)
         export still frame images for the entire video
     flipy : STR, optional (default: "yes")
         yes/no to flip the digitized data to match video reference system
+    innercirc_mag : INT, optional (default: 5)
+        magnitude (units: Nm/kg) of the inner circles displayed on video
+    legend_loc : STR, optional (default: "yes")
+        description of location for the legend (currently only topleft or northwest are possible)
     file_vid_n : STR (default: "fbd_overlay.mp4)
         the name of the new video output
 
@@ -459,6 +465,11 @@ def fbd_overlay(file_vid, data_force, data_digi, data_cm, data_njm, side, frame_
     """ filter digitized endpoints and center of mass to only side that njm was calculated """
     data_digi_side = data_digi.copy().filter(regex = side)
     data_cm_side = data_cm.copy().filter(regex = side)
+
+    """ set body mass for normalization """
+    if body_mass is None:
+        # make one to not alter calculations
+        body_mass = 1
 
     """ sync net joint moment data with the video """
     samp_fact = samp_force / samp_vid
@@ -503,7 +514,22 @@ def fbd_overlay(file_vid, data_force, data_digi, data_cm, data_njm, side, frame_
         ret, frame = cap.read()
         if ret == True:
 
-            # %% apply skeleton on each image
+            """ add legend """
+            # calculate location of box and text
+            if legend_loc in ["northwest", "topleft"]:
+                rec_1 = (int(frame_width*0.023), int(frame_height*0.014))
+                rec_2 = (int(frame_width*0.438), int(frame_height*0.236))
+                ext_loc = (int(frame_width*0.031), int(frame_height*0.083))
+                fle_loc = (int(frame_width*0.031), int(frame_height*0.167))
+                inc_loc = (int(frame_width*0.031), int(frame_height*0.222))
+            # add to image
+            frame = cv2.rectangle(frame, rec_1, rec_2, (255, 255, 255), -1)
+            frame = cv2.putText(frame, "Extension NJM", ext_loc, cv2.FONT_HERSHEY_COMPLEX, 0.825, (80, 127, 255), 2)
+            frame = cv2.putText(frame, "Flexion NJM", fle_loc, cv2.FONT_HERSHEY_COMPLEX, 0.825, (211,85,186), 2)
+            frame = cv2.putText(frame, "Inner Circle Mag = " + str(innercirc_mag) + " Nm/kg",
+                                inc_loc, cv2.FONT_HERSHEY_COMPLEX, 0.5, (0,0,0), 1)
+
+            """ apply skeleton on each image """
             # if current frame is in data
             if any(data_njm_crop.index.isin([frame_cnt])):
 
@@ -514,7 +540,7 @@ def fbd_overlay(file_vid, data_force, data_digi, data_cm, data_njm, side, frame_
                 # create njm tuple location
                 njm_loc = tuple(data_digi_side.filter(regex='hip').loc[frameloc, :].astype(int))
                 # create njm magnitude
-                njm_mag = abs(int(data_njm_crop["thigh_njmp"][frame_cnt] * rf_scale))
+                njm_mag = abs(int(round(data_njm_crop["thigh_njmp"][frame_cnt] / body_mass)))
                 # if positive, plot "coral"...if negative, plot "mediumorchid"
                 if data_njm_crop['thigh_njmp'][frame_cnt] >= 0:
                     moment_color_p = (80, 127, 255)
@@ -522,12 +548,16 @@ def fbd_overlay(file_vid, data_force, data_digi, data_cm, data_njm, side, frame_
                     moment_color_p = (211, 85, 186)
                 # display net joint moment
                 frame = cv2.circle(frame, njm_loc, njm_mag, moment_color_p, 2)
+                # display inner circles
+                for in_mag in range(int(round(njm_mag/innercirc_mag))):
+                    # display net joint moment
+                    frame = cv2.circle(frame, njm_loc, (in_mag+1)*innercirc_mag, moment_color_p, 1)
 
                 """ knee """
                 # create njm tuple location
                 njm_loc = tuple(data_digi_side.filter(regex='knee').loc[frameloc, :].astype(int))
                 # create njm magnitude
-                njm_mag = abs(int(data_njm_crop["shank_njmp"][frame_cnt] * rf_scale))
+                njm_mag = abs(int(round(data_njm_crop["shank_njmp"][frame_cnt] / body_mass)))
                 # if positive, plot "coral"...if negative, plot "mediumorchid"
                 if data_njm_crop['shank_njmp'][frame_cnt] >= 0:
                     moment_color_p = (80, 127, 255)
@@ -535,12 +565,16 @@ def fbd_overlay(file_vid, data_force, data_digi, data_cm, data_njm, side, frame_
                     moment_color_p = (211, 85, 186)
                 # display net joint moment
                 frame = cv2.circle(frame, njm_loc, njm_mag, moment_color_p, 2)
+                # display inner circles
+                for in_mag in range(int(round(njm_mag/innercirc_mag))):
+                    # display net joint moment
+                    frame = cv2.circle(frame, njm_loc, (in_mag+1)*innercirc_mag, moment_color_p, 1)
 
                 """ ankle """
                 # create njm tuple location
                 njm_loc = tuple(data_digi_side.filter(regex='ankle').loc[frameloc, :].astype(int))
                 # create njm magnitude
-                njm_mag = abs(int(data_njm_crop["foot_njmp"][frame_cnt] * rf_scale))
+                njm_mag = abs(int(round(data_njm_crop["foot_njmp"][frame_cnt] / body_mass)))
                 # if positive, plot "coral"...if negative, plot "mediumorchid"
                 if data_njm_crop['foot_njmp'][frame_cnt] >= 0:
                     moment_color_p = (80,127,255)
@@ -548,11 +582,15 @@ def fbd_overlay(file_vid, data_force, data_digi, data_cm, data_njm, side, frame_
                     moment_color_p = (211,85,186)
                 # display net joint moment
                 frame = cv2.circle(frame, njm_loc, njm_mag, moment_color_p, 2)
+                # display inner circles
+                for in_mag in range(int(round(njm_mag/innercirc_mag))):
+                    # display net joint moment
+                    frame = cv2.circle(frame, njm_loc, (in_mag+1)*innercirc_mag, moment_color_p, 1)
 
                 """ iterate counter """
                 njm_cnt += 1
 
-            # %% save frame and add to video
+            """ save frame and add to video """
             if imout is True:
                 # create frame name
                 framename = os.path.join(savefolder,
@@ -566,7 +604,7 @@ def fbd_overlay(file_vid, data_force, data_digi, data_cm, data_njm, side, frame_
         else:
             break
 
-    # %% when everything done, release the video capture and video write objects
+    """ when everything done, release the video capture and video write objects """
     cap.release()
     vid_out.release()
     # closes all the frames
