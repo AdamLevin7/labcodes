@@ -4,13 +4,13 @@
 | Description | Script |Functions |
 | ------------- | ------------- | ------------- |
 | Generates Strobe Image| [strobe.py](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Strobe/strobe.py) | [strobe_image](#function-strobe_image) |
-| Identify frames for strobe | [strobe.py](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Strobe/strobe.py) | [findframe](#function-strobe_findframes) |
+| Identify frames for strobe | [strobe.py](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Strobe/strobe.py) | [strobe_findframes](#function-strobe_findframes) |
 
 ### End Table of Contents  <br/>
 
 
 # Script-strobe
-## Function strobe_findframe
+## Function strobe_findframes
 
 [Link to strobe_findframes Code](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Strobe/strobe.py)
 
