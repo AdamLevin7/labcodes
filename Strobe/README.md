@@ -5,9 +5,56 @@
 | ------------- | ------------- | ------------- |
 | Generates Strobe Image| [strobe.py](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Strobe/strobe.py) | [strobe_image](#function-strobe_image) |
 | Identify frames for strobe | [strobe.py](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Strobe/strobe.py) | [strobe_findframes](#function-strobe_findframes) |
+| Create strobe video or image | [strobe.py](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Strobe/strobe.py) | [strobe](#function-strobe) |
 
 ### End Table of Contents  <br/>
 
+#Script-strobe
+##Function strobe
+
+[Link to strobe Code] (https://github.com/USCBiomechanicsLab/labcodes/blob/master/Strobe/strobe.py)
+
+### **Keywords:**
+strobe
+
+### **Syntax:""
+```
+from Strobe.strobe import strobe
+
+strobe(filename, filesave, frames, searcharea=None, samp=240, thresh=60, bgint=5)
+
+```
+
+### **Dependencies:**
+* **cv2**
+* **np:** numpy
+* **scipy ndimage**
+
+### **Description:**<br/>
+Generates a strobe image and/or video.
+
+### **Arguments:**
+
+#### *Inputs*
+
+1. **filename:** STRING full path file name
+2. **filesave:** STRING full path file name that is to be saved
+    * **image:** jpeg
+    * **video:** mp4
+3. **frames:** SERIES list of strobe frames
+4. **searcharea (optional):** DICTIONARY list of searcha area for each strobe frame
+    * **key:** frame number
+    * **value:** search area from capture_area.py's 'find_area
+5. **samp:** INT sampling rate of video
+6. **thresh:** INT absolute difference threshold to find which pixels changed
+7. **bgint:** INT number of frame difference from current image to use as subtraction image
+
+#### *Outputs*<br/>
+* Generates a strobe image and/or video and saves it as a jpeg file called img_strobe.
+
+### **Examples:**
+
+[Back to Table of Contents](#table-of-contents)
 
 # Script-strobe
 ## Function strobe_findframes
