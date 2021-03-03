@@ -9,10 +9,10 @@
 
 ### End Table of Contents  <br/>
 
-#Script-strobe
-##Function strobe
+# Script-strobe  
+## Function strobe  
 
-[Link to strobe Code] (https://github.com/USCBiomechanicsLab/labcodes/blob/master/Strobe/strobe.py)
+[Link to strobe Code](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Strobe/strobe.py)
 
 ### **Keywords:**
 strobe
