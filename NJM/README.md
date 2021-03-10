@@ -1,5 +1,7 @@
 # Documentation- Net Joint Moment Functions
 
+[Tutorial- NJM Calculations](https://github.com/USCBiomechanicsLab/labcodes/blob/master/NJM/Example_NetJointMoment.md)
+
 ## Table of Contents 
 | Description | Script |Functions |
 | ------------- | ------------- | ------------- |
