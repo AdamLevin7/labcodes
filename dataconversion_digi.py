@@ -10,7 +10,7 @@ import numpy as np
 import cv2
 
 #%%
-def dlc_import(file, filetype='h5', thresh=0.95, file_vid=None, flipy='yes', madlc='no'):
+def dlc_import(file, filetype='h5', thresh=0.8, file_vid=None, flipy='yes', madlc='no', startbuffer=5, edgebuffer=10):
     import os
     
     
@@ -30,11 +30,11 @@ def dlc_import(file, filetype='h5', thresh=0.95, file_vid=None, flipy='yes', mad
             # remove header rows and set column names
             data = pd.DataFrame(data_in.values, columns=colnames)
 
-            """ replace positions surrounded by nans """
-            for col in data.columns:
-                for cntl in data.index[1:-1]:
-                    if np.isnan(data.loc[cntl - 1, col]) and np.isnan(data.loc[cntl + 1, col]):
-                        data.loc[cntl, col] = np.nan
+            # """ replace positions surrounded by nans """
+            # for col in data.columns:
+            #     for cntl in data.index[1:-1]:
+            #         if np.isnan(data.loc[cntl - 1, col]) and np.isnan(data.loc[cntl + 1, col]):
+            #             data.loc[cntl, col] = np.nan
 
             """ flip y-axis of digitized and center of mass data """
             if flipy == 'yes':
@@ -45,40 +45,52 @@ def dlc_import(file, filetype='h5', thresh=0.95, file_vid=None, flipy='yes', mad
                 cap.release()
                 # subtract digitzed loction from frame height (only y columns)
                 data.iloc[:,data.columns.str.contains('_y')] = frame_height - data.filter(regex = '_y')
-
-            """ set likelihood to 0 if location is outside image """
-            # loop through data columns in groups of 3 (_x, _y, _likelihood)
-            for cntg in range(round(len(data.columns)/3)):
-                xlab = data.columns[cntg*3]
-                ylab = data.columns[cntg*3+1]
-                llab = data.columns[cntg*3+2]
-                # if either x or y is outside image, set likelihood to 0
-                data[llab][data[xlab] < 0] = 0
-                data[llab][data[ylab] < 0] = 0
-                data[llab][data[xlab] > frame_width] = 0
-                data[llab][data[ylab] > frame_height] = 0
-                # if likelihood is less than threshold, set marker to nan
-                data[xlab][data[llab] < thresh] = np.nan
-                data[ylab][data[llab] < thresh] = np.nan
             
             """ subset digitized location and likelihood scores """
             # likelihood scores
             data_like = data.filter(regex = 'likelihood')
             # digitized data
             data_out = data.iloc[:,~data.columns.str.contains('likelihood', regex=False)]
+
+            """ increase DLC's auto add likelihood - sets likelihood at 0.01 """
+            def increase_like(y):
+                y.loc[y == 0.01] = 0.95
+                return y
+            data_like = data_like.apply(lambda x: increase_like(x), axis=1)
+
             
             """ create frame column and join with digitized data """
             data_out = pd.DataFrame({'frame': range(0,len(data_out))}).join(data_out)
         
-            """ estimate when body is in view based on likelihood scores """
-            # find first frame where all data is above threshold
-            frame_first = np.max((data_like > thresh).idxmax())
-            # find last frame where all data is above threshold
-            # work backwards until ALL points have likelihood above threshold
-            for cntl in range(len(data_like)-1, 0, -1):
-                if (data_like.iloc[cntl,:] > thresh).all():
-                    frame_last = cntl
+            """ estimate when body is in view based on image size and marker location """
+            # find first frame where all markers are within frame
+            frame_b = max(data.filter(regex='_x').apply(lambda x: x.between(0, frame_width)).idxmax().max(),
+                          data.filter(regex='_y').apply(lambda x: x.between(0, frame_height)).idxmax().max())
+            # find first instance ALL markers have likelihood above threshold for at least startbuffer frames
+            for cntl in data_like.index[frame_b:]:
+                if (data_like.loc[cntl:cntl+startbuffer+1,:] > thresh).all().all():
+                    frame_first = cntl
                     break
+                else:
+                    frame_first = 0
+            # fill nans with 0
+            data_outNAN = data_out.copy().iloc[frame_first:, 1:].fillna(0)
+            # find when object first exited the image for each marker
+            if data_out.iloc[frame_first, 1] < frame_width/2:
+                " object started on left side of image "
+                frames_exc = data_outNAN.apply(lambda x: np.argmax(x > frame_width - edgebuffer))
+            else:
+                " object started on right side of image "
+                frames_exc = data_outNAN.apply(lambda x: np.argmax((x < edgebuffer) & (x > 0)))
+            # check if all are 0
+            if (frames_exc == 0).all():
+                frame_last = data_out.index[-1]
+            else:
+                # find when object first exited the image
+                frame_exc = data_outNAN.index[min(frames_exc[frames_exc > 0]) -1]
+                # find last frame in which all X AND Y locations exist (are not NAN)
+                frame_last = (data_out.iloc[frame_exc:frame_first:-1, :].interpolate(method='linear', limit_direction='forward')>0).all(axis=1).idxmax()
+
         else:
             """ load data """
             data_in = pd.read_hdf(file)
@@ -163,31 +175,32 @@ def dlc_import(file, filetype='h5', thresh=0.95, file_vid=None, flipy='yes', mad
 
 
 #%%    
-def intel_import(file, idfilt=None):
+def intel_import(file):
+    """
+    Update the column names, make it 0-based, and set non-detected locations to nan
+
+    :param file: csv file that comes from intel
+    :return: dataframe modified to work with our codes
+    """
+
+    import numpy as np
+
     """ load data """
-    data_in = pd.read_csv(file)
+    df = pd.read_csv(file)
     
-    """ filter which person id in video """
-    if not idfilt == None:
-        data_in = data_in[data_in['id'] == idfilt]
+    """ convert name to have "left" and "right" """
+    # rename "left" columns
+    df.columns = df.columns.str.replace('l_', '_left_')
+    # rename "right" columns
+    df.columns = df.columns.str.replace('r_', '_right_')
     
-    """ remove id and bounding box columns """
-    data = data_in.drop(['id','bounding_box_corner_left','bounding_box_corner_right',
-                              'bounding_box_corner_top', 'bounding_box_corner_bottom'],
-                             axis = 1)
+    """ convert 0s to nan """
+    df[df==0] = np.nan
+
+    """ make frames 0-based """
+    df.frame = df.frame - 1
     
-    """ convert path to frame number """
-    # rename columns
-    data = data.rename(columns = {'path': 'frame'})
-    # rename frame to actual number
-    data['frame'] = data['frame'].str[-7:-4]
-    # convert data type to float
-    data = data.astype('float').reset_index(drop=True)
-    
-    """ convert negative numbers to nan """
-    data[data<0] = np.nan
-    
-    return data
+    return df
 
 
 #%%
@@ -390,8 +403,8 @@ Input:
         FIRST COLUMN SHOULD BE FRAME/TIME
         Must contain left and right sets
     thresh: FLOAT threshold to check if markers are within set distance (default: 0.1) [m]
-    buffer: INT remove point x number before and after (default: 1)
-        for instances where marker was "moving in the direction of the other"
+    factor: INT factor to multiply the 25% trimmed mean of the marker acceleration for thresholding (default: 8)
+        (i.e., trim_mean(acceleration, 0.25) * 8)
     pix2m: FLOAT pixel to meter ratio, if given it will multiply the dataset to convert to meters (default: None)
 
 Output:
@@ -401,8 +414,9 @@ Output:
 Dependencies:
     numpy
 """
-def remove_switches(data_in, thresh=0.1, buffer=1, sdfactor=5, pix2m=None):
+def remove_switches(data_in, factor=10, pix2m=None):
     import numpy as np
+    from scipy.stats import trim_mean
 
     df = data_in.copy()
 
@@ -410,32 +424,53 @@ def remove_switches(data_in, thresh=0.1, buffer=1, sdfactor=5, pix2m=None):
     if pix2m is not None:
         df.iloc[:, 1:] = df.iloc[:, 1:] * pix2m
 
-    """ for now, hard-code which markers should be checked for switching
-        leave out vertex, c7, shoulder & hip markers (since the natural close proximity)
-    """
-    markers = ['elbow', 'wrist', 'knee', 'ankle', 'heel', 'mtp', 'toes']
 
-    " loop through rows "
-    for cntr in df.index:
-        " loop through markers "
-        for mar in markers:
-            with np.errstate(invalid='ignore'):
-                if (abs(df.loc[cntr, mar + '_left_x'] - df.loc[cntr, mar + '_right_x']) < thresh and abs(df.loc[cntr, mar + '_left_y'] - df.loc[cntr, mar + '_right_y']) < thresh):
-                    # set all positions as nan
-                    if cntr > df.index[0]:
-                        df.loc[cntr-buffer, mar + '_left_x'] = np.nan
-                        df.loc[cntr-buffer, mar + '_right_x'] = np.nan
-                        df.loc[cntr-buffer, mar + '_left_y'] = np.nan
-                        df.loc[cntr-buffer, mar + '_right_y'] = np.nan
-                    df.loc[cntr, mar + '_left_x'] = np.nan
-                    df.loc[cntr, mar + '_right_x'] = np.nan
-                    df.loc[cntr, mar + '_left_y'] = np.nan
-                    df.loc[cntr, mar + '_right_y'] = np.nan
-                    if cntr < df.index[-1]:
-                        df.loc[cntr+buffer, mar + '_left_x'] = np.nan
-                        df.loc[cntr+buffer, mar + '_right_x'] = np.nan
-                        df.loc[cntr+buffer, mar + '_left_y'] = np.nan
-                        df.loc[cntr+buffer, mar + '_right_y'] = np.nan
+    " loop through markers "
+    for mar in pd.Index(map(lambda x : str(x)[:-2], df.columns[1:])).unique():
+
+        df_c = df.filter(regex=mar).copy().interpolate(method='linear', limit_direction='both')
+
+        acc_loc = pd.Index([])
+        stopper = 0
+
+        while stopper == 0:
+            """ find indices when markers have acceleration greater than sdfactor times the standard deviation """
+            acc_loc_t = df_c.index[np.where((abs(df_c[mar + '_x'].diff().diff()) > (trim_mean(abs(df_c[mar + '_x'].diff().diff()), 0.25) * factor)) |
+                                            (abs(df_c[mar + '_y'].diff().diff()) > (trim_mean(abs(df_c[mar + '_y'].diff().diff()), 0.25) * factor)))]
+
+            # append new indices
+            #acc_loc = acc_loc.append(acc_loc_r).append(acc_loc_l)
+
+            if len(acc_loc_t) > 0:
+                if np.isin(acc_loc_t, acc_loc).all():
+                    df.loc[acc_loc, mar + '_x'] = np.nan
+                    df.loc[acc_loc, mar + '_y'] = np.nan
+                    stopper = 1
+                else:
+                    # set appendices to nan
+                    df_c.loc[acc_loc_t, mar + '_x'] = np.nan
+                    df_c.loc[acc_loc_t, mar + '_y'] = np.nan
+                    df_c = df_c.interpolate(method='linear', limit_direction='both')
+                    acc_loc = acc_loc.append(acc_loc_t)
+            else:
+                df.loc[acc_loc, mar + '_x'] = np.nan
+                df.loc[acc_loc, mar + '_y'] = np.nan
+                stopper = 1
+
+
+
+        # """ loop through number of "overlapping" occurances """
+        # for cnts in df.index[np.where((abs(df[mar + '_left_x'] - df[mar + '_right_x']) < thresh) &
+        #                               (abs(df[mar + '_left_y'] - df[mar + '_right_y']) < thresh))]:
+        #     """ if the acceleration index is within one frame of the overlapping
+        #         this makes it so there has to be a large acceleration that occured near by AND the markers are near
+        #     """
+        #     if len(acc_loc_l) > 1 and (abs(acc_loc_l - cnts) <= 1).any():
+        #         df.loc[acc_loc_r[abs(acc_loc_r - cnts) <= 1], mar + '_left_x'] = np.nan
+        #         df.loc[acc_loc_r[abs(acc_loc_r - cnts) <= 1], mar + '_left_y'] = np.nan
+        #     if len(acc_loc_r) > 1 and (abs(acc_loc_r - cnts) <= 1).any():
+        #         df.loc[acc_loc_r[abs(acc_loc_r - cnts) <= 1], mar + '_right_x'] = np.nan
+        #         df.loc[acc_loc_r[abs(acc_loc_r - cnts) <= 1], mar + '_right_y'] = np.nan
 
     """ remove last frames skip if present """
     # for col in range(1, len(df.columns)):
