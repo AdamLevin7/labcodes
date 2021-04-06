@@ -52,6 +52,7 @@ This function is using data from the DeLeva tables which is a classic anthropome
 ```
 segments = segmentdim(sex)
 ```
+[segmentdim](https://github.com/USCBiomechanicsLab/labcodes/tree/master/CalcCOM#function-segmentdim)
 
 Calculate the center of mass (COM) of the participant.
 
@@ -66,6 +67,7 @@ These are the angle measured from the right horizontal to each individual segmen
 ```
 angles_seg = segangle(data_digi, segments)
 ```
+[segangle](https://github.com/USCBiomechanicsLab/labcodes/tree/master/kinematics#function-calc_segmentangle)
 
 Calculate Joint angles. 
 This calculates the angle between two adjacent segments (ie. knee angle would be between the thigh and the shank)
@@ -73,9 +75,7 @@ This calculates the angle between two adjacent segments (ie. knee angle would be
 ```
 angles_joint = jointangle(data_digi, segments)
 ```
-
-#### Functions Used in this Section
-[calc_segmentangle](https://github.com/USCBiomechanicsLab/labcodes/blob/master/kinematics/README.md#function-calc_segmentangle)
+[jointangle](https://github.com/USCBiomechanicsLab/labcodes/tree/master/kinematics#function-jointangle)
 
 ### Convert to Degrees
 
@@ -91,11 +91,13 @@ Calculate the angular velocity of the segment angles. (Angular velocity is how m
 ```
 angvel_seg = centraldiff(angles_seg, 1/samp_vid)
 ```
+[centraldiff](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Documentation_General.md#function-centraldiff)
 
 Calculate the joint angular velocity.
 ```
 angvel_joint = centraldiff(angles_joint, 1/samp_vid)
 ```
+[centraldiff](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Documentation_General.md#function-centraldiff)
 
 ### Plot Angle-Angle Diagrams
 Plot examples that could be generated to show the coordination between two segments or joints. 
