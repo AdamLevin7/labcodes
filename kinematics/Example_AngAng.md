@@ -1,13 +1,13 @@
 # Example Angle Angle Diagram Code
 ## This file will provide the step by step process for using the functions in the labcodes repository to generate an angle-angle diagram.
 
+![ShankThigh](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/angang_shankthigh.png)  
+Figure: Example of Shank-Thigh Angle-Angle plot demonstrating coordination patterns.
 
 For a video that walks you through creating angle-angle diagrams for the PAC12 Steady State Running 
 [Click Here](https://drive.google.com/drive/u/0/folders/1bKA8pVp695KqJMAeGPvVXo6gOT0loFao)
 
 ## Process for creating Angle Angle Diagrams: Steady State Running Example
-
-
 
 ### Import Package and Modules
 
