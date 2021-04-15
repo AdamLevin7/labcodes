@@ -51,15 +51,15 @@ def flighttraj(x_i, y_i, vx_i, vy_i, t_flight, samp):
 """
 def flighttraj_pixels(x_i, y_i, vx_i, vy_i, frame_start, frame_end, pix2m, samp,
                       thresh=0.2, flip_x='no', flip_y='yes'):
-    
+
+    """ check if position is in pixel or meters """
+    if x_i > 200 or y_i > 200:
+        # change to meters
+        x_i = x_i * pix2m
+        y_i = y_i * pix2m
+
     """ flight time """
     t_flight = (frame_end - frame_start ) / samp
-    
-    """ find exact rows of each frame """
-    # find row of start frame
-    frameloc_start = data['frame'].isin([frame_start]).idxmax()
-    # find row of end frame
-    frameloc_end = data['frame'].isin([frame_end]).idxmax()
     
     """ calculate  trajectory """
     # find position during flight ACTUAL FLIGHT
