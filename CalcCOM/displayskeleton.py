@@ -15,10 +15,12 @@ Inputs
     file_vid_n: STR full file name of new video (default: skeletonvideo.mp4)
     samp_vid: INT sampling rate of video (Hz) (default: 240)
     flipy: STR flip y-axis values to match (0,0) in upper left of video (default: 'no')
+    imout: TRUE/FALSE option to output each frame as individual image (default: False)
     
 Outputs
     image of each digitized frame with body cm, segment cm, and segment visually represented
-        loaction: 'SkeletonOL' folder within location of file_vid
+        imout must be True!!
+        location: 'SkeletonOL' folder within location of file_vid
     
 Dependencies
     cv2 (opencv)
@@ -38,17 +40,18 @@ import os
 
 
 def addskeleton(file_vid, data, data_cm, segments,
-                file_vid_n='skeletonvideo.mp4', samp_vid=240, flipy='yes'):
+                file_vid_n='skeletonvideo.mp4', samp_vid=240, flipy='yes', imout=False):
     
     #%% set up location to store images
-    # if just file name was given
-    if os.path.dirname(file_vid) == '':
-        savefolder = 'SkeletonOL'
-    else:
-        savefolder = os.path.join(os.path.dirname(file_vid), 'SkeletonOL')
-    # if folder does not exist
-    if not os.path.exists(savefolder):
-        os.makedirs(savefolder)
+    if imout is True:
+        # if just file name was given
+        if os.path.dirname(file_vid) == '':
+            savefolder = 'SkeletonOL'
+        else:
+            savefolder = os.path.join(os.path.dirname(file_vid), 'SkeletonOL')
+        # if folder does not exist
+        if not os.path.exists(savefolder):
+            os.makedirs(savefolder)
         
     
     #%% load video file and initialize new video
@@ -195,10 +198,12 @@ def addskeleton(file_vid, data, data_cm, segments,
             
             
             #%% save frame and add to video
-            # create frame name
-            framename = os.path.join(savefolder,
-                                     os.path.basename(file_vid)[ :-4] + '_' + str(frame_cnt) + '.png')
-            cv2.imwrite(framename, frame)
+            if imout is True:
+                # create frame name
+                framename = os.path.join(savefolder,
+                                         os.path.basename(file_vid)[ :-4] + '_' + str(frame_cnt) + '.png')
+                cv2.imwrite(framename, frame)
+
             # write the frame into the file
             vid_out.write(frame)
             # iterate frame number
