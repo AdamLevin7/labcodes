@@ -381,3 +381,88 @@ def strobe_findframes(filename, crop='yes', autoid_thresh=None, autoid_num=None)
     
     ###
     return strobeframes, searcharea
+
+
+"""
+strobe_autofindframes
+
+Auto identifies which frames to use for strobe creation.
+    - Usefully to find consistent number of strobe frames with consistent spacing between two events
+        - example, flight phase in the long jump 
+
+User input:
+    - frames: current series of already identified frames
+    - autoid_thresh: OPTIONAL default: 25, minimum number of frames between manually 
+        identified strobe frames before auto id occurs (will find apex and two
+        additional frames before and after apex)
+    - autoid_num: OPTIONAL default: 7, number of frames to automatically find
+        when autoid_thresh is triggered (ex: when two manual frames are spaced
+                                         greater than autoid_thresh, it will find
+                                         autoid_num of frames -including the
+                                         original two frames- between the
+                                         chosen frames)
+
+Created on Tue Apr 27 4:45:26 2021
+
+@author: cwiens, Casey Wiens, cwiens32@gmail.com
+"""
+
+
+def strobe_autofindframes(frames, autoid_thresh=25, autoid_num=7):
+    import pandas as pd
+    import numpy as np
+
+    """ initialize parameters """
+    strobeframes = frames.copy()
+
+    # store strobeframes as another variable to use as search
+    sframestemp = strobeframes
+    # find difference between selected frames
+    diffframes = np.diff(frames)
+    # auto select evenly spaced frames
+    for cntdf in range(len(diffframes)):
+        if diffframes[cntdf] >= autoid_thresh:
+            tempframes = np.linspace(frames.iloc[cntdf],
+                                     frames.iloc[cntdf + 1], autoid_num, dtype=int)
+            strobeframes = (strobeframes.append(pd.Series(tempframes)).reset_index(drop=True)).sort_values(
+                ignore_index=True).drop_duplicates()
+
+    return strobeframes
+
+
+"""
+strobe_findarea
+
+Allows user to identify the search area for the create of strobes.
+    - Note: this can only be used if the frames have already been identified
+
+User input:
+    - filename: full path file name
+    - frames: current series of identified frames
+
+Created on Tue Apr 27 4:45:26 2021
+
+@author: cwiens, Casey Wiens, cwiens32@gmail.com
+"""
+
+def strobe_findarea(filename, frames):
+    import pandas as pd
+    from capture_area import findarea
+    import numpy as np
+
+    """ initialize variables """
+    searcharea = None
+
+    """ loop through frames to identify search area """
+    for frame in frames:
+        # update frame and strobe frame list
+        if searcharea is None:
+            area = findarea(filename,frame=frame,label='Select area around object')
+            searcharea = {frame: area}
+        # if it is not first strobe image
+        else:
+            # find search area
+            area = findarea(filename,frame=frame,label='Select area around object')
+            searcharea[frame] = area
+
+    return searcharea
