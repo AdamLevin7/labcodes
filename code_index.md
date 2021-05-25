@@ -3,14 +3,11 @@
 ## Index with links to find functions within labcodes
 
 ### Links to other repositories-
-
-**USATF:**
-* [processing_codes](https://github.com/USATF-Biomechanics/processing_codes)  
-Processing codes for USATF
-* [data_from_websites](https://github.com/USATF-Biomechanics/data_from_websites)  
-Scraping data from websites.
-* [server_vis](https://github.com/USATF-Biomechanics/server_vis)  
-Shiny apps, htmls, for USATF server
+| Organization | Repository | Description | 
+| ------------- | ------------- | ------------- |
+| [USATF-Biomechanics](https://github.com/USATF-Biomechanics) | [processing_codes](https://github.com/USATF-Biomechanics/processing_codes)| Processing codes for USATF |
+| [USATF-Biomechanics](https://github.com/USATF-Biomechanics) | [data_from_websites](https://github.com/USATF-Biomechanics/data_from_websites)| Scraping data from websites |
+| [USATF-Biomechanics](https://github.com/USATF-Biomechanics) | [server_vis](https://github.com/USATF-Biomechanics/server_vis)| Shiny apps, htmls, for USATF server |
 
 ## Scripts, Functions, Links to Documentation
 *** 
