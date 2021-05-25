@@ -17,3 +17,5 @@
 |Calculating Kinematics|[Kinematics](https://github.com/USCBiomechanicsLab/labcodes/tree/master/kinematics)|
 |Apply Projectile Motion to video | [Projectile Motion](https://github.com/USCBiomechanicsLab/labcodes/tree/master/projectilemotion)|
 |Angle-Angle Plots | [Angle-Angle Diagrams](https://github.com/USCBiomechanicsLab/labcodes/blob/master/kinematics/Example_AngAng.md) |
+
+[Index of Available Codes](https://github.com/USCBiomechanicsLab/labcodes/blob/master/code_index.md)
