@@ -1,8 +1,25 @@
 # Code Index
 
-Index with links to find functions within labcodes
+## Index with links to find functions within labcodes
 
+### Links to other repositories-
 
+**USATF:**
+* [processing_codes](https://github.com/USATF-Biomechanics/processing_codes)  
+Processing codes for USATF
+* [data_from_websites](https://github.com/USATF-Biomechanics/data_from_websites)  
+Scraping data from websites.
+* [server_vis](https://github.com/USATF-Biomechanics/server_vis)  
+Shiny apps, htmls, for USATF server
+
+## Scripts, Functions, Links to Documentation
+*** 
+**Script:**  [FindMotion.py](https://github.com/USATF-Biomechanics/processing_codes/blob/master/FindMotion.py) 
+
+*Functions:*  
+* FindMotion - Find frame when object/person enters and leaves the image (assuming this is reason for change in pixels occuring)   
+[Documentation]
+  
 *** 
 **Script:**  [ImportForce_TXT.py](https://github.com/USCBiomechanicsLab/labcodes/blob/master/ImportForce_TXT.py) 
 
