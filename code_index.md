@@ -18,11 +18,11 @@ Modules for calculating toe locations relative to certain objects (ie. board)
 
 *Functions:*  
 * **findtoelocations** - Find location of contact toe using the video or digitized data. (Assuming pixel locations are in the reference system of the video, origin - top left)   
-[Documentation]  
+[Documentation](https://github.com/USATF-Biomechanics/processing_codes/blob/master/README.md#function-findtoelocations)
 * **toe2board** - Calculates distance from to board for a given frame. Fits a line btw edges of board and provides x-position of the toe distance relative to y-position of the fitted line. Positive value means toe is behind board (good jump/fair). Negative means toe is past board (fault/foul).      
-[Documentation]
+[Documentation](https://github.com/USATF-Biomechanics/processing_codes/blob/master/README.md#function-toe2board)
 * **toeloc** - Identify the location of the toe.    
-[Documentation]
+[Documentation](https://github.com/USATF-Biomechanics/processing_codes/blob/master/README.md#function-toeloc)
 
 
 *** 
