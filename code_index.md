@@ -78,7 +78,7 @@ Gather info from the logsheet to upload info and/or upload and process force dat
 *Functions:*
 * **FindContactIntervals** - Find the beginning and end of contact intervals when provided a single column
 vertical force data.     
-[Documentation]
+[Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Documentation_General.md#function-findcontactintervals)
 
 ***
 **Script:**  [HBIO408_BatchImportKDA.m](https://github.com/USCBiomechanicsLab/labcodes/blob/master/HBIO408_BatchImportKDA.m) 
