@@ -31,7 +31,7 @@ Modules with different methods for calculating velocity.
 
 *Functions:*  
 * **filtdata** - Filters all columns of the dataframe.    
-[Documentation]  
+[Documentation](https://github.com/USATF-Biomechanics/processing_codes/blob/master/README.md#function-filtdata)  
 * vel_filt - Velocity for every frame calculated from filtered data set.    
 [Documentation]
 * **vel_analytical** - Calculated takeoff and final velocity using equations of motion.    
