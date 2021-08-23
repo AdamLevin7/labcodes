@@ -1,0 +1,9 @@
+github_repo,folder,script_name,code_language,function_name,script_website,keywords,describe_fxn,depend_list,inputs,outputs
+labcodes,documentation,document_fxn,R,create_documentation,https://github.com/USCBiomechanicsLab/labcodes/blob/master/documentation/document_fxn.R,"documentation, R",Creates Github markdown script for documenting a function,None,"script_name: STR Name of the script containing the function,
+  function_name: STR Name of the specific function (module),
+  script_website: STR Github website of the script,
+  keywords: STR keywords associated with the function,
+  describe_fxn: STR Description of the function,
+  depend_list: LIST Dependencies needed to run the function,
+  inputs: LIST Input variable names and descriptions,
+  outputs: LIST Output variable names and descriptions",Github markdown output to generate Github documentation

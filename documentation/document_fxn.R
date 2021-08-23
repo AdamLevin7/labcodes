@@ -3,11 +3,35 @@
 # Created by: hestewar, harperestewart7@gmail.com
 # Created on: 8/17/2021
 
-# TODO make a list of existing documentation codes (put in a database table?)
+# TODO make a list of existing documentation codes (put in a csv file that stays with labcodes)
 # TODO Make documentation format for all codes, specify the keywords/things to search for
 # TODO Read that information as the inputs to this function
 # TODO make things into lists to regenerate documentation links and reflect updates (loop a list)
 # TODO make a documentation package (not necessary but fun)
+
+# Other thoughs, documentation becomes a folder within each repository
+# Contains: .csv of the codes and docu info, github markdown of all of the documentation
+
+batch_documentation <- function(doc_codes_csv, repo){
+  # Function::: batch_documentation
+  # Creates series of documentation for functions in a repository
+
+  # Inputs
+  # doc_codes_csv: STR .csv input file containing information
+  # repo: STR Name of repository
+
+  # Outputs
+  # Batch of Github markdown outputs for repository documentation
+
+  # Dependencies
+  # None
+
+  #TODO Read in the .csv file
+
+  #TODO Use create_documentation function to cycle through each row and create the documentation
+
+
+}
 
 create_documentation <- function(script_name = '',
                                  function_name= '',
