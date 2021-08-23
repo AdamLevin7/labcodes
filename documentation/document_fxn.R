@@ -3,25 +3,11 @@
 # Created by: hestewar, harperestewart7@gmail.com
 # Created on: 8/17/2021
 
-# TODO make it into an actual function
-# TODO decide on a template for documentation
 # TODO make a list of existing documentation codes (put in a database table?)
 # TODO Make documentation format for all codes, specify the keywords/things to search for
 # TODO Read that information as the inputs to this function
 # TODO make things into lists to regenerate documentation links and reflect updates (loop a list)
 # TODO make a documentation package (not necessary but fun)
-
-# Gather input variables or make a normal function*
-# Ask for input if nothing is provided
-
-script_name <- "blah"
-function_name <- "blah_function"
-script_website <- 'blah_blah.com'
-keywords <- "blah_keyword"
-describe_fxn <- "describe blah blah blah"
-depend_list <- "dEPenDenCies"
-inputs <- "input1 , input 2"
-outputs <- "output 1, output 7"
 
 create_documentation <- function(script_name = '',
                                  function_name= '',
@@ -53,7 +39,41 @@ create_documentation <- function(script_name = '',
   # None
 
   # Test to see if all variables were provided
+  var_list <- list(script_name,
+                   function_name,
+                   script_website,
+                   keywords,
+                   describe_fxn,
+                   depend_list,
+                   inputs,
+                   outputs)
 
+  # Prompt for input if it was not provided to the function
+  prompt_list <- list('Provide script name: ',
+                      'Provide function (module) name: ',
+                      'Provide script Github website: ',
+                      'Provide function keywords: ',
+                      'Provide function description: ',
+                      'Provide list of dependencies: ',
+                      'Provide list of inputs: ',
+                      'Provide list of outputs: ')
+
+  # For loop cycles through each input and checks to see if it was provided
+    # If it was not provided then it prompts for input
+  for (i in 1:length(var_list)) {
+    if (var_list[i] == ""){
+      var_list[i] <- readline(prompt= prompt_list[i])}
+  }
+
+  # Reassign variables
+  script_name <- var_list[[1]]
+  function_name<- var_list[[2]]
+  script_website <- var_list[[3]]
+  keywords<- var_list[[4]]
+  describe_fxn<- var_list[[5]]
+  depend_list<-  var_list[[6]]
+  inputs<- var_list[[7]]
+  outputs<- var_list[[8]]
 
   # Concatenate the lines together
 cat(paste0("
