@@ -1,5 +1,5 @@
 # Title     : Documentation Functions
-# Objective : Create a script that outputs documentation markdowns
+# Objective : Create functions that help outputs documentation markdowns in Github
 # Created by: hestewar, harperestewart7@gmail.com
 # Created on: 8/17/2021
 
