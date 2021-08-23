@@ -1,0 +1,59 @@
+Documentation Template:
+
+
+
+Modules:
+
+Script: jumpvelocity
+    Modules of different methods of calculating velocity.
+    
+Modules
+    filtdata: filters all columns of dataframe
+    vel_filt: velocity for every frame calculated from filtered data set
+    vel_analytical: takeoff and "final" velocity using equations of motion
+    vel_poly: takeoff and "final" velocity using mean diff for x and polyfit for y
+    
+
+
+Individual Function Template:
+
+*Put the docstring WITHIN the actual function so you can see it when searching "Help"
+
+Function::: name_of_function
+	brief description here (1 row)
+	*Full description with details here*
+    
+Inputs
+    input1: DATATYPE description goes here (units)
+    input2: DATATYPE description goes here (units)
+    input3: DATATYPE description goes here (units)
+    input4: DATATYPE description goes here (units)
+    
+Outputs
+    output1: DATATYPE description goes here (units)
+    output2: DATATYPE description goes here (units)
+    output3: DATATYPE description goes here (units)
+    output4: DATATYPE description goes here (units)
+
+Dependencies
+    dep1    
+    dep2
+    dep3 from uscbrl_script.py
+
+
+
+Brainstorming to identify where functions are/scrape them:
+
+-Search for the word "Function:::" as the start
+
+-Search for the first inputs and outputs after that function 
+
+
+
+ 
+
+
+
+
+
+
