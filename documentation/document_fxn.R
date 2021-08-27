@@ -4,6 +4,9 @@
 # Created on: 8/17/2021
 
 # TODO Make documentation format for all codes, specify the keywords/things to search for
+# TODO Go through the functions and make sure format matches
+# TODO Scrape all of those files and put them into .csv
+# TODO Make a way to generate the table of contents automatically
 # TODO make things into lists to regenerate documentation links and reflect updates (loop a list)
 # TODO make a documentation package (not necessary but fun)
 
@@ -25,11 +28,12 @@ batch_documentation <- function(doc_codes_csv =''){
 
   # Dependencies
   if (doc_codes_csv == ""){
+    print("Select document_fxn R code with functions")
     source(file.choose())
   }
 
-
   # Read in the .csv file
+  print("Select .csv file containing documentation information")
   funct_tab <- read.csv(file.choose())
 
   # Use create_documentation function to cycle through each row and create the documentation
@@ -72,7 +76,7 @@ create_documentation <- function(script_name = '',
   # outputs: LIST Output variable names and descriptions
 
   # Outputs
-  # document_data: STR Github markdown output to generate Github documentation
+  # Prints Github markdown output to generate Github documentation
 
   # Dependencies
   # None
