@@ -3,34 +3,49 @@
 # Created by: hestewar, harperestewart7@gmail.com
 # Created on: 8/17/2021
 
-# TODO make a list of existing documentation codes (put in a csv file that stays with labcodes)
 # TODO Make documentation format for all codes, specify the keywords/things to search for
-# TODO Read that information as the inputs to this function
 # TODO make things into lists to regenerate documentation links and reflect updates (loop a list)
 # TODO make a documentation package (not necessary but fun)
 
 # Other thoughs, documentation becomes a folder within each repository
 # Contains: .csv of the codes and docu info, github markdown of all of the documentation
 
-batch_documentation <- function(doc_codes_csv, repo){
+batch_documentation <- function(doc_codes_csv =''){
   # Function::: batch_documentation
   # Creates series of documentation for functions in a repository
 
   # Inputs
   # doc_codes_csv: STR .csv input file containing information
-  # repo: STR Name of repository
 
   # Outputs
   # Batch of Github markdown outputs for repository documentation
 
   # Dependencies
-  # None
+  # create_documentation USCBRL Repo: labcodes
 
-  #TODO Read in the .csv file
+  # Dependencies
+  if (doc_codes_csv == ""){
+    source(file.choose())
+  }
 
-  #TODO Use create_documentation function to cycle through each row and create the documentation
 
+  # Read in the .csv file
+  funct_tab <- read.csv(file.choose())
 
+  # Use create_documentation function to cycle through each row and create the documentation
+  for (i in 1:nrow(funct_tab)) {
+    create_documentation(script_name = funct_tab[["script_name"]][i],
+                                 function_name= funct_tab[["function_name"]][i],
+                                 script_website= funct_tab[["script_website"]][i],
+                                 keywords= funct_tab[["keywords"]][i],
+                                 describe_fxn= funct_tab[["describe_fxn"]][i],
+                                 depend_list= funct_tab[["depend_list"]][i],
+                                 inputs= funct_tab[["inputs"]][i],
+                                 outputs= funct_tab[["outputs"]][i])
+  # End loop here
+  }
+
+    # End function here
 }
 
 create_documentation <- function(script_name = '',
@@ -57,7 +72,7 @@ create_documentation <- function(script_name = '',
   # outputs: LIST Output variable names and descriptions
 
   # Outputs
-  # Github markdown output to generate Github documentation
+  # document_data: STR Github markdown output to generate Github documentation
 
   # Dependencies
   # None
@@ -136,4 +151,5 @@ describe_fxn, "\n",
 "\n",
 "[Back to Table of Contents](#table-of-contents)"
 ))
+
 }
