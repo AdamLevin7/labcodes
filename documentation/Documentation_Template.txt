@@ -1,20 +1,14 @@
 Documentation Template:
 
-
-
-Modules:
-
-Script: jumpvelocity
-    Modules of different methods of calculating velocity.
+Script: script_name
+    Description of the overall purpose of the script.
     
 Modules
-    filtdata: filters all columns of dataframe
-    vel_filt: velocity for every frame calculated from filtered data set
-    vel_analytical: takeoff and "final" velocity using equations of motion
-    vel_poly: takeoff and "final" velocity using mean diff for x and polyfit for y
+    module_1: module description here
+    module_2: module description here
+    module_3: module description here
+    module_4: module description here
     
-
-
 Individual Function Template:
 
 *Put the docstring WITHIN the actual function so you can see it when searching "Help"
