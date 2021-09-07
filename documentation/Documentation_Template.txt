@@ -9,10 +9,6 @@ Modules
     module_3: module description here
     module_4: module description here
     
-Individual Function Template:
-
-*Put the docstring WITHIN the actual function so you can see it when searching "Help"
-
 Function::: name_of_function
 	brief description here (1 row)
 	*Full description with details here*
@@ -35,6 +31,9 @@ Dependencies
     dep3 from uscbrl_script.py
 
 
+_________________________________________________
+Things to note:
+* Put the docstring WITHIN the actual function so you can see it when searching "Help"
 
 Brainstorming to identify where functions are/scrape them:
 
