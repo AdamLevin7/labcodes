@@ -1,5 +1,6 @@
 Documentation Template:
 
+"""
 Script: script_name
     Description of the overall purpose of the script.
     
@@ -9,6 +10,13 @@ Modules
     module_3: module description here
     module_4: module description here
     
+Author:
+    FirstName LastName 
+    email 
+"""
+
+
+"""    
 Function::: name_of_function
 	brief description here (1 row)
 	*Full description with details here*
@@ -29,7 +37,7 @@ Dependencies
     dep1    
     dep2
     dep3 from uscbrl_script.py
-
+"""    
 
 _________________________________________________
 Things to note:
