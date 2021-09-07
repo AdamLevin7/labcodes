@@ -6,7 +6,7 @@
 # TODO Make documentation format for all codes, specify the keywords/things to search for
 # TODO Go through the functions and make sure format matches
 # TODO Scrape all of those files and put them into .csv
-# TODO Make a way to generate the table of contents automatically
+# TODO Make a way to generate/update the table of contents automatically
 # TODO make things into lists to regenerate documentation links and reflect updates (loop a list)
 # TODO make a documentation package (not necessary but fun)
 
