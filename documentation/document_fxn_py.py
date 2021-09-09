@@ -42,9 +42,14 @@ def scrape_documentation(code_script = '', doc_codes_csv = ''):
 
     # Read in the file of the code which contains the documentation information
     if code_script == '':
-        code_text = open(askopenfilename())
+        code_script = askopenfilename()
+        code_text = open(code_script)
     else:
         code_text  = open(code_script)
+
+    # Get the script name
+    split_script = code_script.split('/')
+    script_name = split_script[-1]
 
     # Inititalize the list
     info_list = []
@@ -52,12 +57,8 @@ def scrape_documentation(code_script = '', doc_codes_csv = ''):
     for line in code_text:
         info_list.append(line)
 
-        # TODO Make sure this is set up in a loop to handle multiple functions in one script
-        # TODO Scrape the information that you need and assign it to variables
-
-
-    # Find indexes where Function::: occurs in the list:'
-    fxn_pos_list = [i for i in range(len(info_list)) if 'Function:::' in info_list[i]]
+    # Find indexes where Function:x3 occurs in the list:'
+    fxn_pos_list = [i for i in range(len(info_list)) if ' Function:::' in info_list[i]]
     # Find indexes where Description: occurs in the list
     desc_pos_list = [i for i in range(len(info_list)) if 'Description:' in info_list[i]]
     # Find indexes where Details: occurs in the list
@@ -100,29 +101,43 @@ def scrape_documentation(code_script = '', doc_codes_csv = ''):
 
  # Write that information out to the .csv file
 
+    # TODO Figure out a way to pull the Github site
+    script_website = 'test.web.github'
 
-    # TODO Create row for the table
+    # TODO Create function that pulls keywords for the function
+    # Placeholder for now to write out to the csv file
+    # Pull the most common words for that function to use as the keywords* ??
 
-    add_row = pd.DataFrame([[repo,
-                           script_name,
-                           code_lang,
-                           fxn_name,
-                           script_website,
-                           fxn_keywords,
-                           fxn_desc,
-                           fxn_depen,
-                           fxn_inputs,
-                           fxn_outputs]],
-                           columns = col_names)
+    # Remove row in table if the function was already documented to update
+    if documentation_csv['fxn_name'].str.contains(fxn_name).any():
+        documentation_csv[~documentation_csv.fxn_name.str.contains(fxn_name)]
+
+    # TODO Create row for that specific function
+
+    new_row = pd.DataFrame([[script_name,
+                             fxn_name,
+                             script_website,
+                             fxn_desc, fxn_details,fxn_depen,fxn_inputs,
+                                                       fxn_outputs]],
+                           columns = ['script_name',
+                                                       'fxn_name',
+                                                       'script_website',
+                                                       'fxn_desc',
+                                                       'fxn_details',
+                                                       'fxn_depen',
+                                                       'fxn_inputs',
+                                                       'fxn_outputs'
+                                                       ])
+
+    # Append that row to the table for documentation
+    frames = [documentation_csv, new_row]
+    documentation_csv = pd.concat(frames)
 
 
-    test = pd.DataFrame(fxn_inputs, fxn_outputs)
-
-    #TODO Write the table back out to .csv file
-    pd.write_csv(add_row, doc_csv_file)
+#TODO Write the table back out to .csv file
+documentation_csv.to_csv(doc_csv_file, index = False)
 
 
-    # TODO check if those functions exist within the .csv table (if not then append to .csv)
 
 
 
