@@ -18,8 +18,8 @@ Author:
 
 """    
 Function::: name_of_function
-	brief description here (1 row)
-	*Full description with details here*
+	Description: brief description here (1 line)
+	Details: Full description with details here
     
 Inputs
     input1: DATATYPE description goes here (units)
