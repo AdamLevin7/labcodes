@@ -9,7 +9,10 @@ Author:
     Harper Stewart
     harperestewart7@gmail.com
 """
-
+#TODO switch the functions in R to Python to make things easier (add modules)
+#TODO remove the .csv table element and just loop through files in a list
+#TODO Search all directories for files ending in .py or .r
+#TODO Create exceptions for if a file doesn't contain "Function:::" and print a list
 
 def scrape_documentation(code_script='', doc_csv_file=''):
     """
@@ -148,6 +151,51 @@ def scrape_documentation(code_script='', doc_csv_file=''):
 
     #Write the table back out to .csv file
     documentation_csv.to_csv(doc_csv_file, index=False)
+
+def gather_scripts():
+    """
+    Function::: name_of_function
+    	Description: brief description here (1 line)
+    	Details: Full description with details here
+
+    Inputs
+        input1: DATATYPE description goes here (units)
+        input2: DATATYPE description goes here (units)
+        input3: DATATYPE description goes here (units)
+        input4: DATATYPE description goes here (units)
+
+    Outputs
+        output1: DATATYPE description goes here (units)
+        output2: DATATYPE description goes here (units)
+        output3: DATATYPE description goes here (units)
+        output4: DATATYPE description goes here (units)
+
+    Dependencies
+        dep1
+        dep2
+        dep3 from uscbrl_script.py (USCBRL repo)
+    """
+
+    import os
+    import os.path
+    import pandas as pd
+    from tkinter.filedialog import askdirectory
+
+    # Select the repository that you are creating documentation for
+    repo_directory = askdirectory(title='Select Repository to Update: ')
+
+    # Find all paths, directory, and filenames for a filetype in the repository
+    for dirpath, dirnames, filenames in os.walk(repo_directory):
+        print("dirpath: ")
+        print(dirpath)
+        print("dirnames: ")
+        print(dirnames)
+        print("filenames: ")
+        print(filenames)
+        for filename in [f for f in filenames if f.endswith(".py")]:
+            print
+            os.path.join(dirpath, filename)
+
 
 
 

@@ -53,7 +53,7 @@ batch_documentation <- function(doc_codes_csv =''){
 
   # Use create_documentation function to cycle through each row and create the documentation
   for (i in 1:nrow(funct_tab)) {
-    create_documentation(script_name = funct_tab[["script_name"]][i],
+    docu_info_full[i] <- create_documentation(script_name = funct_tab[["script_name"]][i],
                                  function_name= funct_tab[["function_name"]][i],
                                  script_website= funct_tab[["script_website"]][i],
                                  keywords= funct_tab[["keywords"]][i],
@@ -136,7 +136,7 @@ create_documentation <- function(script_name = '',
   outputs<- var_list[[8]]
 
   # Concatenate the lines together
-cat(paste0("
+docu_info <- cat(paste0("
 ## Script: ", script_name, "\n",
 "### Function ", function_name, "\n",
 "[Link to ", script_name, " Code](", script_website, ")", "\n",
