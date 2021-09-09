@@ -119,7 +119,7 @@ def scrape_documentation(code_script='', doc_csv_file=''):
         folder_name = folder_names_string[-2]
 
         # Create the string of the script webiste
-        script_website = 'github.com/' + github_org + '/' + repo_name[:-4] + \
+        script_website = 'https://github.com/' + github_org + '/' + repo_name[:-4] + \
                      '/' + 'blob/master/' + folder_name + '/' + script_name
 
         # Remove row in table if the function was already documented to update
@@ -130,17 +130,15 @@ def scrape_documentation(code_script='', doc_csv_file=''):
         new_row = pd.DataFrame([[script_name,
                                  fxn_name,
                                  script_website,
-                                 fxn_desc, fxn_details,fxn_depen,fxn_inputs,
-                                                           fxn_outputs]],
-                               columns=['script_name',
-                                                           'fxn_name',
-                                                           'script_website',
-                                                           'fxn_desc',
-                                                           'fxn_details',
-                                                           'fxn_depen',
-                                                           'fxn_inputs',
-                                                           'fxn_outputs'
-                                                           ])
+                                 fxn_desc,
+                                 fxn_details,
+                                 fxn_depen,
+                                 fxn_inputs,
+                                 fxn_outputs]],
+                               columns=['script_name', 'fxn_name',
+                                        'script_website', 'fxn_desc',
+                                        'fxn_details', 'fxn_depen',
+                                        'fxn_inputs', 'fxn_outputs'])
 
         # Append that row to the table for documentation
         frames = [documentation_csv, new_row]
@@ -148,8 +146,8 @@ def scrape_documentation(code_script='', doc_csv_file=''):
 
         # End loop here
 
-#Write the table back out to .csv file
-documentation_csv.to_csv(doc_csv_file, index = False)
+    #Write the table back out to .csv file
+    documentation_csv.to_csv(doc_csv_file, index=False)
 
 
 
