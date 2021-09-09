@@ -56,11 +56,6 @@ def scrape_documentation(code_script = '', doc_codes_csv = ''):
         # TODO Scrape the information that you need and assign it to variables
 
 
-    # List of keywords to search
-    key_list = ['Function:::', 'Description:', 'Details:',
-                'Inputs', 'Outputs','Dependencies']
-
-
     # Find indexes where Function::: occurs in the list:'
     fxn_pos_list = [i for i in range(len(info_list)) if 'Function:::' in info_list[i]]
     # Find indexes where Description: occurs in the list
@@ -83,7 +78,7 @@ def scrape_documentation(code_script = '', doc_codes_csv = ''):
         fxn_name_2 = fxn_name_1.replace("Function:::", "")
         fxn_name = fxn_name_2.replace("\n", "")
 
-    # Get information closest to that function index
+        # Get information closest to that function index
         desc_loc = min([i for i in desc_pos_list if i > ind])
         details_loc = min([i for i in details_pos_list if i > ind])
         input_loc = min([i for i in input_pos_list if i > ind])
@@ -91,26 +86,22 @@ def scrape_documentation(code_script = '', doc_codes_csv = ''):
         depend_loc = min([i for i in depend_pos_list if i > ind])
         docstring_loc = min([i for i in docstr_pos_list if i > ind])
 
-    # Get the variables
-    fxn_desc = info_list[desc_loc]
+        # Get the variables
+        fxn_desc = info_list[desc_loc]
 
-    # Join elements of the list to create full detail string
-    fxn_details = ''.join(info_list[details_loc:input_loc])
+        # Join elements of the list to create full detail string
+        fxn_details = ''.join(info_list[details_loc:input_loc])
 
 
-    fxn_inputs =''.join(info_list[input_loc:output_loc])
-    fxn_outputs = ''.join(info_list[output_loc:depend_loc])
-    fxn_depen = ''.join(info_list[depend_loc:docstring_loc])
+        fxn_inputs =''.join(info_list[input_loc:output_loc])
+        fxn_outputs = ''.join(info_list[output_loc:depend_loc])
+        fxn_depen = ''.join(info_list[depend_loc:docstring_loc])
 
 
  # Write that information out to the .csv file
 
 
-    # Create row for the table
-    df_newrow =
-
-    documentation_csv =
-
+    # TODO Create row for the table
 
     add_row = pd.DataFrame([[repo,
                            script_name,
@@ -127,13 +118,13 @@ def scrape_documentation(code_script = '', doc_codes_csv = ''):
 
     test = pd.DataFrame(fxn_inputs, fxn_outputs)
 
-    # Write the table back out to .csv file
+    #TODO Write the table back out to .csv file
     pd.write_csv(add_row, doc_csv_file)
 
 
     # TODO check if those functions exist within the .csv table (if not then append to .csv)
-    # TODO Assign those variables to a row in a table
-    # TODO Append or update a .csv file with that information
+
+
 
 
 
