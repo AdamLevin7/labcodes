@@ -104,16 +104,11 @@ def scrape_documentation(code_script = '', doc_codes_csv = ''):
     # TODO Figure out a way to pull the Github site
     script_website = 'test.web.github'
 
-    # TODO Create function that pulls keywords for the function
-    # Placeholder for now to write out to the csv file
-    # Pull the most common words for that function to use as the keywords* ??
-
     # Remove row in table if the function was already documented to update
     if documentation_csv['fxn_name'].str.contains(fxn_name).any():
         documentation_csv[~documentation_csv.fxn_name.str.contains(fxn_name)]
 
-    # TODO Create row for that specific function
-
+    #Create row for the specific function
     new_row = pd.DataFrame([[script_name,
                              fxn_name,
                              script_website,
@@ -134,7 +129,7 @@ def scrape_documentation(code_script = '', doc_codes_csv = ''):
     documentation_csv = pd.concat(frames)
 
 
-#TODO Write the table back out to .csv file
+#Write the table back out to .csv file
 documentation_csv.to_csv(doc_csv_file, index = False)
 
 
