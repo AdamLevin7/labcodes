@@ -3,6 +3,19 @@
 # Created by: hestewar, harperestewart7@gmail.com
 # Created on: 8/17/2021
 
+#"""
+#Script: document_fxn.R
+#    Create functions that help outputs documentation markdowns in Github
+#
+#Modules
+#    batch_documentation: Creates series of documentation for functions in a repository
+#    create_documentation: module description here
+#
+#Author:
+#    Harper Stewart
+#    harperestewart7@gmail.com
+#"""
+
 # TODO Go through the functions and make sure format matches
 # TODO Scrape all of those files and put them into .csv
 # TODO Make a way to generate/update the table of contents automatically
@@ -13,19 +26,22 @@
 # Contains: .csv of the codes and docu info, github markdown of all of the documentation
 
 batch_documentation <- function(doc_codes_csv =''){
-  # Function::: batch_documentation
-  # Creates series of documentation for functions in a repository
+# """
+#  Function::: batch_documentation
+#	Description: Creates series of documentation for functions in a repository
+#	Details: Creates series of documentation for functions in a repository
+#
+#Inputs
+#    doc_codes_csv: STR .csv input file directory containing information
 
-  # Inputs
-  # doc_codes_csv: STR .csv input file directory containing information
+#
+#Outputs
+#    Batch of Github markdown outputs for repository documentation
 
-  # Outputs
-  # Batch of Github markdown outputs for repository documentation
+#Dependencies
+#    create_documentation USCBRL Repo: labcodes
+#"""
 
-  # Dependencies
-  # create_documentation USCBRL Repo: labcodes
-
-  # Dependencies
   if (doc_codes_csv == ""){
     print("Select document_fxn R code with functions")
     source(file.choose())
@@ -59,26 +75,28 @@ create_documentation <- function(script_name = '',
                                  depend_list= '',
                                  inputs= '',
                                  outputs= ''){
+#"""
+#Function::: create_documentation
+#	Description: Creates Github markdown script for documenting a function
+#	Details: Add details
+#
+#Inputs
+#    script_name: STR Name of the script containing the function
+#    function_name: STR Name of the specific function (module)
+#    script_website: STR Github website of the script
+#    keywords: STR keywords associated with the function
+#    describe_fxn: STR Description of the function
+#    depend_list: LIST Dependencies needed to run the function
+#    inputs: LIST Input variable names and descriptions
+#    outputs: LIST Output variable names and descriptions
 
-  # Function::: create_documentation
-  # Creates Github markdown script for documenting a function
-  # More details?
+#Outputs
+#    Prints Github markdown output to generate Github documentation
+#
+#Dependencies
+#    None
+#"""
 
-  # Inputs
-  # script_name: STR Name of the script containing the function
-  # function_name: STR Name of the specific function (module)
-  # script_website: STR Github website of the script
-  # keywords: STR keywords associated with the function
-  # describe_fxn: STR Description of the function
-  # depend_list: LIST Dependencies needed to run the function
-  # inputs: LIST Input variable names and descriptions
-  # outputs: LIST Output variable names and descriptions
-
-  # Outputs
-  # Prints Github markdown output to generate Github documentation
-
-  # Dependencies
-  # None
 
   # Test to see if all variables were provided
   var_list <- list(script_name,
