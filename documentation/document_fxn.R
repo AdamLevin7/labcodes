@@ -157,53 +157,5 @@ describe_fxn, "\n",
 
 }
 
-scrape_documentation <- function(code_script ='', doc_codes_csv ='' ){
-
-#Function::: scrape_documentation
-#	Scrape documentation information from scripts
-#	Way to scrape documentation data from scripts, be sure to use the associated template.
-  # this will add the function information to the .csv documentation file for the repository.
-#
-#Inputs
-#    input1: DATATYPE description goes here (units)
-#    input2: DATATYPE description goes here (units)
-#    input3: DATATYPE description goes here (units)
-#    input4: DATATYPE description goes here (units)
-#
-#Outputs
-#    output1: DATATYPE description goes here (units)
-#    output2: DATATYPE description goes here (units)
-#    output3: DATATYPE description goes here (units)
-#    output4: DATATYPE description goes here (units)
-#
-#Dependencies
-#    dep1
-#    dep2
-#    dep3 from uscbrl_script.py (USCBRL repo)
-
-
-  # Read in the file of the code which contains the documentation information
-   if (code_script == ""){
-    print("Select script to scrape documentation information: ")
-    code_script <- read.delim(file.choose())} else {
-     code_script <- read.delim(code_script)
-   }
-
-  # Read in the .csv file (if it exists) containing already documented codes
-  if (doc_codes_csv == ""){
-    print("Select document_fxn R code with functions: ")
-    funct_tab <- read.csv(file.choose())} else {
-     funct_tab <- read.delim(doc_codes_csv)
-   }
-
-  #TODO Find the functions within the script
-    #TODO Make sure this is set up in a loop to handle multiple functions in one script
-  #TODO Scrape the information that you need and assign it to variables
-  #TODO check if those functions exist within the .csv table (if not then append to .csv)
-  #TODO Assign those variables to a row in a table
-  #TODO Append or update a .csv file with that information
-
-
-}
 
 
