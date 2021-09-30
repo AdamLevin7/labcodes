@@ -1,40 +1,34 @@
 """
-Script: script_name
-    Description of the overall purpose of the script.
+Script: db_changes
+    Make changes to a database.
 
 Modules
-    module_1: module description here
-    module_2: module description here
-    module_3: module description here
-    module_4: module description here
+    check_column_names: Check if a column name is within a database table.
+    check_column_exist: Check if a column exists in a database table.
+
 
 Author:
-    FirstName LastName
-    email
+    Casey Wiens
+    cwiens32@gmail.com
 """
 
 def check_column_names(engine, table_name, df_in):
     """
-    Function::: name_of_function
-    	Description: brief description here (1 line)
-    	Details: Full description with details here
+    Function::: check_column_names
+    	Description: Check if a column name is within a database table.
+    	Details: Check if a column exists in a database table so a new data can be appended.
 
     Inputs
-        input1: DATATYPE description goes here (units)
-        input2: DATATYPE description goes here (units)
-        input3: DATATYPE description goes here (units)
-        input4: DATATYPE description goes here (units)
+        engine: ENGINE Database engine for connection
+        table_name: STR Name of the table you are checking in the database
+        df_in: DATAFRAME Table you are trying to add to existing database table
 
     Outputs
-        output1: DATATYPE description goes here (units)
-        output2: DATATYPE description goes here (units)
-        output3: DATATYPE description goes here (units)
-        output4: DATATYPE description goes here (units)
+        Print line if new column was added
 
     Dependencies
-        dep1
-        dep2
-        dep3 from uscbrl_script.py (USCBRL repo)
+        sqlalchemy
+        pandas
     """
     import sqlalchemy as db
     import pandas as pd
@@ -69,26 +63,23 @@ def check_column_names(engine, table_name, df_in):
 
 def check_column_exist(engine, table_name, col_name, col_type):
     """
-    Function::: name_of_function
-    	Description: brief description here (1 line)
-    	Details: Full description with details here
+    Function::: check_column_exist
+    	Description: Check if a column exists in a database table.
+    	Details: Check if a column exists in a db table and if not, create it.
 
     Inputs
-        input1: DATATYPE description goes here (units)
-        input2: DATATYPE description goes here (units)
-        input3: DATATYPE description goes here (units)
-        input4: DATATYPE description goes here (units)
+        engine: ENGINE Database engine for connection
+        table_name: STR Name of the table you are checking in the database
+        col_name: STR Name of the column you are checking for
+        col_type: STR Datatype in quotes that you want the column to be (ie. Float, INT)
 
     Outputs
-        output1: DATATYPE description goes here (units)
-        output2: DATATYPE description goes here (units)
-        output3: DATATYPE description goes here (units)
-        output4: DATATYPE description goes here (units)
+        Adds column to database table if it didn't exist
 
     Dependencies
-        dep1
-        dep2
-        dep3 from uscbrl_script.py (USCBRL repo)
+        sqlalchemy
+        pandas
+
     """
 
     # Packages
@@ -121,4 +112,3 @@ def check_column_exist(engine, table_name, col_name, col_type):
             con.execute(db.text(qry))
         # message new columns were added
         print("New column was added! Table: " + table_name + " Column: " + col_name)
-
