@@ -28,15 +28,17 @@ Created on Wed Oct 30 10:06:19 2019
 
 # import the necessary packages 
 import cv2
-from PyQt5 import QtWidgets
-import sys
+
 
 def findarea(video,frame=0,label='frame'):
     
+    import wx
+    import sys
+    
     # idenify screen resolution
-    app = QtWidgets.QApplication(sys.argv)
-    screen = app.primaryScreen()    
-    size = screen.size()
+    app = wx.App(False)
+    width, height = wx.GetDisplaySize()
+    app.Destroy()
     
     # set label to show
     labelshow = 'a: advance, w: recrop. ' + label
@@ -73,8 +75,8 @@ def findarea(video,frame=0,label='frame'):
     clone = frame.copy()
     # resize window
     (h, w) = frame.shape[:2]
-    r = size.height()*0.75 / float(h)
-    dim = (int(w*r), int(size.height()*0.75))
+    r = height*0.75 / float(h)
+    dim = (int(w*r), int(height*0.75))
     cv2.namedWindow(labelshow, cv2.WINDOW_NORMAL)
     cv2.setMouseCallback(labelshow, shape_selection)
     cv2.resizeWindow(labelshow, dim)
@@ -96,3 +98,71 @@ def findarea(video,frame=0,label='frame'):
     cv2.destroyAllWindows()
 
     return ref_point
+
+
+#%%
+"""
+draw_bbox
+
+Copied from DeepLabCut auxfun_videos.py from DLC 2.2b7
+"""
+def draw_bbox(video):
+    
+    import matplotlib.pyplot as plt
+    from matplotlib.widgets import RectangleSelector, Button
+
+    clip = cv2.VideoCapture(video)
+    if not clip.isOpened():
+        print("Video could not be opened. Skipping...")
+        return
+
+    success = False
+    # Read the video until a frame is successfully read
+    while not success:
+        success, frame = clip.read()
+
+    bbox = [0, 0, frame.shape[1], frame.shape[0]]
+
+    def line_select_callback(eclick, erelease):
+        bbox[:2] = int(eclick.xdata), int(eclick.ydata)  # x1, y1
+        bbox[2:] = int(erelease.xdata), int(erelease.ydata)  # x2, y2
+
+    def validate_crop(*args):
+        fig.canvas.stop_event_loop()
+
+    def display_help(*args):
+        print(
+            "1. Use left click to select the region of interest. A red box will be drawn around the selected region. \n\n2. Use the corner points to expand the box and center to move the box around the image. \n\n3. Click "
+        )
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.imshow(frame[:, :, ::-1])
+    ax_help = fig.add_axes([0.9, 0.2, 0.1, 0.1])
+    ax_save = fig.add_axes([0.9, 0.1, 0.1, 0.1])
+    crop_button = Button(ax_save, "Crop")
+    crop_button.on_clicked(validate_crop)
+    help_button = Button(ax_help, "Help")
+    help_button.on_clicked(display_help)
+
+    rs = RectangleSelector(
+        ax,
+        line_select_callback,
+        drawtype="box",
+        minspanx=5,
+        minspany=5,
+        interactive=True,
+        spancoords="pixels",
+        rectprops=dict(facecolor="red", edgecolor="black", alpha=0.3, fill=True),
+    )
+    plt.show()
+
+    # import platform
+    # if platform.system() == "Darwin":  # for OSX use WXAgg
+    #    fig.canvas.start_event_loop(timeout=-1)
+    # else:
+    fig.canvas.start_event_loop(timeout=-1)  # just tested on Ubuntu I also need this.
+    #    #fig.canvas.stop_event_loop()
+
+    plt.close(fig)
+    return bbox
