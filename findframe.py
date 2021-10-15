@@ -33,17 +33,16 @@ Created on Fri Dec 27 11:10:54 2019
 """
 
 import cv2
-from PyQt5 import QtWidgets
-import sys
+import wx
 
 
 def findframe(file, label='Find Frame', framestart=0):
     
     # idenify screen resolution
-    app = QtWidgets.QApplication(sys.argv)
-    screen = app.primaryScreen()    
-    size = screen.size()
-    
+    app = wx.App(False)
+    width, height = wx.GetDisplaySize()
+    app.Destroy()
+
     #%% set call back for trackbar
     def nothing(x):
         pass
@@ -58,8 +57,8 @@ def findframe(file, label='Find Frame', framestart=0):
     
     #%% resize window
     (h, w) = im1.shape[:2]
-    r = size.height()*0.75 / float(h)
-    dim = (int(w*r), int(size.height()*0.75))
+    r = height*0.75 / float(h)
+    dim = (int(w*r), int(height*0.75))
     cv2.resizeWindow(label, dim)
     
     #%% create and set trackbar
@@ -114,6 +113,6 @@ def findframe(file, label='Find Frame', framestart=0):
         
     #%% close windows
     cap.release()
-    cv2.destroyAllWindows()
+    cv2.destroyWindow(label)
     
     return cnt, key
