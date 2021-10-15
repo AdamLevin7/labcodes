@@ -72,6 +72,9 @@ def strobe(filename, filesave, frames, searcharea=None, samp=240, thresh=60, bgi
                 # set base black image, then store image
                 img_bg = np.zeros(img.shape,'uint8')
                 img_bg[crop[0][1]:crop[1][1],crop[0][0]:crop[1][0]] = img_bg_blur[crop[0][1]:crop[1][1],crop[0][0]:crop[1][0]]
+            else:
+                img1 = img_c1_blur.copy()
+                img_bg = img_bg_blur.copy()
             # find absolute difference between frames and then sum along BGR axis
             diff = np.sum(cv2.absdiff(img_bg, img1),axis=2)
             # dilate image to fill holes
@@ -106,6 +109,9 @@ def strobe(filename, filesave, frames, searcharea=None, samp=240, thresh=60, bgi
                 # set base black image, then store image
                 img_bg = np.zeros(img.shape,'uint8')
                 img_bg[crop[0][1]:crop[1][1],crop[0][0]:crop[1][0]] = img_bg_blur[crop[0][1]:crop[1][1],crop[0][0]:crop[1][0]]
+            else:
+                img1 = img_c1_blur.copy()
+                img_bg = img_bg_blur.copy()
             # find absolute difference between frames and then sum along BGR axis
             diff = np.sum(cv2.absdiff(img_bg, img1),axis=2)
             # dilate image to fill holes
@@ -152,7 +158,7 @@ def strobe(filename, filesave, frames, searcharea=None, samp=240, thresh=60, bgi
                 # set base black image, then store image
                 img_bg = np.zeros(img.shape,'uint8')
                 img_bg[crop[0][1]:crop[1][1],crop[0][0]:crop[1][0]] = img_bg_c1[crop[0][1]:crop[1][1],crop[0][0]:crop[1][0]]
-            else: # if frame is after last strobe frame
+            elif searcharea is not None: # if frame is after last strobe frame
                 # if object is moving left
                 if searcharea[frames.iloc[strobeframe]][0][0] - searcharea[frames.iloc[strobeframe-1]][0][0] < 0:
                     # identify last search area
@@ -170,6 +176,9 @@ def strobe(filename, filesave, frames, searcharea=None, samp=240, thresh=60, bgi
                 # set base black image, then store image
                 img_bg = np.zeros(img.shape,'uint8')
                 img_bg[crop[0][1]:crop[1][1],crop[0][0]:crop[1][0]] = img_bg_c1[crop[0][1]:crop[1][1],crop[0][0]:crop[1][0]]
+            else:
+                img1 = img_c1.copy()
+                img_bg = img_bg_c1.copy()
             # find absolute difference between frames and then sum along BGR axis
             diff = np.sum(cv2.absdiff(img_bg, img1),axis=2)
             # dilate image to fill holes
@@ -304,8 +313,9 @@ This uses the function 'findframe'.
     
 User input:
     - filename: full path file name
-    - crop: if 'yes' (default), user will identify area around the object of
-        interest that could be used to limit noise in strobe image
+    - crop: if 'all' (default), user will identify area around the object of
+        interest that could be used to limit noise in strobe image FOR ALL FRAMES
+            - 'one' will only use the selected area from the first strobe frame
     - autoid_thresh: OPTIONAL default: None, minimum number of frames between manually 
         identified strobe frames before auto id occurs (will find apex and two
         additional frames before and after apex)
@@ -342,10 +352,13 @@ def strobe_findframes(filename, crop='yes', autoid_thresh=None, autoid_num=None)
                                    framestart=frame)
             strobeframes = pd.Series(frame)
             ### if crop was chosen
-            if crop == 'yes':
+            if (crop is 'all') or (crop is 'yes') or (crop is 'one'):
                 # find search area
                 area = findarea(filename,frame=frame,label='Select area around object')
                 searcharea = {frame: area}
+                print('what is going on')
+            else:
+                searcharea = None
         ### if it is not first strobe image
         else:
             frame, key = findframe(filename,
@@ -353,16 +366,20 @@ def strobe_findframes(filename, crop='yes', autoid_thresh=None, autoid_num=None)
                                    framestart=frame)
             strobeframes = strobeframes.append(pd.Series(frame)).reset_index(drop=True)
             ### if crop was chosen
-            if crop == 'yes':
+            if (crop is 'all') or (crop is 'yes'):
                 # find search area
                 area = findarea(filename,frame=frame,label='Select area around object')
                 searcharea[frame] = area
-            
+            elif crop == 'one':
+                # use the search area from the first strobe image
+                searcharea[frame] = area
+
     ### drop duplicates
     strobeframes = strobeframes.drop_duplicates()
     
     ### if auto-find frames was selected
     if autoid_thresh is not None:
+        print("inside the auto id thresh")
         # store strobeframes as another variable to use as search
         sframestemp = strobeframes
         # find difference between selected frames
@@ -374,10 +391,13 @@ def strobe_findframes(filename, crop='yes', autoid_thresh=None, autoid_num=None)
                                      sframestemp.iloc[cntdf+1], autoid_num, dtype=int)
                 strobeframes = (strobeframes.append(pd.Series(frames)).reset_index(drop=True)).sort_values(ignore_index=True).drop_duplicates()
                 # if crop was selected, crop area for each new frame
-                if crop == 'yes':
+                if crop == 'all' or crop == 'yes':
                     for cntf in frames[1:-1]:
                         area = findarea(filename,frame=cntf,label='Select area around object')
                         searcharea[cntf] = area
+                elif crop == 'one':
+                    # just use the search area from previous strobe frame
+                    searcharea[cntf] = area
     
     ###
     return strobeframes, searcharea
@@ -439,13 +459,14 @@ Allows user to identify the search area for the create of strobes.
 User input:
     - filename: full path file name
     - frames: current series of identified frames
+    - areatype: find search area in all strobe frames ("all") or only find it for the first strobe frame ("one")
 
 Created on Tue Apr 27 4:45:26 2021
 
 @author: cwiens, Casey Wiens, cwiens32@gmail.com
 """
 
-def strobe_findarea(filename, frames):
+def strobe_findarea(filename, frames, areatype="all"):
     import pandas as pd
     from capture_area import findarea
     import numpy as np
@@ -459,10 +480,14 @@ def strobe_findarea(filename, frames):
         if searcharea is None:
             area = findarea(filename,frame=frame,label='Select area around object')
             searcharea = {frame: area}
-        # if it is not first strobe image
-        else:
+        # if it is not first strobe image and user is selecting new search area for each frame
+        elif searcharea is not None and areatype == "all":
             # find search area
             area = findarea(filename,frame=frame,label='Select area around object')
+            searcharea[frame] = area
+        # if it is not first strobe image and user only wants to select the search area once
+        else:
+            # just repeat the previously selected area for the current strobe frame
             searcharea[frame] = area
 
     return searcharea
