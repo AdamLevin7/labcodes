@@ -1,0 +1,60 @@
+Documentation Template:
+
+"""
+Script: script_name
+    Description of the overall purpose of the script.
+    
+Modules
+    module_1: module description here
+    module_2: module description here
+    module_3: module description here
+    module_4: module description here
+    
+Author:
+    FirstName LastName 
+    email 
+"""
+
+
+"""    
+Function::: name_of_function
+	Description: brief description here (1 line)
+	Details: Full description with details here
+    
+Inputs
+    input1: DATATYPE description goes here (units)
+    input2: DATATYPE description goes here (units)
+    input3: DATATYPE description goes here (units)
+    input4: DATATYPE description goes here (units)
+    
+Outputs
+    output1: DATATYPE description goes here (units)
+    output2: DATATYPE description goes here (units)
+    output3: DATATYPE description goes here (units)
+    output4: DATATYPE description goes here (units)
+
+Dependencies
+    dep1    
+    dep2
+    dep3 from uscbrl_script.py (USCBRL repo)
+"""    
+
+_________________________________________________
+Things to note:
+* Put the docstring WITHIN the actual function so you can see it when searching "Help"
+
+Brainstorming to identify where functions are/scrape them:
+
+-Search for the word "Function:::" as the start
+
+-Search for the first inputs and outputs after that function 
+
+
+
+ 
+
+
+
+
+
+

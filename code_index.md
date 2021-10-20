@@ -18,11 +18,11 @@ Modules for calculating toe locations relative to certain objects (ie. board)
 
 *Functions:*  
 * **findtoelocations** - Find location of contact toe using the video or digitized data. (Assuming pixel locations are in the reference system of the video, origin - top left)   
-[Documentation]  
+[Documentation](https://github.com/USATF-Biomechanics/processing_codes/blob/master/README.md#function-findtoelocations)
 * **toe2board** - Calculates distance from to board for a given frame. Fits a line btw edges of board and provides x-position of the toe distance relative to y-position of the fitted line. Positive value means toe is behind board (good jump/fair). Negative means toe is past board (fault/foul).      
-[Documentation]
+[Documentation](https://github.com/USATF-Biomechanics/processing_codes/blob/master/README.md#function-toe2board)
 * **toeloc** - Identify the location of the toe.    
-[Documentation]
+[Documentation](https://github.com/USATF-Biomechanics/processing_codes/blob/master/README.md#function-toeloc)
 
 
 *** 
@@ -31,7 +31,7 @@ Modules with different methods for calculating velocity.
 
 *Functions:*  
 * **filtdata** - Filters all columns of the dataframe.    
-[Documentation]  
+[Documentation](https://github.com/USATF-Biomechanics/processing_codes/blob/master/README.md#function-filtdata)  
 * vel_filt - Velocity for every frame calculated from filtered data set.    
 [Documentation]
 * **vel_analytical** - Calculated takeoff and final velocity using equations of motion.    
@@ -78,7 +78,7 @@ Gather info from the logsheet to upload info and/or upload and process force dat
 *Functions:*
 * **FindContactIntervals** - Find the beginning and end of contact intervals when provided a single column
 vertical force data.     
-[Documentation]
+[Documentation](https://github.com/USCBiomechanicsLab/labcodes/blob/master/Documentation_General.md#function-findcontactintervals)
 
 ***
 **Script:**  [HBIO408_BatchImportKDA.m](https://github.com/USCBiomechanicsLab/labcodes/blob/master/HBIO408_BatchImportKDA.m) 

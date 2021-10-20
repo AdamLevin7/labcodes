@@ -5,8 +5,8 @@
 | Description | Script |Functions |
 | ------------- | ------------- | ------------- |
 | Environment **.yaml** files)  | [Environment](https://github.com/USCBiomechanicsLab/labcodes/blob/master/uscbrl_env.yaml)||
-| Import **.kda** Force Files from B10  |  | [HBIO408_BatchImportKDA](#function-HBIO408_BatchImportKDA)  |
-|   |   | [importForce_KDA](#function-importForce_KDA)  |
+| Import **.kda** Force Files from B10  |  | [HBIO408_BatchImportKDA](#function-hbio408_batchimportKDA)  |
+|   |   | [importForce_KDA](#function-importforce_kda)  |
 | Import **.txt** Force Data  |   | [ImportForce_TXT](#function-importforce_txt)  |
 | Calculate **impulse and velocity**  |   | [imp_vel](#function-imp_vel)  |
 | Load **APDM** data  | apdm_load  | [apdm_import](#function-apdm_import)|
@@ -20,8 +20,50 @@
 |Pixel ratios|pixelratios|[pix2m_fromplate](#function-pix2m_fromplate)|
 | |pixelratios |[pix2m_fromplate](#function-pix2m_fromplate)|
 |Plot flight trajectory|projectiletraj |[flighttraj](#function-flighttraj)|
+| Find contact intervals |  |[FindContactIntervals](#function-findcontactintervals)|
 
 ### End Table of Contents  <br/>
+
+## Script: FindContactIntervals
+### Function FindContactIntervals
+[Link to FindContactIntervals Code](https://github.com/USCBiomechanicsLab/labcodes/blob/master/FindContactIntervals.py)
+
+### **Keywords:**
+Contact, Interval, Force, Vertical
+
+### **Syntax:**
+```
+from FindContactIntervals import FindContactIntervals
+
+CI = FindContactIntervals(data, samp = 1200, thresh = 50)                              
+```
+### Dependencies 
+* **pd:** pandas 
+* **scipy:** scipy
+
+### **Description:**<br/>
+Find the beginning and end of contact intervals when provided a single column
+vertical force data.
+   
+### **Arguments:**
+
+#### *Inputs*
+
+   * **data:** DF Column of vertical force data
+   * **thresh:** INT force threshold to identify when contact occurs (default=50 N)
+   * **samp:** INT Sampling rate of the force plate (Default 1200 Hz)
+
+#### *Outputs*
+
+   * **CI:** DATAFRAME "Start" identifies beginning of contact
+        interval, while "End" identifies the end of interval. The number
+        of rows signifies the number of contact intervals
+   
+### **Examples:**
+Helpful examples
+
+[Back to Table of Contents](#table-of-contents)
+
 
 ## Script: apdm_load
 ### Function apdm_import
