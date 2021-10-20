@@ -89,3 +89,53 @@ def clickpoint(file, framestart=0, label=''):
     
     
     return ix1, iy1
+
+
+"""
+plotclick
+    Identifies x and y locations of mouse click in matplotlib plot
+
+Input:
+    ax: AxesSubplot the matplotlib subplot to used in selecting the points
+    numclicks: INT how many times do you want to identify a point on the plot (default=1)
+    plotit: TRUE/FALSE do you want the points to be identified after you selected them (default=True)
+
+Output:
+    coords: LIST x and y location of each click (coordinates relative to your graph)
+
+Dependencies:
+    matplotlib
+
+Created on Wed Oct 20 10:36:16 2021
+
+@author: cwiens@gmail.com, Casey Wiens
+"""
+def plotclick(ax, numclicks=1, plotit=True):
+    import matplotlib.pyplot as plt
+
+    " initialize parameters "
+    global coords
+    coords = []
+
+    " create function to provide coordindates of button click "
+    def onclick(event):
+        global coords
+        # store location of button click
+        coords.append((event.xdata, event.ydata))
+        # end event loop
+        fig.canvas.stop_event_loop()
+        # disconnect
+        fig.canvas.mpl_disconnect(cid)
+
+    " loop through number of clicks "
+    for i in range(numclicks):
+        # connect to button click function
+        cid = fig.canvas.mpl_connect('button_press_event', onclick)
+        # start event loop
+        fig.canvas.start_event_loop(timeout=-1)
+        # plot the location of the selection if True
+        if plotit is True:
+            ax.plot(coords[i][0], coords[i][1], 'o')
+            plt.pause(0.05)
+
+    return coords
