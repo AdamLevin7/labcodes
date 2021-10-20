@@ -32,11 +32,12 @@ Created on Fri Dec 27 11:10:54 2019
 @author: cwiens, Casey Wiens, cwiens32@gmail.com
 """
 
-import cv2
-import wx
-
 
 def findframe(file, label='Find Frame', framestart=0):
+
+    import cv2
+    import wx
+    import os
     
     # idenify screen resolution
     app = wx.App(False)
@@ -74,7 +75,12 @@ def findframe(file, label='Find Frame', framestart=0):
             break
         cv2.imshow(label, im1)
         key = cv2.waitKey(0)
-        
+
+        # user clicks the window's X to close window
+        if cv2.getWindowProperty(label,cv2.WND_PROP_VISIBLE) < 1:
+            print('closed window')
+            break
+
         #%% get trackbar location
         while cv2.getTrackbarPos('Frame', label) != cnt:
             cnt = cv2.getTrackbarPos('Frame', label)
@@ -106,6 +112,9 @@ def findframe(file, label='Find Frame', framestart=0):
         elif key == 59:
             # press ; button to go forward 100 frames
             cnt += 100
+        elif cv2.getWindowProperty(label,cv2.WND_PROP_VISIBLE) < 1:
+            # user clicks the window's X to close window
+            break
         cnt = max([0, cnt])
         
         #%% set trackbar
@@ -113,6 +122,7 @@ def findframe(file, label='Find Frame', framestart=0):
         
     #%% close windows
     cap.release()
-    cv2.destroyWindow(label)
+    if cv2.getWindowProperty(label,cv2.WND_PROP_VISIBLE) >= 1:
+        cv2.destroyWindow(label)
     
     return cnt, key
