@@ -5,12 +5,13 @@ Script: document_fxn_py
 Modules
     scrape_documentation: Scrape a code script for documentation info
     gather_scripts: List scripts in repository and scrape documentation information.
+    create_documentation: Create Github documentation format for functions
+    batch_documentation: Create markdown file with documentation for all functions in repository
 
 Author:
     Harper Stewart
     harperestewart7@gmail.com
 """
-#TODO 1. switch the functions in R to Python to make things easier (add modules)
 #TODO remove the .csv table element and just loop through files in a list
 #TODO 2. Create exceptions for if a file doesn't contain "Function:::" and print a list
 # TODO Go through the functions and make sure format matches
@@ -175,10 +176,7 @@ def gather_scripts(extensions = ('.py', '.R'), doc_csv_file = ''):
         tkinter
         dep3 from uscbrl_script.py (USCBRL repo)
     """
-
-    import os
     import os.path
-    import pandas as pd
     from tkinter.filedialog import askdirectory
 
     # Select the repository that you are creating documentation for
@@ -202,7 +200,174 @@ def gather_scripts(extensions = ('.py', '.R'), doc_csv_file = ''):
                              doc_csv_file='')
 
 
-def create_documentation():
+def create_documentation(script_name='',
+                         function_name='',
+                         script_website='',
+                         keywords='',
+                         describe_fxn='',
+                         details_fxn='',
+                         depend_list='',
+                         inputs='',
+                         outputs=''):
+    """
+    Function::: create_documentation
+    	Description: Create Github documentation format for functions
+    	Details: Create Github documentation including inputs, outputs, dependencies, how to run the function etc.
+
+    Inputs
+        script_name: STR Name of the script containing the function
+        function_name: STR Name of the specific function (module)
+        script_website: STR Github website of the script
+        keywords: STR keywords associated with the function
+        describe_fxn: STR Description of the function
+        depend_list: LIST Dependencies needed to run the function
+        inputs: LIST Input variable names and descriptions
+        outputs: LIST Output variable names and descriptions
+
+    Outputs
+        docu_info: STR Documentation information as a long string?
+
+    Dependencies
+        dep1
+        dep2
+        dep3 from uscbrl_script.py (USCBRL repo)
+    """
+
+    # Test to see if all variables were provided
+    var_list = [script_name,
+                function_name,
+                script_website,
+                keywords,
+                describe_fxn,
+                details_fxn,
+                depend_list,
+                inputs,
+                outputs]
+
+    # Prompt for input if it was not provided to the function
+    prompt_list = ['Provide script name: ',
+                       'Provide function (module) name: ',
+                       'Provide script Github website: ',
+                       'Provide function keywords: ',
+                       'Provide function description: ',
+                       'Provide function details: ',
+                       'Provide list of dependencies: ',
+                       'Provide list of inputs: ',
+                       'Provide list of outputs: ']
+
+    # For loop cycles through each input and checks to see if it was provided
+    # If it was not provided then it prompts for input
+    for i in range(len(var_list)):
+        if (var_list[i] == ""):
+            var_list[i] = input(prompt_list[i])
+
+    # Reassign variables
+    script_name = var_list[0]
+    function_name= var_list[1]
+    script_website= var_list[2]
+    keywords= var_list[3]
+    describe_fxn= var_list[4]
+    details_fxn = var_list[5]
+    depend_list= var_list[6]
+    inputs= var_list[7]
+    outputs= var_list[8]
+
+    # Format the long documentation string
+    docu_info = '''\
+    ...## Script: {script_name} \n 
+    ...### Function: {function_name} \n
+    ...[Link to {script_name} Code]({script_website}) \n
+    ... \n
+    ...### **Keywords:** \n
+    ...{keywords} \n
+    ... \n
+    ...###Syntax:** \n
+    ...``` \n
+    ... from {script_name} import {function_name} \n
+    ... \n
+    ...{outputs} = {function_name}({inputs}) \n
+    ...```` \n
+    ...### Dependencies \n
+    ...{depend_list} \n
+    ...\n
+    ...### **Description:** \n
+    ...{describe_fxn} \n
+    ...{details_fxn} \n
+    ... \n
+    ... \n
+    ...### **Arguments:** \n
+    ...\n
+    ...#### *Inputs* \n
+    ...{inputs}
+    ...\n
+    ...\n
+    ...#### *Outputs* \n
+    ...{outputs} \n
+    ... \n
+    ... \n
+    ...### **Examples:** \n
+    ...Helpful examples \n
+    ...\n
+    ...[Back to Table of Contents](#table-of-contents) \n
+    ...\
+    ... '''.format(script_name = script_name,
+                   function_name = function_name,
+                   script_website = script_website,
+                   keywords = keywords,
+                   inputs = inputs,
+                   outputs = outputs,
+                   depend_list = depend_list,
+                   describe_fxn= describe_fxn,
+                   details_fxn = details_fxn
+                   )
+    print(docu_info)
+
+
+# TODO make a for loop to format the outputs the way you want them
+#TODO Other thoughts, documentation becomes a folder within each repository
+#TODO Contains: .csv of the codes and docu info, github markdown of all of the documentation
+
+def batch_documentation(doc_csv_file=''):
+    """
+    Function::: batch_documentation
+        Description: Creates series of documentation for functions in a repository
+        Details: Creates series of documentation for functions in a repository
+
+    Inputs
+        doc_codes_csv: STR .csv input file directory containing information
+
+    Outputs
+        Batch of Github markdown outputs for repository documentation
+
+    Dependencies
+        tkinter
+        pandas
+    """
+    # Dependencies
+    import pandas as pd
+    from tkinter.filedialog import askopenfilename
+    from documentation.document_fxn import create_documentation
+
+    # Read in the documentation .csv files for the repository
+    if doc_csv_file == '':
+        doc_csv_file = askopenfilename(title='Select Documentation .csv file for Repository: ')
+        docu_csv = pd.read_csv(doc_csv_file)
+    else:
+        docu_csv = pd.read_csv(doc_csv_file)
+
+    # Use create_documentation function to cycle through each row and create the documentation
+    docu_info_full = []
+    for i in range(len(docu_csv)):
+        docu_info_full[i] = create_documentation(script_name = docu_csv.script_name[i],
+                                                 function_name= docu_csv.fxn_name[i],
+                                                 script_website= docu_csv.script_website[i],
+                                                 keywords= docu_csv.keywords[i],
+                                                 describe_fxn= docu_csv.fxn_desc[i],
+                                                 details_fxn = docu_csv.fxn_details[i],
+                                                 depend_list= docu_csv.fxn_depen[i],
+                                                 inputs= docu_csv.fxn_inputs[i],
+                                                 outputs= docu_csv.fxn_outputs[i])
+
 
 
 

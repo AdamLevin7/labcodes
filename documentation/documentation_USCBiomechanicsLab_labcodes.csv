@@ -1,4 +1,4 @@
-script_name,fxn_name,script_website,fxn_desc,fxn_details,fxn_depen,fxn_inputs,fxn_outputs
+script_name,fxn_name,script_website,fxn_desc,fxn_details,fxn_depen,fxn_inputs,fxn_outputs,keywords
 documentation\document_fxn.R,batch_documentation,https://github.com/USCBiomechanicsLab/labcodes/blob/master/documentation/documentation\document_fxn.R,"	Description: Creates series of documentation for functions in a repository
 ","	Details: Creates series of documentation for functions in a repository
 
@@ -11,7 +11,7 @@ documentation\document_fxn.R,batch_documentation,https://github.com/USCBiomechan
 ","Outputs
     Batch of Github markdown outputs for repository documentation
 
-"
+",
 documentation\document_fxn.R,create_documentation,https://github.com/USCBiomechanicsLab/labcodes/blob/master/documentation/documentation\document_fxn.R,"	Description: Creates Github markdown script for documenting a function
 ","	Details: Add details
 
@@ -34,7 +34,7 @@ Dependencies
     inputs: LIST Input variable names and descriptions
     outputs: LIST Output variable names and descriptions
 
-",
+",,
 documentation\document_fxn_py.py,"TODOCreateexceptionsforifafiledoesn'tcontain""""andprintalist",https://github.com/USCBiomechanicsLab/labcodes/blob/master/documentation/documentation\document_fxn_py.py,"        Description: Scrape a code script for documentation info
 ","        Details: Scrape code for documentation information.
         Write that data into .csv file
@@ -47,7 +47,7 @@ documentation\document_fxn_py.py,"TODOCreateexceptionsforifafiledoesn'tcontain""
         output1: FILE .csv file containing updated documentation information
 
 
-"
+",
 documentation\document_fxn_py.py,scrape_documentation,https://github.com/USCBiomechanicsLab/labcodes/blob/master/documentation/documentation\document_fxn_py.py,"        Description: Scrape a code script for documentation info
 ","        Details: Scrape code for documentation information.
         Write that data into .csv file
@@ -64,7 +64,7 @@ documentation\document_fxn_py.py,scrape_documentation,https://github.com/USCBiom
         output1: FILE .csv file containing updated documentation information
 
 
-"
+",
 documentation\document_fxn_py.py,fxn_pos_list=[iforiinrange(len(info_list))if''ininfo_list[i]],https://github.com/USCBiomechanicsLab/labcodes/blob/master/documentation/documentation\document_fxn_py.py,"     Find indexes where Description: occurs in the list
 ","     Find indexes where Details: occurs in the list
     details_pos_list = [i for i in range(len(info_list)) if 'Details:' in info_list[i]]
@@ -74,7 +74,7 @@ documentation\document_fxn_py.py,fxn_pos_list=[iforiinrange(len(info_list))if''i
 ","    input_pos_list = [i for i in range(len(info_list)) if 'Inputs' in info_list[i]]
      Find indexes where Output occurs in the list
 ","    output_pos_list = [i for i in range(len(info_list)) if 'Outputs' in info_list[i]]
-"
+",
 documentation\document_fxn_py.py,"fxn_name_2=fxn_name_1.replace("""","""")",https://github.com/USCBiomechanicsLab/labcodes/blob/master/documentation/documentation\document_fxn_py.py,"    	Description: Create list of scripts in the repository
 ","    	Details: Create list of scripts in the repository that you will create documentation
     	for, regenerate the table
@@ -91,7 +91,7 @@ documentation\document_fxn_py.py,"fxn_name_2=fxn_name_1.replace("""","""")",http
         output3: DATATYPE description goes here (units)
         output4: DATATYPE description goes here (units)
 
-"
+",
 documentation\document_fxn_py.py,gather_scripts,https://github.com/USCBiomechanicsLab/labcodes/blob/master/documentation/documentation\document_fxn_py.py,"    	Description: Create list of scripts in the repository
 ","    	Details: Create list of scripts in the repository that you will create documentation
     	for, regenerate the table
@@ -112,4 +112,4 @@ documentation\document_fxn_py.py,gather_scripts,https://github.com/USCBiomechani
         output3: DATATYPE description goes here (units)
         output4: DATATYPE description goes here (units)
 
-"
+",
