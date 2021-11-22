@@ -16,12 +16,6 @@
 #    harperestewart7@gmail.com
 #"""
 
-# TODO Go through the functions and make sure format matches
-# TODO Scrape all of those files and put them into .csv
-# TODO Make a way to generate/update the table of contents automatically
-# TODO make things into lists to regenerate documentation links and reflect updates (loop a list)
-# TODO make a documentation package (not necessary but fun)
-
 # Other thoughs, documentation becomes a folder within each repository
 # Contains: .csv of the codes and docu info, github markdown of all of the documentation
 

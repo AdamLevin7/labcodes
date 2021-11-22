@@ -9,9 +9,13 @@ Author:
     Harper Stewart
     harperestewart7@gmail.com
 """
-#TODO switch the functions in R to Python to make things easier (add modules)
+#TODO 1. switch the functions in R to Python to make things easier (add modules)
 #TODO remove the .csv table element and just loop through files in a list
-#TODO Create exceptions for if a file doesn't contain "Function:::" and print a list
+#TODO 2. Create exceptions for if a file doesn't contain "Function:::" and print a list
+# TODO Go through the functions and make sure format matches
+# TODO Make a way to generate/update the table of contents automatically
+# TODO make things into lists to regenerate documentation links and reflect updates (loop a list)
+# TODO make a documentation package (not necessary but fun)
 
 def scrape_documentation(code_script='', doc_csv_file=''):
     """
@@ -163,7 +167,7 @@ def gather_scripts(extensions = ('.py', '.R'), doc_csv_file = ''):
         doc_csv_file: STR Path where .csv file with documentation info is stored
 
     Outputs
-        output1: DATATYPE File where documentation data is stored (.csv file)
+        doc_csv_file: FILE Where documentation data is stored (.csv file)
 
     Dependencies
         os
