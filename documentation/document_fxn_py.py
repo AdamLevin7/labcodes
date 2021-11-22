@@ -11,7 +11,6 @@ Author:
 """
 #TODO switch the functions in R to Python to make things easier (add modules)
 #TODO remove the .csv table element and just loop through files in a list
-#TODO Search all directories for files ending in .py or .r
 #TODO Create exceptions for if a file doesn't contain "Function:::" and print a list
 
 def scrape_documentation(code_script='', doc_csv_file=''):
@@ -152,27 +151,23 @@ def scrape_documentation(code_script='', doc_csv_file=''):
     #Write the table back out to .csv file
     documentation_csv.to_csv(doc_csv_file, index=False)
 
-def gather_scripts():
+def gather_scripts(extensions = ('.py', '.R'), doc_csv_file = ''):
     """
-    Function::: name_of_function
-    	Description: brief description here (1 line)
-    	Details: Full description with details here
+    Function::: gather_scripts
+    	Description: Create list of scripts in the repository
+    	Details: Create list of scripts in the repository that you will create documentation
+    	for, regenerate the table
 
     Inputs
-        input1: DATATYPE description goes here (units)
-        input2: DATATYPE description goes here (units)
-        input3: DATATYPE description goes here (units)
-        input4: DATATYPE description goes here (units)
+        extensions: TUPLE Specify the extensions to document in repo
+        doc_csv_file: STR Path where .csv file with documentation info is stored
 
     Outputs
-        output1: DATATYPE description goes here (units)
-        output2: DATATYPE description goes here (units)
-        output3: DATATYPE description goes here (units)
-        output4: DATATYPE description goes here (units)
+        output1: DATATYPE File where documentation data is stored (.csv file)
 
     Dependencies
-        dep1
-        dep2
+        os
+        tkinter
         dep3 from uscbrl_script.py (USCBRL repo)
     """
 
@@ -182,19 +177,29 @@ def gather_scripts():
     from tkinter.filedialog import askdirectory
 
     # Select the repository that you are creating documentation for
-    repo_directory = askdirectory(title='Select Repository to Update: ')
+    path = askdirectory(title='Select Repository to Update: ')
 
-    # Find all paths, directory, and filenames for a filetype in the repository
-    for dirpath, dirnames, filenames in os.walk(repo_directory):
-        print("dirpath: ")
-        print(dirpath)
-        print("dirnames: ")
-        print(dirnames)
-        print("filenames: ")
-        print(filenames)
-        for filename in [f for f in filenames if f.endswith(".py")]:
-            print
-            os.path.join(dirpath, filename)
+    # Create a list of all the files
+    file_list = []
+    for root, directories, files in os.walk(path, topdown=False):
+        for name in files:
+            file_list.append(name)
+            print(os.path.join(root, name))
+        for name in directories:
+            print(os.path.join(root, name))
+
+    # Keep only the files that you want documented using languages argument
+    file_list_sm = list(filter(lambda x: x.endswith(extensions), file_list))
+
+    # Run the documentation function
+    for i in range(len(file_list_sm)):
+        scrape_documentation(code_script=os.path.join(root, file_list_sm[i]),
+                             doc_csv_file='')
+
+
+
+
+
 
 
 

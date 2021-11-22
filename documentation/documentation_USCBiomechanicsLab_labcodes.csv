@@ -1,22 +1,5 @@
 script_name,fxn_name,script_website,fxn_desc,fxn_details,fxn_depen,fxn_inputs,fxn_outputs
-document_fxn_py.py,scrape_documentation,github.com/USCBiomechanicsLab/labcodes/blob/master/documentation/document_fxn_py.py,"        Description: Scrape a code script for documentation info
-","        Details: Scrape code for documentation information.
-        Write that data into .csv file
-
-","    Dependencies
-        pandas
-        tkinter
-
-","    Inputs
-        code_script: STR Code script with documentation info
-        doc_codes_csv: STR .csv file containing documentation information
-
-","    Outputs
-        output1: FILE .csv file containing updated documentation information
-
-
-"
-document_fxn.R,batch_documentation,github.com/USCBiomechanicsLab/labcodes/blob/master/documentation/document_fxn.R,"	Description: Creates series of documentation for functions in a repository
+documentation\document_fxn.R,batch_documentation,https://github.com/USCBiomechanicsLab/labcodes/blob/master/documentation/documentation\document_fxn.R,"	Description: Creates series of documentation for functions in a repository
 ","	Details: Creates series of documentation for functions in a repository
 
 ","Dependencies
@@ -29,7 +12,7 @@ document_fxn.R,batch_documentation,github.com/USCBiomechanicsLab/labcodes/blob/m
     Batch of Github markdown outputs for repository documentation
 
 "
-document_fxn.R,create_documentation,github.com/USCBiomechanicsLab/labcodes/blob/master/documentation/document_fxn.R,"	Description: Creates Github markdown script for documenting a function
+documentation\document_fxn.R,create_documentation,https://github.com/USCBiomechanicsLab/labcodes/blob/master/documentation/documentation\document_fxn.R,"	Description: Creates Github markdown script for documenting a function
 ","	Details: Add details
 
 ","    depend_list: LIST Dependencies needed to run the function
@@ -52,3 +35,81 @@ Dependencies
     outputs: LIST Output variable names and descriptions
 
 ",
+documentation\document_fxn_py.py,"TODOCreateexceptionsforifafiledoesn'tcontain""""andprintalist",https://github.com/USCBiomechanicsLab/labcodes/blob/master/documentation/documentation\document_fxn_py.py,"        Description: Scrape a code script for documentation info
+","        Details: Scrape code for documentation information.
+        Write that data into .csv file
+
+",,"    Inputs
+        code_script: STR Code script with documentation info
+        doc_codes_csv: STR .csv file containing documentation information
+
+","    Outputs
+        output1: FILE .csv file containing updated documentation information
+
+
+"
+documentation\document_fxn_py.py,scrape_documentation,https://github.com/USCBiomechanicsLab/labcodes/blob/master/documentation/documentation\document_fxn_py.py,"        Description: Scrape a code script for documentation info
+","        Details: Scrape code for documentation information.
+        Write that data into .csv file
+
+","    Dependencies
+        pandas
+        tkinter
+
+","    Inputs
+        code_script: STR Code script with documentation info
+        doc_codes_csv: STR .csv file containing documentation information
+
+","    Outputs
+        output1: FILE .csv file containing updated documentation information
+
+
+"
+documentation\document_fxn_py.py,fxn_pos_list=[iforiinrange(len(info_list))if''ininfo_list[i]],https://github.com/USCBiomechanicsLab/labcodes/blob/master/documentation/documentation\document_fxn_py.py,"     Find indexes where Description: occurs in the list
+","     Find indexes where Details: occurs in the list
+    details_pos_list = [i for i in range(len(info_list)) if 'Details:' in info_list[i]]
+     Find indexes where Input occurs in the list
+","     Find indexes where Dependencies occurs in the list
+    depend_pos_list = [i for i in range(len(info_list)) if 'Dependencies' in info_list[i]]
+","    input_pos_list = [i for i in range(len(info_list)) if 'Inputs' in info_list[i]]
+     Find indexes where Output occurs in the list
+","    output_pos_list = [i for i in range(len(info_list)) if 'Outputs' in info_list[i]]
+"
+documentation\document_fxn_py.py,"fxn_name_2=fxn_name_1.replace("""","""")",https://github.com/USCBiomechanicsLab/labcodes/blob/master/documentation/documentation\document_fxn_py.py,"    	Description: Create list of scripts in the repository
+","    	Details: Create list of scripts in the repository that you will create documentation
+    	for, regenerate the table
+
+",,"    Inputs
+        extensions: TUPLE Specify the extensions to document in repo
+        input2: DATATYPE description goes here (units)
+        input3: DATATYPE description goes here (units)
+        input4: DATATYPE description goes here (units)
+
+","    Outputs
+        output1: DATATYPE description goes here (units)
+        output2: DATATYPE description goes here (units)
+        output3: DATATYPE description goes here (units)
+        output4: DATATYPE description goes here (units)
+
+"
+documentation\document_fxn_py.py,gather_scripts,https://github.com/USCBiomechanicsLab/labcodes/blob/master/documentation/documentation\document_fxn_py.py,"    	Description: Create list of scripts in the repository
+","    	Details: Create list of scripts in the repository that you will create documentation
+    	for, regenerate the table
+
+","    Dependencies
+        os
+        tkinter
+        dep3 from uscbrl_script.py (USCBRL repo)
+","    Inputs
+        extensions: TUPLE Specify the extensions to document in repo
+        input2: DATATYPE description goes here (units)
+        input3: DATATYPE description goes here (units)
+        input4: DATATYPE description goes here (units)
+
+","    Outputs
+        output1: DATATYPE description goes here (units)
+        output2: DATATYPE description goes here (units)
+        output3: DATATYPE description goes here (units)
+        output4: DATATYPE description goes here (units)
+
+"
