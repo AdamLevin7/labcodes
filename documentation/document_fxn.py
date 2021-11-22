@@ -4,6 +4,7 @@ Script: document_fxn_py
 
 Modules
     scrape_documentation: Scrape a code script for documentation info
+    gather_scripts: List scripts in repository and scrape documentation information.
 
 Author:
     Harper Stewart
@@ -158,7 +159,7 @@ def scrape_documentation(code_script='', doc_csv_file=''):
 def gather_scripts(extensions = ('.py', '.R'), doc_csv_file = ''):
     """
     Function::: gather_scripts
-    	Description: Create list of scripts in the repository
+    	Description: List scripts in repository and scrape documentation information.
     	Details: Create list of scripts in the repository that you will create documentation
     	for, regenerate the table
 
@@ -199,6 +200,9 @@ def gather_scripts(extensions = ('.py', '.R'), doc_csv_file = ''):
     for i in range(len(file_list_sm)):
         scrape_documentation(code_script=os.path.join(root, file_list_sm[i]),
                              doc_csv_file='')
+
+
+def create_documentation():
 
 
 
