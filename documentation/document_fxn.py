@@ -102,6 +102,7 @@ def scrape_documentation(code_script='', doc_csv_file=''):
         fxn_desc = info_list[desc_loc]
         fxn_desc = fxn_desc.replace("#", "")
         fxn_desc = fxn_desc.replace("Description: ", "")
+        fxn_desc = fxn_desc.replace("    ", "")
 
     # Join elements of list to create strings
         # Full detail string
@@ -414,16 +415,15 @@ def table_of_contents(doc_csv_file=''):
     str_fxns = ''
 
     for i in range(len(docu_csv)):
-        str_fxns = str_fxns + '''| {description} |{script}|[{fxn}](#function-{fxn})| \n'''.format(description = docu_csv.fxn_desc[i],
-            script = docu_csv.script_name[i],
-            fxn = docu_csv.fxn_name[i],
-            )
+        str_fxns = str_fxns + '''|{description}|{script}|[{fxn}](#function-{fxn})|'''.format(description=docu_csv.fxn_desc[i],
+            script=docu_csv.script_name[i],
+            fxn=docu_csv.fxn_name[i])
 
     # Create the table of contents for a repository
     tab_contents = '''# Documentation- \n
 ## Table of Contents \n
-|Description|Script|Functions| \n
-| ------------- | ------------- | ------------- | \n
+|Description|Script|Functions| 
+| ------------- | ------------- | ------------- | 
 {all_fxns} \n
 ### End Table of Contents <br/> \n'''.format(all_fxns = str_fxns)
 
