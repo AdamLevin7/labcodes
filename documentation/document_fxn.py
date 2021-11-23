@@ -15,7 +15,6 @@ Author:
 #TODO remove the .csv table element and just loop through files in a list
 #TODO 2. Create exceptions for if a file doesn't contain "Function::" and print a list
 # TODO Go through the functions and make sure format matches
-# TODO Make a way to generate/update the table of contents automatically
 # TODO make things into lists to regenerate documentation links and reflect updates (loop a list)
 # TODO make a documentation package (not necessary but fun)
 
@@ -345,6 +344,22 @@ def batch_documentation(doc_csv_file=''):
     else:
         docu_csv = pd.read_csv(doc_csv_file)
 
+    # Make a .md File
+    # open text file
+    filename = 'documentation.md'
+    file_exists = os.path.isfile(filename)
+
+    # If the file doesn't exist
+    if file_exists == False:
+        text_file = open(filename, "x")
+    # If the file does exist
+    else:
+        text_file = open(filename, "a")
+
+    # Add the table of contents
+    tab_cont_str = table_of_contents(doc_csv_file)
+    text_file.write(tab_cont_str)
+
     # Use create_documentation function to cycle through each row and create the documentation
     docu_info_full = []
     for i in range(len(docu_csv)):
@@ -358,23 +373,57 @@ def batch_documentation(doc_csv_file=''):
                                               inputs=docu_csv.fxn_inputs[i],
                                               outputs=docu_csv.fxn_outputs[i])
 
-        # Make a .md File
-        # open text file
-        filename = 'documentation.md'
-        file_exists = os.path.isfile(filename)
-
-        # If the file doesn't exist
-        if file_exists == False:
-            text_file = open(filename, "x")
-        # If the file does exist
-        else:
-            text_file = open(filename, "a")
-
-        # write string to file
+        # write documentation information to the file
         text_file.write(docu_info_full)
 
-        # close file
-        text_file.close()
+    # close file
+    text_file.close()
+
+def table_of_contents(doc_csv_file=''):
+    """
+    Function::: table_of_contents
+    	Description: brief description here (1 line)
+    	Details: Full description with details here
+
+    Inputs
+        doc_csv_file: FILE csv file with documentation of functions
+
+    Outputs
+        tab_contents: STR Table of contents of functions in repository
+
+    Dependencies
+        pandas
+        tkinter
+    """
+    # Dependencies
+    import pandas as pd
+    from tkinter.filedialog import askopenfilename
+
+    # Read in the documentation .csv files for the repository
+    if doc_csv_file == '':
+        doc_csv_file = askopenfilename(title='Select Documentation .csv file for Repository: ')
+        docu_csv = pd.read_csv(doc_csv_file)
+    else:
+        docu_csv = pd.read_csv(doc_csv_file)
+
+    # Create a list of strings in the correct format for each function
+    str_fxns = ''
+
+    for i in range(len(docu_csv)):
+        str_fxns = str_fxns + '''| {description} |{script}|[{fxn}](#function-{fxn})| \n'''.format(description = docu_csv.fxn_desc[i],
+            script = docu_csv.script_name[i],
+            fxn = docu_csv.fxn_name[i],
+            )
+
+    # Create the table of contents for a repository
+    tab_contents = '''# Documentation- \n
+## Table of Contents \n
+|Description|Script|Functions| \n
+| ------------- | ------------- | ------------- | \n
+{all_fxns} \n
+### End Table of Contents <br/> \n'''.format(all_fxns = str_fxns)
+
+    return(tab_contents)
 
 
 

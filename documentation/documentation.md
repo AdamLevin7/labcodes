@@ -1,3 +1,26 @@
+# Documentation- 
+
+## Table of Contents 
+
+|Description|Script|Functions| 
+
+| ------------- | ------------- | ------------- | 
+
+|         Description: Scrape a code script for documentation info
+ |document_fxn.py|[scrape_documentation](#function-scrape_documentation)| 
+|     	Description: List scripts in repository and scrape documentation information.
+ |document_fxn.py|[gather_scripts](#function-gather_scripts)| 
+|     	Description: Create Github documentation format for functions
+ |document_fxn.py|[create_documentation](#function-create_documentation)| 
+|         Description: Creates series of documentation for functions in a repository
+ |document_fxn.py|[batch_documentation](#function-batch_documentation)| 
+| 	Description: Creates series of documentation for functions in a repository
+ |document_fxn.R|[batch_documentation](#function-batch_documentation)| 
+| 	Description: Creates Github markdown script for documenting a function
+ |document_fxn.R|[create_documentation](#function-create_documentation)| 
+ 
+
+### End Table of Contents <br/> 
 ## Script: document_fxn.py 
  
 ### Function: scrape_documentation 
