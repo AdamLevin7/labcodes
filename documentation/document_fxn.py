@@ -277,42 +277,42 @@ def create_documentation(script_name='',
 
     # Format the long documentation string
     docu_info = '''\
-    ## Script: {script_name} \n 
-    ### Function: {function_name} \n
-    [Link to {script_name} Code]({script_website}) \n
-    \n
-    ### **Keywords:** \n
-    {keywords} \n
-    \n
-    ###Syntax:** \n
-    ``` \n
-    from {script_name} import {function_name} \n
-    \n
-    {outputs} = {function_name}({inputs}) \n
-    ```` \n
-    ### Dependencies \n
-    {depend_list} \n
-    \n
-    ### **Description:** \n
-    {describe_fxn} \n
-    {details_fxn} \n
-    \n
-    \n
-    ### **Arguments:** \n
-    \n
-    #### *Inputs* \n
-    {inputs}
-    \n
-    \n
-    #### *Outputs* \n
-    {outputs} \n
-    \n
-     \n
-    ### **Examples:** \n
-    Helpful examples \n
-    \n
-    [Back to Table of Contents](#table-of-contents) \n
-    \
+## Script: {script_name} \n 
+### Function: {function_name} \n
+[Link to {script_name} Code]({script_website}) \n
+\n
+### **Keywords:** \n
+{keywords} \n
+\n
+###Syntax:** \n
+``` \n
+from {script_name} import {function_name} \n
+\n
+{outputs} = {function_name}({inputs}) \n
+```` \n
+### Dependencies \n
+{depend_list} \n
+\n
+### **Description:** \n
+{describe_fxn} \n
+{details_fxn} \n
+\n
+\n
+### **Arguments:** \n
+\n
+#### *Inputs* \n
+{inputs}
+\n
+\n
+#### *Outputs* \n
+{outputs} \n
+\n
+ \n
+### **Examples:** \n
+Helpful examples \n
+\n
+[Back to Table of Contents](#table-of-contents) \n
+\
      '''.format(script_name = script_name,
                    function_name = function_name,
                    script_website = script_website,
@@ -323,7 +323,6 @@ def create_documentation(script_name='',
                    describe_fxn= describe_fxn,
                    details_fxn = details_fxn
                    )
-    print(docu_info)
     return(docu_info)
 
 #TODO make a for loop to format the outputs the way you want them
@@ -361,15 +360,15 @@ def batch_documentation(doc_csv_file=''):
     # Use create_documentation function to cycle through each row and create the documentation
     docu_info_full = []
     for i in range(len(docu_csv)):
-        docu_info_full = create_documentation(script_name = docu_csv.script_name[i],
-                                                 function_name= docu_csv.fxn_name[i],
-                                                 script_website= docu_csv.script_website[i],
-                                                 keywords= docu_csv.keywords[i],
-                                                 describe_fxn= docu_csv.fxn_desc[i],
-                                                 details_fxn = docu_csv.fxn_details[i],
-                                                 depend_list= docu_csv.fxn_depen[i],
-                                                 inputs= docu_csv.fxn_inputs[i],
-                                                 outputs= docu_csv.fxn_outputs[i])
+        docu_info_full = create_documentation(script_name=docu_csv.script_name[i],
+                                              function_name=docu_csv.fxn_name[i],
+                                              script_website=docu_csv.script_website[i],
+                                              keywords=docu_csv.keywords[i],
+                                              describe_fxn=docu_csv.fxn_desc[i],
+                                              details_fxn =docu_csv.fxn_details[i],
+                                              depend_list=docu_csv.fxn_depen[i],
+                                              inputs=docu_csv.fxn_inputs[i],
+                                              outputs=docu_csv.fxn_outputs[i])
 
         # Make a .md File
         # open text file
