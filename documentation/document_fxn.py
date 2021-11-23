@@ -103,6 +103,7 @@ def scrape_documentation(code_script='', doc_csv_file=''):
         fxn_desc = fxn_desc.replace("#", "")
         fxn_desc = fxn_desc.replace("Description: ", "")
         fxn_desc = fxn_desc.replace("    ", "")
+        fxn_desc = fxn_desc.replace("\n", "")
 
     # Join elements of list to create strings
         # Full detail string
@@ -279,6 +280,10 @@ def create_documentation(script_name='',
     inputs= var_list[7]
     outputs= var_list[8]
 
+    # Reformat the inputs
+
+    # Reformat the outputs
+
     # Format the long documentation string
     docu_info = '''## Script: {script_name} \n 
 ### Function: {function_name} \n
@@ -415,7 +420,7 @@ def table_of_contents(doc_csv_file=''):
     str_fxns = ''
 
     for i in range(len(docu_csv)):
-        str_fxns = str_fxns + '''|{description}|{script}|[{fxn}](#function-{fxn})|'''.format(description=docu_csv.fxn_desc[i],
+        str_fxns = str_fxns + '''|{description}|{script}|[{fxn}](#function-{fxn})| \n'''.format(description=docu_csv.fxn_desc[i],
             script=docu_csv.script_name[i],
             fxn=docu_csv.fxn_name[i])
 
