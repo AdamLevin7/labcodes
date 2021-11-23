@@ -3,6 +3,7 @@ Script: document_fxn_py
     Create documentation functions for Github documentation.
 
 Modules
+    main: Runs the series of modules
     scrape_documentation: Scrape a code script for documentation info
     gather_scripts: List scripts in repository and scrape documentation information.
     create_documentation: Create Github documentation format for functions
@@ -15,8 +16,53 @@ Author:
 #TODO remove the .csv table element and just loop through files in a list
 #TODO 2. Create exceptions for if a file doesn't contain "Function::" and print a list
 # TODO Go through the functions and make sure format matches
-# TODO make things into lists to regenerate documentation links and reflect updates (loop a list)
 # TODO make a documentation package (not necessary but fun)
+
+def main():
+    path_to_repo = r'C:\Users\hestewar\Codes-USCBiomechanicsLab\labcodes\documentation'
+    create_doc_csv(path_to_repo)
+    gather_scripts(extensions=('.py', '.R'), doc_csv_file='')
+    batch_documentation(doc_csv_file='')
+
+
+def create_doc_csv(path_to_file):
+    """
+    Function::: create_doc_csv
+    	Description: Create documentation csv file if it doesn't exist
+    	Details: Full description with details here
+
+    Inputs
+        path_to_file: STR Path to .csv with repo information
+
+    Outputs
+        output1: DATATYPE description goes here (units)
+
+    Dependencies
+        dep1
+        dep2
+        dep3 from uscbrl_script.py (USCBRL repo)
+    """
+    # Dependencies
+    from os.path import exists
+    import pandas as pd
+
+    # Check if the file exsits
+    file_exists = exists(path_to_file + '\\documentation.csv')
+    if file_exists == False:
+        # Column headers
+        cols = ['script_name',
+                   'fxn_name',
+                   'script_website',
+                   'fxn_desc',
+                   'fxn_details',
+                   'fxn_depen',
+                   'fxn_inputs',
+                   'fxn_outputs',
+                   'keywords']
+
+        df = pd.DataFrame(columns = cols)
+        df.to_csv('documentation.csv', index = False)
+
 
 def scrape_documentation(code_script='', doc_csv_file=''):
     """
