@@ -276,15 +276,14 @@ def create_documentation(script_name='',
     outputs= var_list[8]
 
     # Format the long documentation string
-    docu_info = '''\
-## Script: {script_name} \n 
+    docu_info = '''## Script: {script_name} \n 
 ### Function: {function_name} \n
 [Link to {script_name} Code]({script_website}) \n
 \n
 ### **Keywords:** \n
 {keywords} \n
 \n
-###Syntax:** \n
+### **Syntax:** \n
 ``` \n
 from {script_name} import {function_name} \n
 \n
@@ -292,28 +291,17 @@ from {script_name} import {function_name} \n
 ```` \n
 ### Dependencies \n
 {depend_list} \n
-\n
 ### **Description:** \n
 {describe_fxn} \n
 {details_fxn} \n
-\n
-\n
 ### **Arguments:** \n
-\n
 #### *Inputs* \n
-{inputs}
-\n
-\n
+{inputs}\n
 #### *Outputs* \n
 {outputs} \n
-\n
- \n
 ### **Examples:** \n
 Helpful examples \n
-\n
-[Back to Table of Contents](#table-of-contents) \n
-\
-     '''.format(script_name = script_name,
+[Back to Table of Contents](#table-of-contents) \n'''.format(script_name = script_name,
                    function_name = function_name,
                    script_website = script_website,
                    keywords = keywords,

@@ -12,7 +12,7 @@ nan
 
 
 
-###Syntax:** 
+### **Syntax:** 
 
 ``` 
 
@@ -40,8 +40,6 @@ from document_fxn.py import scrape_documentation
 
  
 
-
-
 ### **Description:** 
 
         Description: Scrape a code script for documentation info
@@ -52,22 +50,13 @@ from document_fxn.py import scrape_documentation
 
  
 
-
-
-
-
 ### **Arguments:** 
-
-
 
 #### *Inputs* 
 
     Inputs
         code_script: STR Code script with documentation info
         doc_codes_csv: STR .csv file containing documentation information
-
-
-
 
 
 
@@ -79,19 +68,12 @@ from document_fxn.py import scrape_documentation
 
  
 
-
-
- 
-
 ### **Examples:** 
 
 Helpful examples 
 
-
-
 [Back to Table of Contents](#table-of-contents) 
-
-     ## Script: document_fxn.py 
+## Script: document_fxn.py 
  
 ### Function: gather_scripts 
 
@@ -105,7 +87,7 @@ nan
 
 
 
-###Syntax:** 
+### **Syntax:** 
 
 ``` 
 
@@ -132,8 +114,6 @@ from document_fxn.py import gather_scripts
         dep3 from uscbrl_script.py (USCBRL repo)
  
 
-
-
 ### **Description:** 
 
     	Description: List scripts in repository and scrape documentation information.
@@ -144,22 +124,13 @@ from document_fxn.py import gather_scripts
 
  
 
-
-
-
-
 ### **Arguments:** 
-
-
 
 #### *Inputs* 
 
     Inputs
         extensions: TUPLE Specify the extensions to document in repo
         doc_csv_file: STR Path where .csv file with documentation info is stored
-
-
-
 
 
 
@@ -170,19 +141,12 @@ from document_fxn.py import gather_scripts
 
  
 
-
-
- 
-
 ### **Examples:** 
 
 Helpful examples 
 
-
-
 [Back to Table of Contents](#table-of-contents) 
-
-     ## Script: document_fxn.py 
+## Script: document_fxn.py 
  
 ### Function: create_documentation 
 
@@ -196,7 +160,7 @@ nan
 
 
 
-###Syntax:** 
+### **Syntax:** 
 
 ``` 
 
@@ -233,8 +197,6 @@ nan = create_documentation(    Inputs
         dep3 from uscbrl_script.py (USCBRL repo)
  
 
-
-
 ### **Description:** 
 
     	Description: Create Github documentation format for functions
@@ -244,13 +206,7 @@ nan = create_documentation(    Inputs
 
  
 
-
-
-
-
 ### **Arguments:** 
-
-
 
 #### *Inputs* 
 
@@ -266,26 +222,16 @@ nan = create_documentation(    Inputs
 
 
 
-
-
-
 #### *Outputs* 
 
 nan 
-
-
-
- 
 
 ### **Examples:** 
 
 Helpful examples 
 
-
-
 [Back to Table of Contents](#table-of-contents) 
-
-     ## Script: document_fxn.py 
+## Script: document_fxn.py 
  
 ### Function: batch_documentation 
 
@@ -299,7 +245,7 @@ nan
 
 
 
-###Syntax:** 
+### **Syntax:** 
 
 ``` 
 
@@ -324,8 +270,6 @@ from document_fxn.py import batch_documentation
         pandas
  
 
-
-
 ### **Description:** 
 
         Description: Creates series of documentation for functions in a repository
@@ -335,21 +279,12 @@ from document_fxn.py import batch_documentation
 
  
 
-
-
-
-
 ### **Arguments:** 
-
-
 
 #### *Inputs* 
 
     Inputs
         doc_codes_csv: STR .csv input file directory containing information
-
-
-
 
 
 
@@ -360,19 +295,12 @@ from document_fxn.py import batch_documentation
 
  
 
-
-
- 
-
 ### **Examples:** 
 
 Helpful examples 
 
-
-
 [Back to Table of Contents](#table-of-contents) 
-
-     ## Script: document_fxn.R 
+## Script: document_fxn.R 
  
 ### Function: batch_documentation 
 
@@ -386,7 +314,7 @@ nan
 
 
 
-###Syntax:** 
+### **Syntax:** 
 
 ``` 
 
@@ -411,8 +339,6 @@ Dependencies
     create_documentation USCBRL Repo: labcodes
  
 
-
-
 ### **Description:** 
 
 	Description: Creates series of documentation for functions in a repository
@@ -422,21 +348,12 @@ Dependencies
 
  
 
-
-
-
-
 ### **Arguments:** 
-
-
 
 #### *Inputs* 
 
 Inputs
     doc_codes_csv: STR .csv input file directory containing information
-
-
-
 
 
 
@@ -448,19 +365,12 @@ Outputs
 
  
 
-
-
- 
-
 ### **Examples:** 
 
 Helpful examples 
 
-
-
 [Back to Table of Contents](#table-of-contents) 
-
-     ## Script: document_fxn.R 
+## Script: document_fxn.R 
  
 ### Function: create_documentation 
 
@@ -474,7 +384,7 @@ nan
 
 
 
-###Syntax:** 
+### **Syntax:** 
 
 ``` 
 
@@ -509,8 +419,6 @@ Dependencies
     None
  
 
-
-
 ### **Description:** 
 
 	Description: Creates Github markdown script for documenting a function
@@ -520,13 +428,7 @@ Dependencies
 
  
 
-
-
-
-
 ### **Arguments:** 
-
-
 
 #### *Inputs* 
 
@@ -542,23 +444,12 @@ Inputs
 
 
 
-
-
-
 #### *Outputs* 
 
 nan 
-
-
-
- 
 
 ### **Examples:** 
 
 Helpful examples 
 
-
-
 [Back to Table of Contents](#table-of-contents) 
-
-     
