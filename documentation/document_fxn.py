@@ -101,22 +101,26 @@ def scrape_documentation(code_script='', doc_csv_file=''):
         # Get the variables
         fxn_desc = info_list[desc_loc]
         fxn_desc = fxn_desc.replace("#", "")
+        fxn_desc = fxn_desc.replace("Description: ", "")
 
-        # Join elements of list to create strings
+    # Join elements of list to create strings
         # Full detail string
         fxn_details = ''.join(info_list[details_loc:input_loc])
         fxn_details = fxn_details.replace("#", "")
+        fxn_details = fxn_details.replace("Details: ", "")
         # Gather inputs
-        fxn_inputs =''.join(info_list[input_loc:output_loc])
+        fxn_inputs =''.join(info_list[input_loc+1:output_loc])
         fxn_inputs = fxn_inputs.replace("#", "")
+        fxn_inputs = fxn_inputs.replace("    ", "")
         # Gather outputs
-        fxn_outputs = ''.join(info_list[output_loc:depend_loc])
+        fxn_outputs = ''.join(info_list[output_loc+1:depend_loc])
         fxn_outputs = fxn_outputs.replace("#", "")
+        fxn_outputs = fxn_outputs.replace("    ", "")
         # Gather dependencies
-        fxn_depen = ''.join(info_list[depend_loc:docstring_loc])
+        fxn_depen = ''.join(info_list[depend_loc+1:docstring_loc])
         fxn_depen = fxn_depen.replace("#", "")
-
-        # Find name of Github org and repository by splitting the filename
+        fxn_depen = fxn_depen.replace("    ", "")
+    # Find name of Github org and repository by splitting the filename
         doc_csv_split = doc_csv_file.split('_')
         github_org = doc_csv_split[1]
         repo_name = doc_csv_split[2]
