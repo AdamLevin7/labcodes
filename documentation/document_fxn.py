@@ -13,7 +13,7 @@ Author:
     harperestewart7@gmail.com
 """
 #TODO remove the .csv table element and just loop through files in a list
-#TODO 2. Create exceptions for if a file doesn't contain "Function:::" and print a list
+#TODO 2. Create exceptions for if a file doesn't contain "Function::" and print a list
 # TODO Go through the functions and make sure format matches
 # TODO Make a way to generate/update the table of contents automatically
 # TODO make things into lists to regenerate documentation links and reflect updates (loop a list)
@@ -187,16 +187,19 @@ def gather_scripts(extensions = ('.py', '.R'), doc_csv_file = ''):
     for root, directories, files in os.walk(path, topdown=False):
         for name in files:
             file_list.append(name)
-            print(os.path.join(root, name))
         for name in directories:
+            print('Directories: ')
             print(os.path.join(root, name))
 
     # Keep only the files that you want documented using languages argument
-    file_list_sm = list(filter(lambda x: x.endswith(extensions), file_list))
+    # Don't document the init file
+    file_list_sm = list(filter(lambda x: x.endswith(extensions) and not x.startswith('__init__'), file_list))
+    print('Files to document: ')
+    print(file_list_sm)
 
     # Run the documentation function
     for i in range(len(file_list_sm)):
-        scrape_documentation(code_script=os.path.join(root, file_list_sm[i]),
+        scrape_documentation(code_script=str(root + '/' + file_list_sm[i]),
                              doc_csv_file='')
 
 
@@ -274,43 +277,43 @@ def create_documentation(script_name='',
 
     # Format the long documentation string
     docu_info = '''\
-    ...## Script: {script_name} \n 
-    ...### Function: {function_name} \n
-    ...[Link to {script_name} Code]({script_website}) \n
-    ... \n
-    ...### **Keywords:** \n
-    ...{keywords} \n
-    ... \n
-    ...###Syntax:** \n
-    ...``` \n
-    ... from {script_name} import {function_name} \n
-    ... \n
-    ...{outputs} = {function_name}({inputs}) \n
-    ...```` \n
-    ...### Dependencies \n
-    ...{depend_list} \n
-    ...\n
-    ...### **Description:** \n
-    ...{describe_fxn} \n
-    ...{details_fxn} \n
-    ... \n
-    ... \n
-    ...### **Arguments:** \n
-    ...\n
-    ...#### *Inputs* \n
-    ...{inputs}
-    ...\n
-    ...\n
-    ...#### *Outputs* \n
-    ...{outputs} \n
-    ... \n
-    ... \n
-    ...### **Examples:** \n
-    ...Helpful examples \n
-    ...\n
-    ...[Back to Table of Contents](#table-of-contents) \n
-    ...\
-    ... '''.format(script_name = script_name,
+    ## Script: {script_name} \n 
+    ### Function: {function_name} \n
+    [Link to {script_name} Code]({script_website}) \n
+    \n
+    ### **Keywords:** \n
+    {keywords} \n
+    \n
+    ###Syntax:** \n
+    ``` \n
+    from {script_name} import {function_name} \n
+    \n
+    {outputs} = {function_name}({inputs}) \n
+    ```` \n
+    ### Dependencies \n
+    {depend_list} \n
+    \n
+    ### **Description:** \n
+    {describe_fxn} \n
+    {details_fxn} \n
+    \n
+    \n
+    ### **Arguments:** \n
+    \n
+    #### *Inputs* \n
+    {inputs}
+    \n
+    \n
+    #### *Outputs* \n
+    {outputs} \n
+    \n
+     \n
+    ### **Examples:** \n
+    Helpful examples \n
+    \n
+    [Back to Table of Contents](#table-of-contents) \n
+    \
+     '''.format(script_name = script_name,
                    function_name = function_name,
                    script_website = script_website,
                    keywords = keywords,
@@ -321,11 +324,10 @@ def create_documentation(script_name='',
                    details_fxn = details_fxn
                    )
     print(docu_info)
+    return(docu_info)
 
-
-# TODO make a for loop to format the outputs the way you want them
+#TODO make a for loop to format the outputs the way you want them
 #TODO Other thoughts, documentation becomes a folder within each repository
-#TODO Contains: .csv of the codes and docu info, github markdown of all of the documentation
 
 def batch_documentation(doc_csv_file=''):
     """
@@ -347,6 +349,7 @@ def batch_documentation(doc_csv_file=''):
     import pandas as pd
     from tkinter.filedialog import askopenfilename
     from documentation.document_fxn import create_documentation
+    import os.path
 
     # Read in the documentation .csv files for the repository
     if doc_csv_file == '':
@@ -358,7 +361,7 @@ def batch_documentation(doc_csv_file=''):
     # Use create_documentation function to cycle through each row and create the documentation
     docu_info_full = []
     for i in range(len(docu_csv)):
-        docu_info_full[i] = create_documentation(script_name = docu_csv.script_name[i],
+        docu_info_full = create_documentation(script_name = docu_csv.script_name[i],
                                                  function_name= docu_csv.fxn_name[i],
                                                  script_website= docu_csv.script_website[i],
                                                  keywords= docu_csv.keywords[i],
@@ -368,13 +371,23 @@ def batch_documentation(doc_csv_file=''):
                                                  inputs= docu_csv.fxn_inputs[i],
                                                  outputs= docu_csv.fxn_outputs[i])
 
+        # Make a .md File
+        # open text file
+        filename = 'documentation.md'
+        file_exists = os.path.isfile(filename)
 
+        # If the file doesn't exist
+        if file_exists == False:
+            text_file = open(filename, "x")
+        # If the file does exist
+        else:
+            text_file = open(filename, "a")
 
+        # write string to file
+        text_file.write(docu_info_full)
 
-
-
-
-
+        # close file
+        text_file.close()
 
 
 
