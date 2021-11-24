@@ -35,12 +35,11 @@ def create_doc_csv(path_to_file):
         path_to_file: STR Path to .csv with repo information
 
     Outputs
-        output1: DATATYPE description goes here (units)
+        documentation.csv: FILE csv with documentation info for repo
 
     Dependencies
-        dep1
-        dep2
-        dep3 from uscbrl_script.py (USCBRL repo)
+        pandas
+        os
     """
     # Dependencies
     from os.path import exists
@@ -317,18 +316,45 @@ def create_documentation(script_name='',
 
     # Reassign variables
     script_name = var_list[0]
-    function_name= var_list[1]
-    script_website= var_list[2]
-    keywords= var_list[3]
-    describe_fxn= var_list[4]
+    function_name = var_list[1]
+    script_website = var_list[2]
+    keywords = var_list[3]
+    describe_fxn = var_list[4]
     details_fxn = var_list[5]
-    depend_list= var_list[6]
-    inputs= var_list[7]
-    outputs= var_list[8]
+    depend_list = var_list[6]
+    inputs = var_list[7]
+    outputs = var_list[8]
 
     # Reformat the inputs
+    # Split the lines using word before the semicolon
+    if isinstance(inputs, str) == True:
+        split_inputs = inputs.split('\n')
+    else:
+        split_inputs = str(inputs)
 
-    # Reformat the outputs
+    new_inputs = ''
+    for line in split_inputs:
+        if line == '':
+            continue
+        else:
+            line = '* ' + line + '\n'
+            new_inputs = new_inputs + line
+
+    # Reformat the outputs by adding bullet point to front
+    # Split the lines using word before the semicolon
+    if isinstance(outputs, str) == True:
+        split_outputs = outputs.split('\n')
+    else:
+        split_outputs = str(outputs)
+
+    new_outputs = ''
+    # Reformat the inputs
+    for line in split_outputs:
+        if line == '':
+            continue
+        else:
+            line = '* ' + line + '\n'
+            new_outputs = new_outputs + line
 
     # Format the long documentation string
     docu_info = '''## Script: {script_name} \n 
@@ -351,21 +377,22 @@ from {script_name} import {function_name} \n
 {details_fxn} \n
 ### **Arguments:** \n
 #### *Inputs* \n
-{inputs}\n
+{new_inputs}\n
 #### *Outputs* \n
-{outputs} \n
+{new_outputs} \n
 ### **Examples:** \n
 Helpful examples \n
-[Back to Table of Contents](#table-of-contents) \n'''.format(script_name = script_name,
+[Back to Table of Contents](#table-of-contents) \n'''.format(script_name =script_name,
                    function_name = function_name,
                    script_website = script_website,
-                   keywords = keywords,
-                   inputs = inputs,
-                   outputs = outputs,
-                   depend_list = depend_list,
-                   describe_fxn= describe_fxn,
-                   details_fxn = details_fxn
-                   )
+                   keywords =keywords,
+                   inputs =inputs,
+                   outputs =outputs,
+                   depend_list =depend_list,
+                   describe_fxn=describe_fxn,
+                   details_fxn =details_fxn,
+                   new_outputs =new_outputs,
+                   new_inputs =new_inputs)
     return(docu_info)
 
 #TODO make a for loop to format the outputs the way you want them
@@ -392,6 +419,7 @@ def batch_documentation(doc_csv_file=''):
     from tkinter.filedialog import askopenfilename
     from documentation.document_fxn import create_documentation
     import os.path
+    from documentation.document_fxn import table_of_contents
 
     # Read in the documentation .csv files for the repository
     if doc_csv_file == '':
