@@ -19,7 +19,7 @@ Author:
 
 def main():
     # Path must be entered with 2 forward slashes
-    path_to_repo = 'C:/Users/hestewar/Codes-USCBiomechanicsLab/labcodes/documentation'
+    path_to_repo = ''
     df_docu = gather_scripts(extensions=('.py', '.R'),
                              df_documentation='',
                              path=path_to_repo)
