@@ -13,9 +13,10 @@ Author:
     Harper Stewart
     harperestewart7@gmail.com
 """
-#TODO 2. Create exceptions for if a file doesn't contain "Function::" and print a list
-#TODO Go through the functions and make sure format matches
-#TODO make a documentation package (not necessary but fun)
+# TODO 2. Create exceptions for if a file doesn't contain "Function::" and print a list
+# TODO Go through the functions and make sure format matches
+# TODO make a documentation package (not necessary but fun)
+
 
 def main():
     # Path must be entered with 2 forward slashes
@@ -24,7 +25,9 @@ def main():
                              df_documentation='',
                              path=path_to_repo)
     df_docu = df_docu.reset_index(drop=True)
+    df_docu = df_docu.drop_duplicates()
     batch_documentation(df_documentation=df_docu)
+
 
 def scrape_documentation(code_script='',
                          df_documentation='',
@@ -40,7 +43,7 @@ def scrape_documentation(code_script='',
         df_documentation: DF Dataframe containing documentation information
 
     Outputs
-        output1: FILE .csv file containing updated documentation information
+        df_documentation: DF Updated dataframe with additional docu information
 
     Dependencies
         pandas
@@ -85,8 +88,8 @@ def scrape_documentation(code_script='',
     docstr_pos_list = [i for i in range(len(info_list)) if '"""' in info_list[i]]
 
     for ind in fxn_pos_list:
-    # Variables from script
-    # Get the function name
+        # Variables from script
+        # Get the function name
         fxn_name_1 = info_list[ind].replace(" ", "")
         fxn_name_2 = fxn_name_1.replace("Function:::", "")
         fxn_name_3 = fxn_name_2.replace("\n", "")
@@ -113,7 +116,7 @@ def scrape_documentation(code_script='',
         fxn_details = fxn_details.replace("#", "")
         fxn_details = fxn_details.replace("Details: ", "")
         # Gather inputs
-        fxn_inputs =''.join(info_list[input_loc+1:output_loc])
+        fxn_inputs = ''.join(info_list[input_loc+1:output_loc])
         fxn_inputs = fxn_inputs.replace("#", "")
         fxn_inputs = fxn_inputs.replace("    ", "")
         # Gather outputs
@@ -125,7 +128,6 @@ def scrape_documentation(code_script='',
         fxn_depen = fxn_depen.replace("#", "")
         fxn_depen = fxn_depen.replace("    ", "")
 
-
         # Find the folder names using the path
         folder_names_string = path.split('/')
         folder_name = folder_names_string[-1]
@@ -134,9 +136,9 @@ def scrape_documentation(code_script='',
 
         # Create the string of the script webiste
         script_website = 'https://github.com/' + github_org + '/' + repo_name + \
-                     '/' + 'blob/master/' + folder_name + '/' + script_name
+                         '/' + 'blob/master/' + folder_name + '/' + script_name
 
-        #Create row for the specific function
+        # Create row for the specific function
         new_row = pd.DataFrame([[script_name,
                                  fxn_name,
                                  script_website,
@@ -154,8 +156,8 @@ def scrape_documentation(code_script='',
         frames = [df_documentation, new_row]
         df_documentation = pd.concat(frames)
 
+    return df_documentation
 
-    return(df_documentation)
 
 def gather_scripts(extensions = ('.py', '.R'),
                    df_documentation='',
@@ -168,14 +170,16 @@ def gather_scripts(extensions = ('.py', '.R'),
 
     Inputs
         extensions: TUPLE Specify the extensions to document in repo
+        df_documentation: DF Table with the documentation information
+        path: STR Path of the repository
 
     Outputs
-        doc_csv_file: FILE Where documentation data is stored (.csv file)
+        df_documentation: DF Updated documentation table
 
     Dependencies
         os
         tkinter
-        dep3 from uscbrl_script.py (USCBRL repo)
+        pandas
     """
     # Dependencies
     import os.path
@@ -203,19 +207,24 @@ def gather_scripts(extensions = ('.py', '.R'),
 
     # If the dataframe hasn't been created yet, then create it
     if df_documentation == '':
-        df_documentation = pd.DataFrame(columns=['script_name', 'fxn_name',
-                                        'script_website', 'fxn_desc',
-                                        'fxn_details', 'fxn_depen',
-                                        'fxn_inputs', 'fxn_outputs'])
+        df_documentation = pd.DataFrame(columns=['script_name',
+                                                 'fxn_name',
+                                                 'script_website',
+                                                 'fxn_desc',
+                                                 'fxn_details',
+                                                 'fxn_depen',
+                                                 'fxn_inputs',
+                                                 'fxn_outputs'])
 
     # Run the documentation function
     for i in range(len(file_list_sm)):
         df_docu_new = scrape_documentation(code_script=str(root + '/' + file_list_sm[i]),
-                             df_documentation=df_documentation,
-                             path=path)
+                                           df_documentation=df_documentation,
+                                           path=path)
         df_documentation = pd.concat([df_documentation, df_docu_new])
 
-    return(df_documentation)
+    return df_documentation
+
 
 def create_documentation(script_name='',
                          function_name='',
@@ -240,12 +249,10 @@ def create_documentation(script_name='',
         outputs: LIST Output variable names and descriptions
 
     Outputs
-        docu_info: STR Documentation information as a long string?
+        docu_info: STR Documentation info, long string for a function
 
     Dependencies
-        dep1
-        dep2
-        dep3 from uscbrl_script.py (USCBRL repo)
+
     """
 
     # Test to see if all variables were provided
@@ -260,18 +267,18 @@ def create_documentation(script_name='',
 
     # Prompt for input if it was not provided to the function
     prompt_list = ['Provide script name: ',
-                       'Provide function (module) name: ',
-                       'Provide script Github website: ',
-                       'Provide function description: ',
-                       'Provide function details: ',
-                       'Provide list of dependencies: ',
-                       'Provide list of inputs: ',
-                       'Provide list of outputs: ']
+                   'Provide function (module) name: ',
+                   'Provide script Github website: ',
+                   'Provide function description: ',
+                   'Provide function details: ',
+                   'Provide list of dependencies: ',
+                   'Provide list of inputs: ',
+                   'Provide list of outputs: ']
 
     # For loop cycles through each input and checks to see if it was provided
     # If it was not provided then it prompts for input
     for i in range(len(var_list)):
-        if (var_list[i] == ""):
+        if var_list[i] == "":
             print(function_name)
             var_list[i] = input(prompt_list[i])
 
@@ -287,7 +294,7 @@ def create_documentation(script_name='',
 
     # Reformat the inputs
     # Split the lines using word before the semicolon
-    if isinstance(inputs, str) == True:
+    if isinstance(inputs, str) is True:
         split_inputs = inputs.split('\n')
     else:
         split_inputs = str(inputs)
@@ -302,7 +309,7 @@ def create_documentation(script_name='',
 
     # Reformat the outputs by adding bullet point to front
     # Split the lines using word before the semicolon
-    if isinstance(outputs, str) == True:
+    if isinstance(outputs, str) is True:
         split_outputs = outputs.split('\n')
     else:
         split_outputs = str(outputs)
@@ -338,33 +345,34 @@ from {script_name} import {function_name} \n
 {new_outputs} \n
 ### **Examples:** \n
 Helpful examples \n
-[Back to Table of Contents](#table-of-contents) \n'''.format(script_name =script_name,
-                   function_name =function_name,
-                   script_website =script_website,
-                   inputs =inputs,
-                   outputs =outputs,
-                   depend_list =depend_list,
+[Back to Table of Contents](#table-of-contents) \n'''.format(script_name=script_name,
+                   function_name=function_name,
+                   script_website=script_website,
+                   inputs=inputs,
+                   outputs=outputs,
+                   depend_list=depend_list,
                    describe_fxn=describe_fxn,
-                   details_fxn =details_fxn,
-                   new_outputs =new_outputs,
-                   new_inputs =new_inputs)
-    return(docu_info)
+                   details_fxn=details_fxn,
+                   new_outputs=new_outputs,
+                   new_inputs=new_inputs)
+    return docu_info
 
-def batch_documentation(df_documentation = ''):
+def batch_documentation(df_documentation=''):
     """
     Function::: batch_documentation
         Description: Creates series of documentation for functions in a repository
         Details: Creates series of documentation for functions in a repository
 
     Inputs
-        doc_codes_csv: STR .csv input file directory containing information
+        df_documentation: DF Table with documentation inforamtion
 
     Outputs
-        Batch of Github markdown outputs for repository documentation
+        documentation.md file added to the repository
 
     Dependencies
-        tkinter
-        pandas
+        os
+        create_documentation uscbrl labcodes
+        table_of_contents uscbrl labcodes
     """
     # Dependencies
     from documentation.document_fxn import create_documentation
@@ -407,7 +415,8 @@ def batch_documentation(df_documentation = ''):
     # close file
     text_file.close()
 
-def table_of_contents(df_documentation = ''):
+
+def table_of_contents(df_documentation=''):
     """
     Function::: table_of_contents
     	Description: brief description here (1 line)
@@ -420,13 +429,12 @@ def table_of_contents(df_documentation = ''):
         tab_contents: STR Table of contents of functions in repository
 
     Dependencies
-        pandas
-        tkinter
+
     """
     # Dependencies
 
     # Read in the documentation dataframe for the repository
-    docu_csv = df_documentation.copy()
+    docu_csv = df_documentation
 
     # Create a list of strings in the correct format for each function
     str_fxns = ''
@@ -442,12 +450,6 @@ def table_of_contents(df_documentation = ''):
 |Description|Script|Functions| 
 | ------------- | ------------- | ------------- | 
 {all_fxns} \n
-### End Table of Contents <br/> \n'''.format(all_fxns = str_fxns)
+### End Table of Contents <br/> \n'''.format(all_fxns=str_fxns)
 
-    return(tab_contents)
-
-
-
-
-
-
+    return tab_contents
