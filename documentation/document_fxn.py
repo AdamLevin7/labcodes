@@ -336,7 +336,7 @@ from {script_name} import {function_name} \n
 ### Dependencies \n
 {depend_list} \n
 ### **Description:** \n
-{describe_fxn} \n
+{describe_fxn} 
 {details_fxn} \n
 ### **Arguments:** \n
 #### *Inputs* \n
