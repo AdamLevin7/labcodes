@@ -13,57 +13,22 @@ Author:
     Harper Stewart
     harperestewart7@gmail.com
 """
-#TODO remove the .csv table element and just loop through files in a list
 #TODO 2. Create exceptions for if a file doesn't contain "Function::" and print a list
-# TODO Go through the functions and make sure format matches
-# TODO make a documentation package (not necessary but fun)
+#TODO Go through the functions and make sure format matches
+#TODO make a documentation package (not necessary but fun)
 
 def main():
-    path_to_repo = r'C:\Users\hestewar\Codes-USCBiomechanicsLab\labcodes\documentation'
-    create_doc_csv(path_to_repo)
-    gather_scripts(extensions=('.py', '.R'), doc_csv_file='')
-    batch_documentation(doc_csv_file='')
+    # Path must be entered with 2 forward slashes
+    path_to_repo = 'C:/Users/hestewar/Codes-USCBiomechanicsLab/labcodes/documentation'
+    df_docu = gather_scripts(extensions=('.py', '.R'),
+                             df_documentation='',
+                             path=path_to_repo)
+    df_docu = df_docu.reset_index(drop=True)
+    batch_documentation(df_documentation=df_docu)
 
-
-def create_doc_csv(path_to_file):
-    """
-    Function::: create_doc_csv
-    	Description: Create documentation csv file if it doesn't exist
-    	Details: Full description with details here
-
-    Inputs
-        path_to_file: STR Path to .csv with repo information
-
-    Outputs
-        documentation.csv: FILE csv with documentation info for repo
-
-    Dependencies
-        pandas
-        os
-    """
-    # Dependencies
-    from os.path import exists
-    import pandas as pd
-
-    # Check if the file exsits
-    file_exists = exists(path_to_file + '\\documentation.csv')
-    if file_exists == False:
-        # Column headers
-        cols = ['script_name',
-                   'fxn_name',
-                   'script_website',
-                   'fxn_desc',
-                   'fxn_details',
-                   'fxn_depen',
-                   'fxn_inputs',
-                   'fxn_outputs',
-                   'keywords']
-
-        df = pd.DataFrame(columns = cols)
-        df.to_csv('documentation.csv', index = False)
-
-
-def scrape_documentation(code_script='', doc_csv_file=''):
+def scrape_documentation(code_script='',
+                         df_documentation='',
+                         path=''):
     """
     Function::: scrape_documentation
         Description: Scrape a code script for documentation info
@@ -72,11 +37,10 @@ def scrape_documentation(code_script='', doc_csv_file=''):
 
     Inputs
         code_script: STR Code script with documentation info
-        doc_codes_csv: STR .csv file containing documentation information
+        df_documentation: DF Dataframe containing documentation information
 
     Outputs
         output1: FILE .csv file containing updated documentation information
-
 
     Dependencies
         pandas
@@ -87,13 +51,6 @@ def scrape_documentation(code_script='', doc_csv_file=''):
     # Dependencies
     import pandas as pd
     from tkinter.filedialog import askopenfilename
-
-    # Read in the documentation .csv files for the repository
-    if doc_csv_file == '':
-        doc_csv_file = askopenfilename(title='Select Documentation .csv file for Repository: ')
-        documentation_csv = pd.read_csv(doc_csv_file)
-    else:
-        documentation_csv = pd.read_csv(doc_csv_file)
 
     # Read in the file of the code which contains the documentation information
     if code_script == '':
@@ -167,22 +124,17 @@ def scrape_documentation(code_script='', doc_csv_file=''):
         fxn_depen = ''.join(info_list[depend_loc+1:docstring_loc])
         fxn_depen = fxn_depen.replace("#", "")
         fxn_depen = fxn_depen.replace("    ", "")
-    # Find name of Github org and repository by splitting the filename
-        doc_csv_split = doc_csv_file.split('_')
-        github_org = doc_csv_split[1]
-        repo_name = doc_csv_split[2]
+
 
         # Find the folder names using the path
-        folder_names_string = doc_csv_split[0].split('/')
-        folder_name = folder_names_string[-2]
+        folder_names_string = path.split('/')
+        folder_name = folder_names_string[-1]
+        github_org = folder_names_string[-3]
+        repo_name = folder_names_string[-2]
 
         # Create the string of the script webiste
-        script_website = 'https://github.com/' + github_org + '/' + repo_name[:-4] + \
+        script_website = 'https://github.com/' + github_org + '/' + repo_name + \
                      '/' + 'blob/master/' + folder_name + '/' + script_name
-
-        # Remove row in table if the function was already documented to update
-        if documentation_csv['fxn_name'].str.contains(fxn_name).any():
-            documentation_csv[~documentation_csv.fxn_name.str.contains(fxn_name)]
 
         #Create row for the specific function
         new_row = pd.DataFrame([[script_name,
@@ -199,15 +151,15 @@ def scrape_documentation(code_script='', doc_csv_file=''):
                                         'fxn_inputs', 'fxn_outputs'])
 
         # Append that row to the table for documentation
-        frames = [documentation_csv, new_row]
-        documentation_csv = pd.concat(frames)
+        frames = [df_documentation, new_row]
+        df_documentation = pd.concat(frames)
 
-        # End loop here
 
-    #Write the table back out to .csv file
-    documentation_csv.to_csv(doc_csv_file, index=False)
+    return(df_documentation)
 
-def gather_scripts(extensions = ('.py', '.R'), doc_csv_file = ''):
+def gather_scripts(extensions = ('.py', '.R'),
+                   df_documentation='',
+                   path=''):
     """
     Function::: gather_scripts
     	Description: List scripts in repository and scrape documentation information.
@@ -216,7 +168,6 @@ def gather_scripts(extensions = ('.py', '.R'), doc_csv_file = ''):
 
     Inputs
         extensions: TUPLE Specify the extensions to document in repo
-        doc_csv_file: STR Path where .csv file with documentation info is stored
 
     Outputs
         doc_csv_file: FILE Where documentation data is stored (.csv file)
@@ -226,11 +177,14 @@ def gather_scripts(extensions = ('.py', '.R'), doc_csv_file = ''):
         tkinter
         dep3 from uscbrl_script.py (USCBRL repo)
     """
+    # Dependencies
     import os.path
     from tkinter.filedialog import askdirectory
+    import pandas as pd
 
     # Select the repository that you are creating documentation for
-    path = askdirectory(title='Select Repository to Update: ')
+    if path == '':
+        path = askdirectory(title='Select Repository to Update: ')
 
     # Create a list of all the files
     file_list = []
@@ -247,16 +201,25 @@ def gather_scripts(extensions = ('.py', '.R'), doc_csv_file = ''):
     print('Files to document: ')
     print(file_list_sm)
 
+    # If the dataframe hasn't been created yet, then create it
+    if df_documentation == '':
+        df_documentation = pd.DataFrame(columns=['script_name', 'fxn_name',
+                                        'script_website', 'fxn_desc',
+                                        'fxn_details', 'fxn_depen',
+                                        'fxn_inputs', 'fxn_outputs'])
+
     # Run the documentation function
     for i in range(len(file_list_sm)):
-        scrape_documentation(code_script=str(root + '/' + file_list_sm[i]),
-                             doc_csv_file='')
+        df_docu_new = scrape_documentation(code_script=str(root + '/' + file_list_sm[i]),
+                             df_documentation=df_documentation,
+                             path=path)
+        df_documentation = pd.concat([df_documentation, df_docu_new])
 
+    return(df_documentation)
 
 def create_documentation(script_name='',
                          function_name='',
                          script_website='',
-                         keywords='',
                          describe_fxn='',
                          details_fxn='',
                          depend_list='',
@@ -271,7 +234,6 @@ def create_documentation(script_name='',
         script_name: STR Name of the script containing the function
         function_name: STR Name of the specific function (module)
         script_website: STR Github website of the script
-        keywords: STR keywords associated with the function
         describe_fxn: STR Description of the function
         depend_list: LIST Dependencies needed to run the function
         inputs: LIST Input variable names and descriptions
@@ -290,7 +252,6 @@ def create_documentation(script_name='',
     var_list = [script_name,
                 function_name,
                 script_website,
-                keywords,
                 describe_fxn,
                 details_fxn,
                 depend_list,
@@ -301,7 +262,6 @@ def create_documentation(script_name='',
     prompt_list = ['Provide script name: ',
                        'Provide function (module) name: ',
                        'Provide script Github website: ',
-                       'Provide function keywords: ',
                        'Provide function description: ',
                        'Provide function details: ',
                        'Provide list of dependencies: ',
@@ -312,18 +272,18 @@ def create_documentation(script_name='',
     # If it was not provided then it prompts for input
     for i in range(len(var_list)):
         if (var_list[i] == ""):
+            print(function_name)
             var_list[i] = input(prompt_list[i])
 
     # Reassign variables
     script_name = var_list[0]
     function_name = var_list[1]
     script_website = var_list[2]
-    keywords = var_list[3]
-    describe_fxn = var_list[4]
-    details_fxn = var_list[5]
-    depend_list = var_list[6]
-    inputs = var_list[7]
-    outputs = var_list[8]
+    describe_fxn = var_list[3]
+    details_fxn = var_list[4]
+    depend_list = var_list[5]
+    inputs = var_list[6]
+    outputs = var_list[7]
 
     # Reformat the inputs
     # Split the lines using word before the semicolon
@@ -360,14 +320,10 @@ def create_documentation(script_name='',
     docu_info = '''## Script: {script_name} \n 
 ### Function: {function_name} \n
 [Link to {script_name} Code]({script_website}) \n
-\n
-### **Keywords:** \n
-{keywords} \n
-\n
 ### **Syntax:** \n
-``` \n
+``` 
+*Need to fix this*
 from {script_name} import {function_name} \n
-\n
 {outputs} = {function_name}({inputs}) \n
 ```` \n
 ### Dependencies \n
@@ -383,9 +339,8 @@ from {script_name} import {function_name} \n
 ### **Examples:** \n
 Helpful examples \n
 [Back to Table of Contents](#table-of-contents) \n'''.format(script_name =script_name,
-                   function_name = function_name,
-                   script_website = script_website,
-                   keywords =keywords,
+                   function_name =function_name,
+                   script_website =script_website,
                    inputs =inputs,
                    outputs =outputs,
                    depend_list =depend_list,
@@ -395,10 +350,7 @@ Helpful examples \n
                    new_inputs =new_inputs)
     return(docu_info)
 
-#TODO make a for loop to format the outputs the way you want them
-#TODO Other thoughts, documentation becomes a folder within each repository
-
-def batch_documentation(doc_csv_file=''):
+def batch_documentation(df_documentation = ''):
     """
     Function::: batch_documentation
         Description: Creates series of documentation for functions in a repository
@@ -415,18 +367,11 @@ def batch_documentation(doc_csv_file=''):
         pandas
     """
     # Dependencies
-    import pandas as pd
-    from tkinter.filedialog import askopenfilename
     from documentation.document_fxn import create_documentation
     import os.path
     from documentation.document_fxn import table_of_contents
 
-    # Read in the documentation .csv files for the repository
-    if doc_csv_file == '':
-        doc_csv_file = askopenfilename(title='Select Documentation .csv file for Repository: ')
-        docu_csv = pd.read_csv(doc_csv_file)
-    else:
-        docu_csv = pd.read_csv(doc_csv_file)
+    docu_csv = df_documentation
 
     # Make a .md File
     # open text file
@@ -441,7 +386,7 @@ def batch_documentation(doc_csv_file=''):
         text_file = open(filename, "a")
 
     # Add the table of contents
-    tab_cont_str = table_of_contents(doc_csv_file)
+    tab_cont_str = table_of_contents(df_documentation)
     text_file.write(tab_cont_str)
 
     # Use create_documentation function to cycle through each row and create the documentation
@@ -450,7 +395,6 @@ def batch_documentation(doc_csv_file=''):
         docu_info_full = create_documentation(script_name=docu_csv.script_name[i],
                                               function_name=docu_csv.fxn_name[i],
                                               script_website=docu_csv.script_website[i],
-                                              keywords=docu_csv.keywords[i],
                                               describe_fxn=docu_csv.fxn_desc[i],
                                               details_fxn =docu_csv.fxn_details[i],
                                               depend_list=docu_csv.fxn_depen[i],
@@ -463,7 +407,7 @@ def batch_documentation(doc_csv_file=''):
     # close file
     text_file.close()
 
-def table_of_contents(doc_csv_file=''):
+def table_of_contents(df_documentation = ''):
     """
     Function::: table_of_contents
     	Description: brief description here (1 line)
@@ -480,15 +424,9 @@ def table_of_contents(doc_csv_file=''):
         tkinter
     """
     # Dependencies
-    import pandas as pd
-    from tkinter.filedialog import askopenfilename
 
-    # Read in the documentation .csv files for the repository
-    if doc_csv_file == '':
-        doc_csv_file = askopenfilename(title='Select Documentation .csv file for Repository: ')
-        docu_csv = pd.read_csv(doc_csv_file)
-    else:
-        docu_csv = pd.read_csv(doc_csv_file)
+    # Read in the documentation dataframe for the repository
+    docu_csv = df_documentation.copy()
 
     # Create a list of strings in the correct format for each function
     str_fxns = ''
