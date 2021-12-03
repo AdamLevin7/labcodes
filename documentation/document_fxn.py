@@ -17,7 +17,6 @@ Author:
 # TODO Go through the functions and make sure format matches
 # TODO make a documentation package (not necessary but fun)
 
-
 def main():
     # Path must be entered with 2 forward slashes
     path_to_repo = ''
@@ -54,13 +53,18 @@ def scrape_documentation(code_script='',
     # Dependencies
     import pandas as pd
     from tkinter.filedialog import askopenfilename
+    import tkinter
 
     # Read in the file of the code which contains the documentation information
+    root = tkinter.Tk()
+    root.withdraw()
     if code_script == '':
         code_script = askopenfilename(title='Select code script to scrape documentation: ')
         code_text = open(code_script)
     else:
         code_text = open(code_script)
+    root.destroy()
+
 
     # Get the script name
     split_script = code_script.split('/')
@@ -185,10 +189,14 @@ def gather_scripts(extensions = ('.py', '.R'),
     import os.path
     from tkinter.filedialog import askdirectory
     import pandas as pd
+    import tkinter
 
+    root = tkinter.Tk()
+    root.withdraw()
     # Select the repository that you are creating documentation for
     if path == '':
         path = askdirectory(title='Select Repository to Update: ')
+    root.destroy()
 
     # Create a list of all the files
     file_list = []
@@ -323,21 +331,29 @@ def create_documentation(script_name='',
             line = '* ' + line + '\n'
             new_outputs = new_outputs + line
 
+    # Reformat the dependencies with bullets
+    if isinstance(depend_list,str) is True:
+        split_dependencies = depend_list.split('\n')
+    else:
+        split_dependencies = str(depend_list)
+
+    new_dependencies = ''
+    for line in split_dependencies:
+        if line == '':
+            continue
+        else:
+            line = '* ' + line + '\n'
+            new_dependencies = new_dependencies + line
+
     # Format the long documentation string
     docu_info = '''## Script: {script_name} \n 
 ### Function: {function_name} \n
 [Link to {script_name} Code]({script_website}) \n
-### **Syntax:** \n
-``` 
-*Need to fix this*
-from {script_name} import {function_name} \n
-{outputs} = {function_name}({inputs}) \n
-```` \n
 ### Dependencies \n
 {depend_list} \n
 ### **Description:** \n
 {describe_fxn} 
-{details_fxn} \n
+{details_fxn} 
 ### **Arguments:** \n
 #### *Inputs* \n
 {new_inputs}\n
@@ -350,7 +366,7 @@ Helpful examples \n
                    script_website=script_website,
                    inputs=inputs,
                    outputs=outputs,
-                   depend_list=depend_list,
+                   depend_list=new_dependencies,
                    describe_fxn=describe_fxn,
                    details_fxn=details_fxn,
                    new_outputs=new_outputs,
