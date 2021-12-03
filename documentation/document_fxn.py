@@ -111,14 +111,17 @@ def scrape_documentation(code_script='',
         fxn_desc = info_list[desc_loc]
         fxn_desc = fxn_desc.replace("#", "")
         fxn_desc = fxn_desc.replace("Description: ", "")
-        fxn_desc = fxn_desc.replace("    ", "")
         fxn_desc = fxn_desc.replace("\n", "")
+        fxn_desc_list = fxn_desc.split()
+        fxn_desc = " ".join(fxn_desc_list)
 
     # Join elements of list to create strings
         # Full detail string
         fxn_details = ''.join(info_list[details_loc:input_loc])
         fxn_details = fxn_details.replace("#", "")
         fxn_details = fxn_details.replace("Details: ", "")
+        fxn_details_list = fxn_details.split()
+        fxn_details = " ".join(fxn_details_list)
         # Gather inputs
         fxn_inputs = ''.join(info_list[input_loc+1:output_loc])
         fxn_inputs = fxn_inputs.replace("#", "")
@@ -349,11 +352,11 @@ def create_documentation(script_name='',
     docu_info = '''## Script: {script_name} \n 
 ### Function: {function_name} \n
 [Link to {script_name} Code]({script_website}) \n
+### **Description:** \n
+{describe_fxn} \n
+{details_fxn} 
 ### Dependencies \n
 {depend_list} \n
-### **Description:** \n
-{describe_fxn} 
-{details_fxn} 
 ### **Arguments:** \n
 #### *Inputs* \n
 {new_inputs}\n
