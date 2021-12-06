@@ -17,15 +17,13 @@ Author:
 # TODO Go through the functions and make sure format matches
 # TODO make a documentation package (not necessary but fun)
 
-def main():
-    # Path must be entered with 2 forward slashes
-    path_to_repo = ''
-    df_docu = gather_scripts(extensions=('.py', '.R'),
+def main(path_to_repo = ''):
+    df_docu, repo_path = gather_scripts(extensions=('.py', '.R'),
                              df_documentation='',
                              path=path_to_repo)
     df_docu = df_docu.reset_index(drop=True)
     df_docu = df_docu.drop_duplicates()
-    batch_documentation(df_documentation=df_docu)
+    batch_documentation(df_documentation=df_docu, path =repo_path)
 
 
 def scrape_documentation(code_script='',
@@ -187,12 +185,14 @@ def gather_scripts(extensions = ('.py', '.R'),
         os
         tkinter
         pandas
+        glob
     """
     # Dependencies
     import os.path
     from tkinter.filedialog import askdirectory
     import pandas as pd
     import tkinter
+    import glob
 
     root = tkinter.Tk()
     root.withdraw()
@@ -205,14 +205,15 @@ def gather_scripts(extensions = ('.py', '.R'),
     file_list = []
     for root, directories, files in os.walk(path, topdown=False):
         for name in files:
-            file_list.append(name)
-        for name in directories:
-            print('Directories: ')
-            print(os.path.join(root, name))
+            file_list.append(os.path.join(root, name))
 
     # Keep only the files that you want documented using languages argument
     # Don't document the init file
-    file_list_sm = list(filter(lambda x: x.endswith(extensions) and not x.startswith('__init__'), file_list))
+    ignore_list = ['.git', 'pycache','.idea', '__init__']
+
+    file_list_sm = [s for s in file_list if not any(x in s for x in ignore_list)]
+    file_list_sm = [s for s in file_list_sm if any(x in s for x in extensions)]
+
     print('Files to document: ')
     print(file_list_sm)
 
@@ -229,12 +230,13 @@ def gather_scripts(extensions = ('.py', '.R'),
 
     # Run the documentation function
     for i in range(len(file_list_sm)):
-        df_docu_new = scrape_documentation(code_script=str(root + '/' + file_list_sm[i]),
+        print('Starting on '+str(i)+' of '+str(len(file_list_sm)) + ': '+file_list_sm[i])
+        df_docu_new = scrape_documentation(code_script=file_list_sm[i],
                                            df_documentation=df_documentation,
                                            path=path)
         df_documentation = pd.concat([df_documentation, df_docu_new])
 
-    return df_documentation
+    return df_documentation, path
 
 
 def create_documentation(script_name='',
@@ -376,7 +378,7 @@ Helpful examples \n
                    new_inputs=new_inputs)
     return docu_info
 
-def batch_documentation(df_documentation=''):
+def batch_documentation(df_documentation='',path = ''):
     """
     Function::: batch_documentation
         Description: Creates series of documentation for functions in a repository
@@ -402,7 +404,7 @@ def batch_documentation(df_documentation=''):
 
     # Make a .md File
     # open text file
-    filename = 'documentation.md'
+    filename = os.path.join(path, 'documentation.md')
     file_exists = os.path.isfile(filename)
 
     # If the file doesn't exist
