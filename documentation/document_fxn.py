@@ -231,10 +231,9 @@ def gather_scripts(extensions = ('.py', '.R'),
     # Run the documentation function
     for i in range(len(file_list_sm)):
         print('Starting on '+str(i)+' of '+str(len(file_list_sm)) + ': '+file_list_sm[i])
-        df_docu_new = scrape_documentation(code_script=file_list_sm[i],
-                                           df_documentation=df_documentation,
-                                           path=path)
-        df_documentation = pd.concat([df_documentation, df_docu_new])
+        df_documentation = scrape_documentation(code_script=file_list_sm[i],
+                                                df_documentation=df_documentation,
+                                                path=path)
 
     return df_documentation, path
 
