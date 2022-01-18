@@ -1,30 +1,45 @@
-# -*- coding: utf-8 -*-
 """
-linegraph
-    Combine a video and (line) graph into an animation graph.
+Script: animationgraph
+    Create animations with videos and graphical data.
 
-Inputs 
-    filename: STRING file name of output video
-    fig: FIGURE matplotlib figure object of graph
-        ex.) fig, ax = plt.subplots()
-    ax: AxesSubplot matplotlib axes object of the graph
-        ex.) fig, ax = plt.subplots()
-    xind: ARRAY indices of x-axis for line animation advancement 
-        ex.) this would be the time array if the x-axis was time
-    video_file: STRING file name of original video
-    graph_start: INT (default: 0) the frame number the graph animation should begin
-    samp_factor: INT (default: 10) the factor of plot signal sampling rate to the video sampling rate
-        ex.) 1200 / 120 = 10  -> samp_force / samp_video = samp_factor
+Modules
+    linegraph: Combine a video and (line) graph into an animation graph.
 
-Outputs
-    An mp4 file will be created with the name of the input 'filename'
-        
-Created on Fri Aug 28 16:44:17 2020
-
-@author: cwiens, cwiens32@gmail.com
+Author:
+    Casey Wiens
+    cwiens32@gmail.com
 """
+
+
 def linegraph(filename, fig, ax, t, video_file, graph_start=0, samp_factor=10):
-    
+    """
+    Function::: linegraph
+    	Description: Combine a video and (line) graph into an animation graph.
+    	Details:
+
+    Inputs
+        filename: STRING file name of output video
+        fig: FIGURE matplotlib figure object of graph
+            ex.) fig, ax = plt.subplots()
+        ax: AxesSubplot matplotlib axes object of the graph
+            ex.) fig, ax = plt.subplots()
+        xind: ARRAY indices of x-axis for line animation advancement
+            ex.) this would be the time array if the x-axis was time
+        video_file: STRING file name of original video
+        graph_start: INT (default: 0) the frame number the graph animation should begin
+        samp_factor: INT (default: 10) the factor of plot signal sampling rate to the video sampling rate
+            ex.) 1200 / 120 = 10  -> samp_force / samp_video = samp_factor
+
+    Outputs
+        output1: FILE mp4 file will be created with the name of the input 'filename'
+
+    Dependencies
+        cv2
+        matplotlib
+        os
+    """
+
+    # Dependencies
     import cv2
     import matplotlib.animation
     import os
