@@ -1,13 +1,20 @@
-# -*- coding: utf-8 -*-
 """
-fbd_vis
+Script: fbd_display
     Create a visual displaying free body diagram at an instance along with
     the NJM curves of the segments. CURRENTLY ONLY FOR LOWER BODY.
-        
-Created on Mon Sep 14 17:03:38 2020
 
-@author: cwiens
+Modules
+    __init__: Initialize class to create free body diagram visual.
+    fig_init: Initializes the figure with an empty subplot for the free body diagram
+    fbd_update: Refreshes and displays the free body diagram at the instant of choice.
+    fbd_animate: Create an animated video of FBD at every instant in contact phase.
+    fbd_overlay: Main function to create FBD animation
+
+Author:
+    Casey Wiens
+    cwiens@gmail.com
 """
+
 
 class fbd_vis():
     
@@ -15,41 +22,43 @@ class fbd_vis():
     def __init__(self, data_force, data_digi, data_cm, data_njm, side,
                  cnt=None, ylim=[-600,600], colorlegend='flexext', rf_scale=0.0002):
         """
-        Initialize class to create free body diagram visual.
+        Function::: __init__
+        	Description: Initialize class to create free body diagram visual.
+        	Details:
 
-        Parameters
-        ----------
-        data_force : DATAFRAME
-            force data (fx, fy, ax, ay) (N, N, m, m).
-        data_digi : DATAFRAME
-            digitized data (m).
-        data_cm : DATAFRAME
-            center of mass data for segments and body (m).
-            format mathces that of NJM.dig2jointkinetics.dig2jk.main().
-        data_njm : DATAFRAME
-            contains calculated variables for segment's joint kinetics.
-        side : STRING
-            which side of the body.
-            (ex: 'left')
-        cnt : INT, optional
-            counter - index of data to be visualized.
-            The default is None, but will be reset to the first index of data
-        ylim : LIST, optional (default: [-600, 600])
-            limits for y-axis of the graph
-        colorlegend : STRING, optional (default: 'flexext')
-            What do positive/negative values represent?
-            Possible inputs:
-                'flexext': positive = extensor moment; negative = flexor moment
-                'posneg': positive = positive moment w/r reference frame; negative = negative moment w/r reference frame
-        rf_scale : INT, optional (default: 0.0002)
-            It scales the force and moments ONLY IN THE VISUAL.
+        Inputs
+            data_force : DATAFRAME
+                force data (fx, fy, ax, ay) (N, N, m, m).
+            data_digi : DATAFRAME
+                digitized data (m).
+            data_cm : DATAFRAME
+                center of mass data for segments and body (m).
+                format mathces that of NJM.dig2jointkinetics.dig2jk.main().
+            data_njm : DATAFRAME
+                contains calculated variables for segment's joint kinetics.
+            side : STRING
+                which side of the body.
+                (ex: 'left')
+            cnt : INT, optional
+                counter - index of data to be visualized.
+                The default is None, but will be reset to the first index of data
+            ylim : LIST, optional (default: [-600, 600])
+                limits for y-axis of the graph
+            colorlegend : STRING, optional (default: 'flexext')
+                What do positive/negative values represent?
+                Possible inputs:
+                    'flexext': positive = extensor moment; negative = flexor moment
+                    'posneg': positive = positive moment w/r reference frame; negative = negative moment w/r reference frame
+            rf_scale : INT, optional (default: 0.0002)
+                It scales the force and moments ONLY IN THE VISUAL.
 
+        Outputs
+            output1: None
 
-        Returns
-        -------
-        None.
+        Dependencies
 
         """
+
         self.data_force = data_force
         self.data_digi = data_digi
         self.data_cm = data_cm
@@ -67,15 +76,21 @@ class fbd_vis():
     #%%
     def fig_init(self):
         """
-        Initializes the figure with an empty subplot for the free body diagram,
-        and the foot, shank and thigh joint kinetic variables plotted.
+        Function::: fig_init
+        	Description: Initializes the figure with an empty subplot for the free body diagram.
+        	Details:  foot, shank and thigh joint kinetic variables plotted.
 
-        Returns
-        -------
-        None.
+        Inputs
+            self: 
+
+        Outputs
+            output1: None
+
+        Dependencies
+            matplotlib
 
         """
-        
+        # Dependencies
         import matplotlib.pyplot as plt
         
         """ initialize figure """
@@ -150,18 +165,22 @@ class fbd_vis():
     #%%
     def fbd_update(self):
         """
-        Refreshes and displays the free body diagram at the instant of choice.
-        
-        Parameters
-        ----------
-        None.
+        Function::: fbdupdate
+            Description: Refreshes and displays the free body diagram at the instant of choice.
+            Details:
 
-        Returns
-        -------
-        None.
+        Inputs
+            input: self
 
+        Outputs
+            output: None
+
+        Dependencies
+            matplotlib
+            numpy
         """
-        
+
+        # Dependencies
         import matplotlib.pyplot as plt
         import matplotlib.patheffects as pe
         import numpy as np
@@ -346,25 +365,27 @@ class fbd_vis():
                             abs(self.data_njm['thigh_njmd'][self.cnt])*self.rf_scale,
                             color=moment_color_d, zorder=10)
         self.f_ax1.add_artist(circ_d)
-    
-    #%%
+
+
     def fbd_animate(self, filename='fbd_animate.mp4', ):
         """
-        Create an animated video of the free body diagram at every instant in
-        contact phase.
+        Function::: fbd_animate
+            Description: Create an animated video of the free body diagram.
+            Details:  At every instant in contact phase.
 
-        Parameters
-        ----------
-        filename : STRING, optional
-            Filename for the created animated video.
-            The default is 'fbd_animate.mp4'.
+        Inputs
+            self:
+            filename: STR Name of the animation file
 
-        Returns
-        -------
-        None.
+        Outputs
+            output1: None
+
+        Dependencies
+            matplotlib
 
         """
-        
+
+        # Dependencies
         import matplotlib.animation
         
         """ initialize lines """
@@ -398,31 +419,22 @@ def fbd_overlay(file_vid, data_force, data_digi, data_cm, data_njm, side, frame_
                 samp_vid=240, samp_force=1200, colorlegend="flexext", body_mass=None, rf_scale=0.1, imout=False,
                 flipy="yes", innercirc_mag=5, legend_loc="topleft", file_vid_n="fbd_overlay.mp4"):
     """
-    Initialize class to create free body diagram overlay.
+    Function::: fbd_overlay
+            Description: Run functions to create animation of FBD
+            Details:
 
-    Parameters
-    ----------
-    file_vid : STR
-        full path file name of the video to overlay the free body diagram visual
-    data_force : DATAFRAME
-        force data (fx, fy, ax, ay) (N, N, m, m).
-    data_digi : DATAFRAME
-        digitized data (m).
-    data_cm : DATAFRAME
-        center of mass data for segments and body (m).
-        format mathces that of NJM.dig2jointkinetics.dig2jk.main().
-    data_njm : DATAFRAME
-        contains calculated variables for segment's joint kinetics.
-    side : STRING
-        which side of the body.
-        (ex: 'left')
-    frame_start : INT
-        frame number when the net joint moment calculations begin (i.e., contact frame)
+    Inputs
+    file_vid : STR full path file name of the video to overlay the free body diagram visual
+    data_force : DATAFRAME force data (fx, fy, ax, ay) (N, N, m, m).
+    data_digi : DATAFRAME digitized data (m).
+    data_cm : DATAFRAME center of mass data for segments and body (m).
+        format matches that of NJM.dig2jointkinetics.dig2jk.main().
+    data_njm : DATAFRAME contains calculated variables for segment's joint kinetics.
+    side : STRING which side of the body (ex- 'left')
+    frame_start : INT frame number when the net joint moment calculations begin (i.e., contact frame)
         this is zero-based
-    samp_vid : INT, optional (default: 240)
-        sampling rate of the video
-    samp_force : INT, optional (default: 1200)
-        sampling rate of the force data
+    samp_vid : INT, optional (default: 240) sampling rate of the video
+    samp_force : INT, optional (default: 1200) sampling rate of the force data
     colorlegend : STRING, optional (default: 'flexext')
         What do positive/negative values represent?
         Possible inputs:
@@ -430,10 +442,8 @@ def fbd_overlay(file_vid, data_force, data_digi, data_cm, data_njm, side, frame_
             'posneg': positive = positive moment w/r reference frame; negative = negative moment w/r reference frame
     body_mass : FLOAT, optinal (default: None)
         body mass of individual. this will be used to scale the circles
-    rf_scale : INT, optional (default: 0.1)
-        It scales the force and moments ONLY IN THE VISUAL.
-    imout : BOOLEAN, optional (default: False)
-        export still frame images for the entire video
+    rf_scale : INT, optional (default: 0.1) It scales the force and moments ONLY IN THE VISUAL.
+    imout : BOOLEAN, optional (default: False) export still frame images for the entire video
     flipy : STR, optional (default: "yes")
         yes/no to flip the digitized data to match video reference system
     innercirc_mag : INT, optional (default: 5)
@@ -443,13 +453,16 @@ def fbd_overlay(file_vid, data_force, data_digi, data_cm, data_njm, side, frame_
     file_vid_n : STR (default: "fbd_overlay.mp4)
         the name of the new video output
 
+    Outputs
+        output1: None
 
-    Returns
-    -------
-    None.
-
+    Dependencies
+        cv2
+        pandas
+        numpy
     """
 
+    # Dependencies
     import cv2
     import pandas as pd
     import numpy as np
