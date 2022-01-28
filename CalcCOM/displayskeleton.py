@@ -1,47 +1,54 @@
-# -*- coding: utf-8 -*-
 """
-displayskeleton
+Script: displayskeleton
     Add visual representation of segments and center of mass of body and segments.
-    
-Inputs
-    file_vid: STR full file name of video
-    data: DATAFRAME digitized data for each segment
-        Column 0: frame
-        Column 1+: digitized locations with x then y
-    data_cm: DATAFRAME body and segment CM locations (prefe)
-        Column 0: frame
-        Column 1+: center of mass locations with x then y
-    segments: DATAFRAME segment parameters obtained from segdim_deleva.py
-    file_vid_n: STR full file name of new video (default: skeletonvideo.mp4)
-    samp_vid: INT sampling rate of video (Hz) (default: 240)
-    flipy: STR flip y-axis values to match (0,0) in upper left of video (default: 'no')
-    imout: TRUE/FALSE option to output each frame as individual image (default: False)
-    
-Outputs
-    image of each digitized frame with body cm, segment cm, and segment visually represented
-        imout must be True!!
-        location: 'SkeletonOL' folder within location of file_vid
-    
-Dependencies
-    cv2 (opencv)
-    pandas
-    numpy
-    os
-    
-Created on Fri Apr 17 15:27:11 2020
 
-@author: cwiens
+Modules
+    addskeleton: Add visual representation of segments and center of mass of body and segments.
+
+Author:
+    Casey Wiens
+    cwiens32@gmail.com
 """
-
-import cv2
-import pandas as pd
-import numpy as np
-import os
 
 
 def addskeleton(file_vid, data, data_cm, segments,
                 file_vid_n='skeletonvideo.mp4', samp_vid=240, flipy='yes', imout=False):
-    
+    """
+    Function::: addskeleton
+    	Description: Add visual representation of segments and center of mass of body and segments.
+    	Details: imout must be True!!
+            location: 'SkeletonOL' folder within location of file_vid
+
+    Inputs
+            file_vid: STR full file name of video
+        data: DATAFRAME digitized data for each segment
+            Column 0: frame
+            Column 1+: digitized locations with x then y
+        data_cm: DATAFRAME body and segment CM locations (prefe)
+            Column 0: frame
+            Column 1+: center of mass locations with x then y
+        segments: DATAFRAME segment parameters obtained from segdim_deleva.py
+        file_vid_n: STR full file name of new video (default: skeletonvideo.mp4)
+        samp_vid: INT sampling rate of video (Hz) (default: 240)
+        flipy: STR flip y-axis values to match (0,0) in upper left of video (default: 'no')
+        imout: TRUE/FALSE option to output each frame as individual image (default: False)
+
+    Outputs
+        output1: image of each digitized frame with body cm, segment cm, and segment visually represented
+
+    Dependencies
+        cv2 (opencv)
+        pandas
+        numpy
+        os
+    """
+
+    # Dependencies
+    import cv2
+    import pandas as pd
+    import numpy as np
+    import os
+
     #%% set up location to store images
     if imout is True:
         # if just file name was given
