@@ -1,40 +1,49 @@
-# -*- coding: utf-8 -*-
 """
-segdim_deleva
-    Create data frame containing segment center of mass length and percent weight
-        based on de Leva 1996.
-        
-Inputs
-    sex: STR segmental parameters for which gender ('f' or 'm')
-    
-Outputs
-    segments: DATAFRAME contains origin and other location for segment definition,
-        proximal and distal joints (primarily for digitized point),
-        as well as segmental center of mass position (cmpos),
-        percent weight (massper), and sagittal radii of gyration (r_gyr).
-    
-de Leva. Adjustments to Zatsiorsky-Seluyanov's segment inertia parameters. 1996
+Script: segdim_deleva
+    Description of the overall purpose of the script.
 
-Based on digitized points:
-    segment:    origin                  -   other
-    head:       vertex                  -   cervicale (C7)
-    trunk:      cervical (C7)           -   mid-hip
-    upperarm:   shoulder joint center   -   elbow joint center
-    forearm:    elbow joint center      -   stylion (distal point radial styloid)
-    hand:       sylion (see forearm)    -   3rd dactylion (tip of 3rd digit)
-    thigh:      hip joint center        -   knee joint center 
-    shank:      knee joint center       -   lateral malleolus
-    foot:       heel                    -   acropodion (tip of longest toe - 1st or 2nd)
+Modules
+    segmentdim: Create data frame containing segment center of mass length and percent weight based on de Leva 1996.
 
-Created on Wed Apr 15 13:32:30 2020
-
-@author: cwiens, Casey Wiens, cwiens32@gmail.com
+Author:
+    Casey Wiens
+    cwiens32@gmail.com
 """
 
-import pandas as pd
-import numpy as np
 
 def segmentdim(sex):
+    """
+    Function::: segmentdim
+    	Description: Create data frame containing segment center of mass length and percent weight based on de Leva 1996.
+    	Details: de Leva. Adjustments to Zatsiorsky-Seluyanov's segment inertia parameters. 1996
+            Based on digitized points:
+                segment:    origin                  -   other
+                head:       vertex                  -   cervicale (C7)
+                trunk:      cervical (C7)           -   mid-hip
+                upperarm:   shoulder joint center   -   elbow joint center
+                forearm:    elbow joint center      -   stylion (distal point radial styloid)
+                hand:       sylion (see forearm)    -   3rd dactylion (tip of 3rd digit)
+                thigh:      hip joint center        -   knee joint center
+                shank:      knee joint center       -   lateral malleolus
+                foot:       heel                    -   acropodion (tip of longest toe - 1st or 2nd)
+
+    Inputs
+        sex: STR segmental parameters for which gender ('f' or 'm')
+
+    Outputs
+        segments: DATAFRAME contains origin and other location for segment definition,
+            proximal and distal joints (primarily for digitized point),
+            as well as segmental center of mass position (cmpos),
+            percent weight (massper), and sagittal radii of gyration (r_gyr).
+
+    Dependencies
+        pandas
+        numpy
+    """
+
+    # Dependencies
+    import pandas as pd
+    import numpy as np
     
     # create segment dimension dict
     segloc = pd.DataFrame(index={'head', 'trunk', 'upperarm', 'forearm',
@@ -157,8 +166,6 @@ def segmentdim(sex):
         
     #%% join data tables
     segments = segloc.join(segdim)
-    
-    
+
     #%% return data frame
     return segments
-        
