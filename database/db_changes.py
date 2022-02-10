@@ -30,6 +30,7 @@ def check_column_names(engine, table_name, df_in):
         sqlalchemy
         pandas
     """
+    # Dependencies
     import sqlalchemy as db
     import pandas as pd
 
@@ -82,7 +83,7 @@ def check_column_exist(engine, table_name, col_name, col_type):
 
     """
 
-    # Packages
+    # Dependencies
     import sqlalchemy as db
     import pandas as pd
 

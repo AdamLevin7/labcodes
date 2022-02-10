@@ -55,13 +55,22 @@ def open_ssh_tunnel(ssh_host, ssh_username, ssh_password, verbose=False):
 
 
 def mysql_connect(database_username, database_password, database_name, tunnel):
-    """Connect to a MySQL server using the SSH tunnel connection
+    """
+    Function::: mysql_connect
+        Description: Connect to a MySQL server using the SSH tunnel connection
+        Details:
 
-    :param database_username: MySQL database host name
-    :param database_password: MySQL database user name
-    :param database_name: MySQL database password
-    :param tunnel: SSH tunnel connection
-    :return connection: MySQL database connection
+    Inputs
+        database_username: MySQL database host name
+        database_password: MySQL database user name
+        database_name: MySQL database password
+        tunnel: SSH tunnel connection
+
+    Outputs
+        connection: MySQL database connection
+
+    Dependencies
+        pymysql
     """
 
     # Dependencies
@@ -79,9 +88,19 @@ def mysql_connect(database_username, database_password, database_name, tunnel):
 
 
 def mysql_disconnect(connection):
-    """Closes the MySQL database connection.
+    """
+    Function::: mysql_disconnect
+        Description: Closes the MySQL database connection.
+        Details:
 
-    :param connection: MySQL database connection
+    Inputs
+        connection: MySQL database connection
+
+    Outputs
+        output: None
+
+    Dependencies
+        None
     """
 
     connection.close()
@@ -89,6 +108,21 @@ def mysql_disconnect(connection):
 
 def close_ssh_tunnel(tunnel):
     """Closes the SSH tunnel connection.
+    """
+
+    """
+    Function::: close_ssh_tunnel
+        Description: Closes the SSH tunnel connection.
+        Details:
+
+    Inputs
+        input: None
+
+    Outputs
+        output: None
+
+    Dependencies
+        None
     """
 
     tunnel.close
