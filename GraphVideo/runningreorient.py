@@ -1,47 +1,45 @@
-# -*- coding: utf-8 -*-
 """
-runningreorient
+Script: runningreorient
     Reorients FP data to "running" reference system.
-    Ie. Vertical force (+)
-        Anterior force (+)
-        Medial force (+)
-    
-    
-Dependencies
-    matplotlib
-    pandas
-    ImportForce_TXT, combine_forces
-    FindContactIntervals 
-    
-Created on Mon Jun 15 20:47:51 2020
 
-@author: hestewar
-"""
-#%% Packages/Modules
-from ImportForce_TXT import ImportForce_TXT, combine_force
-from FindContactIntervals import FindContactIntervals
-import matplotlib.pyplot as plt
-import pandas as pd
+Modules
+    RunReorient: Reorients FP data to "running" reference system.
 
-#%% 
+Author:
+    Harper Stewart
+    harperestewart7@gmail.com
 """
-runningorient
-    Orient force data in "running reference frame."
-    
-Use function line: fpDataReorient = RunReorient(filepath, rezero = 'b', foot = 'R')
-    
-Inputs
-    file: STR file name (.txt) of force data
-    rezero: STR ability to rezero force data (default: None)
-        options:    b - subtracted based on beginning 200 frames
-                    e - subtracted bassed on ending 200 frames
-    foot: STR R or L to indicate if medial lateral force should be flipped
-    
-Outputs
-    fpDataReorient : DATAFRAME force data with forces reoriented
 
-"""
+
 def RunReorient(file, rezero, foot):
+    """
+    Function::: RunReorient
+        Description: Orient force data in "running reference frame."
+        Details: Ie. Vertical force (+), Anterior force (+), Medial force (+)
+
+    Inputs
+        file: STR file name (.txt) of force data
+        rezero: STR ability to rezero force data (default: None)
+            options:    b - subtracted based on beginning 200 frames
+                        e - subtracted bassed on ending 200 frames
+        foot: STR R or L to indicate if medial lateral force should be flipped
+
+    Outputs
+        fpDataReorient : DATAFRAME force data with forces reoriented
+
+    Dependencies
+        matplotlib
+        pandas
+        ImportForce_TXT, combine_forces
+        FindContactIntervals
+    """
+
+    # Dependencies
+    from ImportForce_TXT import ImportForce_TXT, combine_force
+    from FindContactIntervals import FindContactIntervals
+    import matplotlib.pyplot as plt
+    import pandas as pd
+
     # Threshold for contact and QC check
     thresh = 20
     
@@ -112,7 +110,3 @@ def RunReorient(file, rezero, foot):
 
     #%% Return Dataframe
     return fpDataReorient
-
-
-
-
