@@ -1,30 +1,41 @@
-# -*- coding: utf-8 -*-
 """
-calc_jointangle
-    Calculate angle for each joint.
-    
-Inputs
-    data: DATAFRAME digitized data for each landmark
-        Column 0: time or frame number
-        Column 1+: location of each digitized point
-    segments: DATAFRAME segment parameters obtained from segdim_deleva.py
-    
-Outputs
-    dataout: DATAFRAME angle of each joint (radians)
-    
-Dependencies
-    pandas
-    numpy
-    
-Created on Mon Apr 27 10:49:53 2020
+Script: calc_jointangle
+    Calculate joint angles from digitized data
 
-@author: cwiens
+Modules
+    calc_angle: Calculate an angle using 3 points
+    jointangle: Calculate angle for each joint.
+
+Author:
+    Casey Wiens
+    cwiens32@gmail.com
 """
 
-import pandas as pd
-import numpy as np
 
 def calc_angle(jointname, pt_a, pt_b, pt_c):
+    """
+    Function::: calc_angle
+    	Description: Calculate an angle using 3 points
+    	Details: Joint name will be included in the dataframe, uses the cosine rule to calculate the angle
+
+    Inputs
+        jointname: STR Name of the joint to be calculated
+        pt_a: DF Point A of the 3 points needed for the angle
+        pt_b: DF Point B of the 3 points needed for the angle
+        pt_c: DF Point C of the 3 points needed for the angle
+
+    Outputs
+        joint_angle: DF Joint name and the value associated
+
+    Dependencies
+        pandas
+        numpy
+    """
+
+    # Dependencies
+    import pandas as pd
+    import numpy as np
+
     # convert column names
     pt_a.columns = ['x', 'y']
     pt_b.columns = ['x', 'y']
@@ -40,14 +51,32 @@ def calc_angle(jointname, pt_a, pt_b, pt_c):
     theta = np.arccos((np.square(side_b) + np.square(side_c) - np.square(side_a)) / (2*side_b*side_c))
     # store as dataframe
     joint_angle = pd.DataFrame({jointname: theta})
-    
-    
+
     return joint_angle
 
 
-
 def jointangle(datain, segments):
-    
+    """
+    Function::: jointangle
+        Description: Calculate angle for each joint.
+        Details: Utilize segments parameters from DeLeva
+
+    Inputs
+        datain: DATAFRAME digitized data for each landmark
+            Column 0: time or frame number
+            Column 1+: location of each digitized point
+        segments: DATAFRAME segment parameters obtained from segdim_deleva.py
+
+    Outputs
+        dataout: DF Contains all the joint names and their associated angles
+
+    Dependencies
+        pandas
+    """
+
+    # Dependencies
+    import pandas as pd
+
     #%% create joint dictionary
     # create joint dict
     joints = pd.DataFrame(index={'neck', 'shoulder', 'elbow', 'wrist',
@@ -71,8 +100,7 @@ def jointangle(datain, segments):
     joints['other']['hip'] = 'thigh'
     joints['other']['knee'] = 'shank'
     joints['other']['ankle'] = 'foot'
-    
-    
+
     #%% initialize data out
     dataout = pd.DataFrame(datain.iloc[:,0])
     
@@ -178,6 +206,5 @@ def jointangle(datain, segments):
                                            point_a, point_b, point_c)
                     # add column to data out
                     dataout = dataout.join(joint_ang)
-    
-    
+
     return dataout
