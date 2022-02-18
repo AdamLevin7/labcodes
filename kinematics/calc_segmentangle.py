@@ -1,30 +1,41 @@
-# -*- coding: utf-8 -*-
 """
-calc_segmentangle
-    Calculate angle for each segment.
-    
-Inputs
-    data: DATAFRAME digitized data for each segment
-        Column 0: time or frame number
-        Column 1+: length of the segment
-    segments: DATAFRAME segment parameters obtained from segdim_deleva.py
-    
-Outputs
-    dataout: DATAFRAME angle of each segment (radians)
-    
-Dependencies
-    pandas
-    numpy
-    
-Created on Sun Apr 26 12:09:46 2020
+Script: calc_segmentangle
+    Calculate segement angles using DeLeva parameters from digitized data.
 
-@author: cwiens
+Modules
+    calc_angle: Calculate an individual segment angle
+    segangle: Calculate the segment angles for the entire body
+
+Author:
+    Casey Wiens
+    cwiens32@gmail.com
 """
 
-import pandas as pd
-import numpy as np
 
 def calc_angle(segname, origin, other, allpositive='no'):
+    """
+    Function::: calc_angle
+    	Description: Calculate an individual segment angle
+    	Details: Positive output values can be specified
+
+    Inputs
+        segname: STR description goes here (units)
+        origin: DF x and y location of the origin
+        other: DF x and y location of the other end of the line
+        allpositive: STR Specify if all angles should be defined as positive numbers
+
+    Outputs
+        seg_angle: DF Contains the segment name and associated angle
+
+    Dependencies
+        pandas
+        numpy
+    """
+
+    # Dependencies
+    import pandas as pd
+    import numpy as np
+
     # convert column names
     origin.columns = ['x', 'y']
     other.columns = ['x', 'y']
@@ -46,14 +57,33 @@ def calc_angle(segname, origin, other, allpositive='no'):
         theta = theta.apply(negative_clean_up)
     # store as dataframe
     seg_angle = pd.DataFrame({segname: theta})
-    
-    
+
     return seg_angle
 
 
+def segangle(datain, segments,allpositive='no'):
+    """
+    Function::: segangle
+    	Description: Calculate the segment angles for the entire body
+    	Details: Uses calc_angle for each segment
 
-def segangle(datain, segments, allpositive='no'):
-    
+    Inputs
+        data: DATAFRAME digitized data for each segment
+            Column 0: time or frame number
+            Column 1+: Coordinate of the segment
+        segments: DATAFRAME segment parameters obtained from segdim_deleva.py
+        allpositive: STR Specify if all angles should be defined as positive numbers
+
+    Outputs
+        dataout: DF Containing the segment angles of the body (radians)
+
+    Dependencies
+        pandas
+    """
+
+    # Dependencies
+    import pandas as pd
+
     # initialize data out
     dataout = pd.DataFrame(datain.iloc[:,0])
     
@@ -122,6 +152,5 @@ def segangle(datain, segments, allpositive='no'):
                     seg_ang = calc_angle((segments.iloc[cnt,:]).name, orig, oth, allpositive)
                     # add column to data out
                     dataout = dataout.join(seg_ang)
-    
-    
+
     return dataout

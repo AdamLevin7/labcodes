@@ -1,44 +1,69 @@
-# -*- coding: utf-8 -*-
 """
-calc_segmentlength
-    Calculate length for each segment.
-    
-Inputs
-    data: DATAFRAME digitized data for each segment
-        Column 0: time or frame number
-        Column 1+: digitized locations with x then y
-    segments: DATAFRAME segment parameters obtained from segdim_deleva.py
-    
-Outputs
-    dataout: DATAFRAME length of each segment (in units it was provided)
-    
-Dependencies
-    pandas
-    numpy
+Script: calc_segmentlength
+    Calculate segment lengths from digitized data.
 
-Created on Tue Apr 21 14:27:53 2020
+Modules
+    calc_length: Calculate length of an individual segment
+    seglength: Create dataframe with segment lengths calculated
 
-@author: cwiens
+Author:
+    Casey Wiens
+    cwiens32@gmail.com
 """
 
-import pandas as pd
-import numpy as np
 
 def calc_length(segname, origin, other):
+    """
+    Function::: calc_length
+    	Description: Calaculate length of an individual segment
+    	Details:
+
+    Inputs
+        segname: STR segment name
+        origin: DF x and y coordinates of the origin of the segment
+        other: DF x and y coordinates of the second point on the limb
+
+    Outputs
+        seg_length: DATATYPE description goes here (units)
+    Dependencies
+        pandas
+        numpy
+    """
+
+    # Dependencies
+    import pandas as pd
+    import numpy as np
+
     # convert column names
     origin.columns = ['x', 'y']
     other.columns = ['x', 'y']
     # calculate segment length
     # sqrt( (x2 - x1)^2 + (y2 - y1)^2 )
     seg_length = pd.DataFrame({segname: np.sqrt(np.sum(np.square(origin - other), axis=1))})
-    
-    
+
     return seg_length
 
 
-
 def seglength(datain, segments):
-    
+    """
+    Function::: seglength
+    	Description: Create dataframe with segment lengths calculated
+
+    Inputs
+        datain: DATAFRAME digitized data for each segment
+            Column 0: time or frame number
+            Column 1+: digitized locations with x then y
+        segments: DATAFRAME segment parameters obtained from segdim_deleva.py
+
+    Outputs
+        dataout: DATAFRAME length of each segment (in units it was provided)
+
+    Dependencies
+        pandas
+    """
+    # Dependencies
+    import pandas as pd
+
     # initialize data out
     dataout = pd.DataFrame(datain.iloc[:,0])
     
@@ -107,6 +132,5 @@ def seglength(datain, segments):
                     seg_len = calc_length((segments.iloc[cnt,:]).name, orig, oth)
                     # add column to data out
                     dataout = dataout.join(seg_len)
-    
-    
+
     return dataout
