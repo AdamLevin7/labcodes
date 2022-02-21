@@ -38,6 +38,7 @@ def findframe(file, label='Find Frame', framestart=0):
     import cv2
     import wx
     import os
+    import matplotlib.pyplot as plt
     
     # idenify screen resolution
     app = wx.App(False)
@@ -47,6 +48,27 @@ def findframe(file, label='Find Frame', framestart=0):
     #%% set call back for trackbar
     def nothing(x):
         pass
+
+    """ create figure to use as hotkey help and strobe frame info """
+    # set string for hotkey help
+    hotkey_text = ("you can advance using the trackbar but must click button after to update\n"
+                   "'k' = -100 | 'm' = -10 | ',' = -1 | '.' = +1 | '/' = +10 | ';' = +100\n"
+                   "click 'q' to select frame when identified in GUI\n"
+                   "click 'esc' to exit out of GUI")
+    # turn off toolbar
+    plt.rcParams['toolbar'] = 'None'
+    # create figure
+    plt.figure("Find Frame - Hot Key Info", figsize=(10.75, 1.25), dpi=80)
+    # turn axes off
+    plt.axis('off')
+    # set up the fig manager to set location
+    mngr = plt.get_current_fig_manager()
+    # set location in upper left corner
+    mngr.window.setGeometry(25, 50, mngr.window.geometry().getRect()[2], mngr.window.geometry().getRect()[3])
+    # display help info text
+    plt.text(0, 0, hotkey_text, size=16)
+    # show image
+    plt.show()
     
     #%% initialize window
     cv2.namedWindow(label, cv2.WINDOW_NORMAL)
@@ -61,10 +83,11 @@ def findframe(file, label='Find Frame', framestart=0):
     r = height*0.75 / float(h)
     dim = (int(w*r), int(height*0.75))
     cv2.resizeWindow(label, dim)
+    cv2.moveWindow(label, 25, 50+mngr.window.geometry().getRect()[3])
     
     #%% create and set trackbar
     cv2.createTrackbar('Frame', label, framestart, int(cap.get(cv2.CAP_PROP_FRAME_COUNT)), nothing)
-    
+
     #%%
     key = 0
     while cap.isOpened():
@@ -78,7 +101,6 @@ def findframe(file, label='Find Frame', framestart=0):
 
         # user clicks the window's X to close window
         if cv2.getWindowProperty(label,cv2.WND_PROP_VISIBLE) < 1:
-            print('closed window')
             break
 
         #%% get trackbar location
@@ -121,6 +143,7 @@ def findframe(file, label='Find Frame', framestart=0):
         cv2.setTrackbarPos('Frame', label, cnt)
         
     #%% close windows
+    plt.close("Find Frame - Hot Key Info")
     cap.release()
     if cv2.getWindowProperty(label,cv2.WND_PROP_VISIBLE) >= 1:
         cv2.destroyWindow(label)
