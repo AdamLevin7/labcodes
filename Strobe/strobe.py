@@ -356,7 +356,6 @@ def strobe_findframes(filename, crop='yes', autoid_thresh=None, autoid_num=None)
                 # find search area
                 area = findarea(filename,frame=frame,label='Select area around object')
                 searcharea = {frame: area}
-                print('what is going on')
             else:
                 searcharea = None
         ### if it is not first strobe image
@@ -379,7 +378,6 @@ def strobe_findframes(filename, crop='yes', autoid_thresh=None, autoid_num=None)
     
     ### if auto-find frames was selected
     if autoid_thresh is not None:
-        print("inside the auto id thresh")
         # store strobeframes as another variable to use as search
         sframestemp = strobeframes
         # find difference between selected frames
@@ -396,8 +394,9 @@ def strobe_findframes(filename, crop='yes', autoid_thresh=None, autoid_num=None)
                         area = findarea(filename,frame=cntf,label='Select area around object')
                         searcharea[cntf] = area
                 elif crop == 'one':
-                    # just use the search area from previous strobe frame
-                    searcharea[cntf] = area
+                    for cntf in frames[1:-1]:
+                        # just use the search area from previous strobe frame
+                        searcharea[cntf] = area
     
     ###
     return strobeframes, searcharea
@@ -435,17 +434,19 @@ def strobe_autofindframes(frames, autoid_thresh=25, autoid_num=7):
     """ initialize parameters """
     strobeframes = frames.copy()
 
-    # store strobeframes as another variable to use as search
-    sframestemp = strobeframes
-    # find difference between selected frames
-    diffframes = np.diff(frames)
-    # auto select evenly spaced frames
-    for cntdf in range(len(diffframes)):
-        if diffframes[cntdf] >= autoid_thresh:
-            tempframes = np.linspace(frames.iloc[cntdf],
-                                     frames.iloc[cntdf + 1], autoid_num, dtype=int)
-            strobeframes = (strobeframes.append(pd.Series(tempframes)).reset_index(drop=True)).sort_values(
-                ignore_index=True).drop_duplicates()
+    # run code only if autoid_thresh is greater than 0
+    if autoid_thresh > 0:
+        # store strobeframes as another variable to use as search
+        sframestemp = strobeframes
+        # find difference between selected frames
+        diffframes = np.diff(frames)
+        # auto select evenly spaced frames
+        for cntdf in range(len(diffframes)):
+            if diffframes[cntdf] >= autoid_thresh:
+                tempframes = np.linspace(frames.iloc[cntdf],
+                                         frames.iloc[cntdf + 1], autoid_num, dtype=int)
+                strobeframes = (strobeframes.append(pd.Series(tempframes)).reset_index(drop=True)).sort_values(
+                    ignore_index=True).drop_duplicates()
 
     return strobeframes
 
@@ -460,34 +461,39 @@ User input:
     - filename: full path file name
     - frames: current series of identified frames
     - areatype: find search area in all strobe frames ("all") or only find it for the first strobe frame ("one")
+    - searcharea: NONE/DICT user can provide previously selected searcharea(s) to add to
+        - ex) user already found searcharea for most frames but added new strobe frames and needs to add new searchareas
 
 Created on Tue Apr 27 4:45:26 2021
 
 @author: cwiens, Casey Wiens, cwiens32@gmail.com
 """
 
-def strobe_findarea(filename, frames, areatype="all"):
+def strobe_findarea(filename, frames, areatype="all", searcharea=None):
     import pandas as pd
     from capture_area import findarea
     import numpy as np
 
-    """ initialize variables """
-    searcharea = None
-
-    """ loop through frames to identify search area """
-    for frame in frames:
-        # update frame and strobe frame list
-        if searcharea is None:
-            area = findarea(filename,frame=frame,label='Select area around object')
-            searcharea = {frame: area}
-        # if it is not first strobe image and user is selecting new search area for each frame
-        elif searcharea is not None and areatype == "all":
-            # find search area
-            area = findarea(filename,frame=frame,label='Select area around object')
-            searcharea[frame] = area
-        # if it is not first strobe image and user only wants to select the search area once
-        else:
-            # just repeat the previously selected area for the current strobe frame
-            searcharea[frame] = area
+    # run code only if areatype is not None
+    if areatype is not None:
+        """ loop through frames to identify search area """
+        for frame in frames:
+            # if searchframe is none or the searcharea has not been found for this frame
+            if searcharea is None or frame not in searcharea:
+                # update frame and strobe frame list
+                if searcharea is None:
+                    area = findarea(filename,frame=frame,label='Select area around object')
+                    searcharea = {frame: area}
+                # if it is not first strobe image and user is selecting new search area for each frame
+                elif searcharea is not None and areatype == "all":
+                    # find search area
+                    area = findarea(filename,frame=frame,label='Select area around object')
+                    searcharea[frame] = area
+                # if it is not first strobe image and user only wants to select the search area once
+                else:
+                    # set area as the first searcharea
+                    area = searcharea[frames[0]]
+                    # just repeat the previously selected area for the current strobe frame
+                    searcharea[frame] = area
 
     return searcharea
