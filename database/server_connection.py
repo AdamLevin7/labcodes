@@ -74,15 +74,15 @@ def mysql_connect(database_username, database_password, database_name, tunnel):
     """
 
     # Dependencies
-    import pymysql
+    import sqlalchemy as db
 
-    connection = pymysql.connect(
-        host='127.0.0.1',
-        user=database_username,
-        passwd=database_password,
-        db=database_name,
-        port=tunnel.local_bind_port
-    )
+    # set connection parameters
+    host = '127.0.0.1'
+
+    # connect to database
+    engineString = ('mysql+pymysql://' + database_username + ':' + database_password + '@' + host + ':' +
+                    str(tunnel.local_bind_port) + '/' + database_name)
+    connection = db.create_engine(engineString, echo=False)
 
     return connection
 
