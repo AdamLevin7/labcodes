@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
+#TODO should packages go within the functions individually or the class overall?
 """
-dig2jointkinetics
-    Modules to go from digitized data to joint kinetics calculations.
-    
+Script: dig2jointkinetics
+    Modules to go from digitized data to joint kinetics calculations..
+
 Modules
     filtdata: filters all but first column of dataframe
     interpdatasig: interpolates all but first column of dataframe
@@ -13,7 +13,14 @@ Modules
     jointangle_vel: calculate joint angle and angular velocity
     selectdata: select only data to be used in joint kinetics calculations
     main: run through all modules in specified order to calculate joint kinetics
-    
+
+Author:
+    Casey Wiens
+    cwiens32@gmail.com
+"""
+
+"""
+  
 Dependencies
     scipy    
     pandas
@@ -25,11 +32,7 @@ Dependencies
     momentinertia from calc_segmentmomentinertia.py
     njm_setup from jointkinetics
     
-Created on Tue Apr 21 14:26:27 2020
-
-@author: cwiens
 """
-
 
 from scipy import signal
 from scipy.interpolate import splev, splrep
@@ -63,26 +66,31 @@ class dig2jk:
         self.xvals = xvals
         self.samp_dig = samp_dig
         self.samp_force = samp_force
-    
-    
-    #%%    
-    """
-    datainterp
-        filter and interpolates CM and digitized data to match force data
-        
-    Inputs
-        data_dig: DATAFRAME digitized data (m)
-        data_cm: DATAFRAME center of mass data for segments and body (m)
-        xvals: 1-D FLOATS x-coordinates for new data series
-        segments: DATAFRAME segment parameters obtained from segdim_deleva.py
-        samp_dig: INT sampling rate of digitized data
-        
-    Outputs
-        data_dig_interp: DATAFRAME filtered and interpolated digitized data (m)
-        data_cm_interp: DATAFRAME filtered and interpolated center of mass data (m)
-        data_seglength_interp: DATAFRAME filtered and interpolated segment length data (m)
-    """
+
+
     def datainterp(self):
+        """
+        Function::: datainterp
+        	Description: filter and interpolates CM and digitized data to match force data
+        	Details:
+
+        Inputs
+            data_dig: DATAFRAME digitized data (m)
+            data_cm: DATAFRAME center of mass data for segments and body (m)
+            xvals: 1-D FLOATS x-coordinates for new data series
+            segments: DATAFRAME segment parameters obtained from segdim_deleva.py
+            samp_dig: INT sampling rate of digitized data
+
+        Outputs
+            data_dig_interp: DATAFRAME filtered and interpolated digitized data (m)
+            data_cm_interp: DATAFRAME filtered and interpolated center of mass data (m)
+            data_seglength_interp: DATAFRAME filtered and interpolated segment length data (m)
+
+        Dependencies
+            scipy
+            pandas
+        """
+
         ### calculate segmental distances
         # find segment lengths of each frame
         data_seglength = seglength(self.data_dig, self.segments)
@@ -110,24 +118,27 @@ class dig2jk:
         # segment length data
         self.data_seglength_interp = pd.DataFrame({'time': self.xvals}).join(self.data_seglength_filt.iloc[:,1:].apply(lambda y: splev(self.xvals, splrep(self.data_seglength_filt['time'], y))).set_index(self.xvals.index))
     
-    
-    
-    #%%
-    """
-    cm_angularimpulse
-        calculate angular impulse about body center of mass
-        
-    Inputs
-        data_force: DATAFRAME force data (fx, fy, ax, ay) (N, N, m, m)
-        data_cm: DATAFRAME center of mass data for segments and body (m).
-            Dataframe obtained from calc_centermass.py
-            Data should be same length as force data.
-        
-    Outputs
-        cm_moment: ARRAY moment about center of mass (N*m)
-        cm_theta: ARRAY angle between center of mass and reaction force (rad)
-    """
+
     def cm_angularimpulse(self):
+        """
+        Function::: cm_angularimpulse
+        	Description: calculate angular impulse about body center of mass
+        	Details:
+
+        Inputs
+            data_force: DATAFRAME force data (fx, fy, ax, ay) (N, N, m, m)
+            data_cm: DATAFRAME center of mass data for segments and body (m).
+                Dataframe obtained from calc_centermass.py
+                Data should be same length as force data.
+
+        Outputs
+            cm_moment: ARRAY moment about center of mass (N*m)
+            cm_theta: ARRAY angle between center of mass and reaction force (rad)
+
+        Dependencies
+            pandas
+            numpy
+        """
         ### filter and interpoloate data
         dig2jk.datainterp(self)
         
@@ -148,25 +159,31 @@ class dig2jk:
         
         return self.ang_imp, self.cm_moment, self.cm_theta, self.rf_theta
     
-    
-    
-    #%%    
-    """
-    cm_velocityacceleration
-        calculate center of mass velocity and acceleration
-        
-    Inputs
-        data_cm: DATAFRAME center of mass data for segments and body (m).
-            Dataframe obtained from calc_centermass.py
-            Data should be same length as force data.
-        xvals: 1-D FLOATS x-coordinates for new data series
-        samp: INT sampling rate of signal
-        
-    Outputs
-        data_cm_vel_filt: DATAFRAME filtered center of mass velocity data for segments and body (m/s)
-        data_cm_acc_filt: DATAFRAME filtered center of mass acceleration data for segments and body (m/s^2)
-    """
+
+
     def cm_velocityacceleration(self):
+        """
+        Function::: cm_velocityacceleration
+        	Description: calculate center of mass velocity and acceleration
+        	Details:
+
+        Inputs
+            data_cm: DATAFRAME center of mass data for segments and body (m).
+                Dataframe obtained from calc_centermass.py
+                Data should be same length as force data.
+            xvals: 1-D FLOATS x-coordinates for new data series
+            samp: INT sampling rate of signal
+
+        Outputs
+            data_cm_vel_filt: DATAFRAME filtered center of mass velocity data for segments and body (m/s)
+            data_cm_acc_filt: DATAFRAME filtered center of mass acceleration data for segments and body (m/s^2)
+
+        Dependencies
+            dig2jk
+            scipy
+            pandas
+        """
+
         ### filter and interpoloate data
         dig2jk.datainterp(self)
         
@@ -187,23 +204,30 @@ class dig2jk:
         # filter center of mass accelerations
         self.data_cm_acc_filt = pd.DataFrame({'time': self.xvals}).join(data_cm_acc.iloc[:, 1:].apply(lambda x: x.interpolate(method='spline', order=3).fillna(method='bfill')).apply(lambda x: signal.filtfilt(b, a, x)))
     
-    
-    #%%    
-    """
-    segmentangle_vel_acc
-        calculate segment angle, angular velocity, and angular acceleration
-        
-    Inputs
-        data_dig: DATAFRAME digitized data (m)
-        xvals: 1-D FLOATS x-coordinates for new data series
-        segments: DATAFRAME segment parameters obtained from segdim_deleva.py
-        
-    Outputs
-        data_segang: DATAFRAME segment angle data (rad)
-        data_segang_vel: DATAFRAME segment angular velocity data (rad/s)
-        data_segang_acc: DATAFRAME segment angular acceleration data (rad/s^2)
-    """
+
     def segmentangle_vel_acc(self):
+        """
+        Function::: segmentangle_vel_acc
+        	Description: calculate segment angle, angular velocity, and angular acceleration
+        	Details:
+
+        Inputs
+            data_dig: DATAFRAME digitized data (m)
+            xvals: 1-D FLOATS x-coordinates for new data series
+            segments: DATAFRAME segment parameters obtained from segdim_deleva.py
+
+        Outputs
+            data_segang: DATAFRAME segment angle data (rad)
+            data_segang_vel: DATAFRAME segment angular velocity data (rad/s)
+            data_segang_acc: DATAFRAME segment angular acceleration data (rad/s^2)
+
+        Dependencies
+            dig2jk
+            segangle
+            centraldiff
+            numpy
+        """
+
         ### filter and interpoloate data
         dig2jk.datainterp(self)
         ### calculate center of mass velocity and acceleration
@@ -219,23 +243,29 @@ class dig2jk:
         ### calculate segmental angular accelerations
         # segmental angular velocities
         self.data_segang_acc = centraldiff(self.data_segang_vel, np.mean(np.diff(self.data_segang_vel['time'])))
-    
-    
-    #%%    
-    """
-    jointangle_vel
-        calculate joint angle and angular velocity
-        
-    Inputs
-        data_dig: DATAFRAME digitized data (m)
-        xvals: 1-D FLOATS x-coordinates for new data series
-        segments: DATAFRAME segment parameters obtained from segdim_deleva.py
-        
-    Outputs
-        data_jointang: DATAFRAME joint angle data (rad)
-        data_jointang_vel: DATAFRAME joint angular velocity data (rad/s)
-    """
+
+
     def jointangle_vel(self):
+        """
+        Function::: jointangle_vel
+        	Description: calculate joint angle and angular velocity
+        	Details:
+
+        Inputs
+            data_dig: DATAFRAME digitized data (m)
+            xvals: 1-D FLOATS x-coordinates for new data series
+            segments: DATAFRAME segment parameters obtained from segdim_deleva.py
+
+        Outputs
+            data_jointang: DATAFRAME joint angle data (rad)
+            data_jointang_vel: DATAFRAME joint angular velocity data (rad/s)
+
+        Dependencies
+            dig2jk
+            numpy
+            centraldiff
+        """
+
         ### filter and interpoloate data
         dig2jk.datainterp(self)
         ### calculate center of mass velocity and acceleration
@@ -274,6 +304,29 @@ class dig2jk:
         seg_sequence: LIST segment sequence for order to calculate joint kinetics
     """
     def selectdata(self):
+        """
+        Function::: name_of_function
+        	Description: brief description here (1 line)
+        	Details: Full description with details here
+
+        Inputs
+            input1: DATATYPE description goes here (units)
+            input2: DATATYPE description goes here (units)
+            input3: DATATYPE description goes here (units)
+            input4: DATATYPE description goes here (units)
+
+        Outputs
+            output1: DATATYPE description goes here (units)
+            output2: DATATYPE description goes here (units)
+            output3: DATATYPE description goes here (units)
+            output4: DATATYPE description goes here (units)
+
+        Dependencies
+            dep1
+            dep2
+            dep3 from uscbrl_script.py (USCBRL repo)
+        """
+
         ### filter and interpoloate data
         dig2jk.datainterp(self)
         ### calculate center of mass velocity and acceleration
@@ -346,6 +399,29 @@ class dig2jk:
         data_njm: DATAFRAME calculated joint kinetics variables from jointkinetics.py
     """
     def main(self):
+        """
+        Function::: name_of_function
+        	Description: brief description here (1 line)
+        	Details: Full description with details here
+
+        Inputs
+            input1: DATATYPE description goes here (units)
+            input2: DATATYPE description goes here (units)
+            input3: DATATYPE description goes here (units)
+            input4: DATATYPE description goes here (units)
+
+        Outputs
+            output1: DATATYPE description goes here (units)
+            output2: DATATYPE description goes here (units)
+            output3: DATATYPE description goes here (units)
+            output4: DATATYPE description goes here (units)
+
+        Dependencies
+            dep1
+            dep2
+            dep3 from uscbrl_script.py (USCBRL repo)
+        """
+
         ### filter and interpoloate data
         dig2jk.datainterp(self)
         print('Completed datainterp')
@@ -378,10 +454,9 @@ class dig2jk:
         return data_njm
 
 
-
 #%%
 class dig2jk_format:
-    
+
     def __init__(self, data_digi, data_cm, data_force, bw, sex,
                  con_plate, con_frame, flip, file_vid=None):
         # initialize variables
@@ -399,7 +474,30 @@ class dig2jk_format:
     def data_reformat(self, view="fy", mode="combined", flipy_digi='no',
                       con_num=0, zero_thresh=16, plate_area=None, ci_thresh=16,
                       plate_dim=(0.6, 0.4), bwpermeter=2, samp_vid=240, samp_force=1200):
-        
+        """
+        Function::: name_of_function
+        	Description: brief description here (1 line)
+        	Details: Full description with details here
+
+        Inputs
+            input1: DATATYPE description goes here (units)
+            input2: DATATYPE description goes here (units)
+            input3: DATATYPE description goes here (units)
+            input4: DATATYPE description goes here (units)
+
+        Outputs
+            output1: DATATYPE description goes here (units)
+            output2: DATATYPE description goes here (units)
+            output3: DATATYPE description goes here (units)
+            output4: DATATYPE description goes here (units)
+
+        Dependencies
+            dep1
+            dep2
+            dep3 from uscbrl_script.py (USCBRL repo)
+        """
+
+
         """ find contact interval for force and digitized data """
         con_plate_fz = [s + '_Fz' for s in self.con_plate]
         # contact interval for force data
@@ -499,6 +597,5 @@ class dig2jk_format:
         # create object
         jk_obj = dig2jk(self.data_digi_crop_m, self.data_cm_crop_m, self.data_force_vidref_m,
                         segments, t, mass=self.bw/9.81, samp_dig=samp_vid, samp_force=samp_force)
-        
-        
+
         return jk_obj
