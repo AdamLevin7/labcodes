@@ -1,4 +1,5 @@
-#TODO should packages go within the functions individually or the class overall?
+#TODO put packages and dependencies within the functions
+#TODO also document the intial functions** not super important for intializing variables but if the initial function does more later on then you want to know that
 """
 Script: dig2jointkinetics
     Modules to go from digitized data to joint kinetics calculations..
@@ -56,6 +57,28 @@ class dig2jk:
     
     def __init__(self, data_dig, data_cm, data_force, segments, xvals,
                  contact_seg=None, mass=None, samp_dig=240, samp_force=1200):
+        """
+        Function::: __init__
+            Description: Initial function for dig2jk class.
+            Details: Initializes variables for the digitizing to joint kinetics class.
+
+        Inputs
+            data_dig:DATATYPE description goes here (units)
+            data_cm: DATATYPE description goes here (units)
+            data_force: DATATYPE description goes here (units)
+            segements: DATATYPE description goes here (units)
+            xvals:
+            contact_seg:
+            mass:
+            samp_dig:
+            samp_force:
+
+        Outputs
+            None:
+
+        Dependencies
+            None
+        """
         # initialize variables
         self.data_dig = data_dig
         self.data_cm = data_cm
@@ -90,6 +113,10 @@ class dig2jk:
             scipy
             pandas
         """
+        # Dependencies
+        from scipy import signal
+        import pandas as pd
+        from scipy.interpolate import splev, splrep
 
         ### calculate segmental distances
         # find segment lengths of each frame
@@ -139,6 +166,11 @@ class dig2jk:
             pandas
             numpy
         """
+
+        # Dependencies
+        import pandas as pd
+        import numpy as np
+
         ### filter and interpoloate data
         dig2jk.datainterp(self)
         
@@ -159,7 +191,6 @@ class dig2jk:
         
         return self.ang_imp, self.cm_moment, self.cm_theta, self.rf_theta
     
-
 
     def cm_velocityacceleration(self):
         """
@@ -182,7 +213,12 @@ class dig2jk:
             dig2jk
             scipy
             pandas
+            derivative (USCBRL script)
         """
+        from scipy import signal
+        import pandas as pd
+        from derivative import centraldiff
+
 
         ### filter and interpoloate data
         dig2jk.datainterp(self)
@@ -227,6 +263,11 @@ class dig2jk:
             centraldiff
             numpy
         """
+        # Dependencies
+        import numpy as np
+        from kinematics.calc_segmentangle import segangle
+        from derivative import centraldiff
+
 
         ### filter and interpoloate data
         dig2jk.datainterp(self)
@@ -265,6 +306,11 @@ class dig2jk:
             numpy
             centraldiff
         """
+        # Dependencies
+        import numpy as np
+        from kinematics.calc_jointangle import jointangle
+        from derivative import centraldiff
+
 
         ### filter and interpoloate data
         dig2jk.datainterp(self)
@@ -459,6 +505,24 @@ class dig2jk_format:
 
     def __init__(self, data_digi, data_cm, data_force, bw, sex,
                  con_plate, con_frame, flip, file_vid=None):
+        """
+        Function::: __init__
+            Description: Init function for dig2jk_format.
+            Details: Takes digitized data and calculates joint kinetics
+
+        Inputs
+            input1: DATATYPE description goes here (units)
+            input2: DATATYPE description goes here (units)
+            input3: DATATYPE description goes here (units)
+            input4: DATATYPE description goes here (units)
+
+        Outputs
+            No outputs:
+
+        Dependencies
+            None
+        """
+
         # initialize variables
         self.data_digi = data_digi
         self.data_cm = data_cm
