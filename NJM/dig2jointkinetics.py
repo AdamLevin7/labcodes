@@ -63,15 +63,16 @@ class dig2jk:
             Details: Initializes variables for the digitizing to joint kinetics class.
 
         Inputs
-            data_dig:DATATYPE description goes here (units)
-            data_cm: DATATYPE description goes here (units)
-            data_force: DATATYPE description goes here (units)
-            segements: DATATYPE description goes here (units)
-            xvals:
-            contact_seg:
-            mass:
-            samp_dig:
-            samp_force:
+            data_dig: DATAFRAME digitized data (m)
+            data_cm: DATAFRAME center of mass data for segments and body (m)
+            data_force: DATAFRAME force data (fx, fy, ax, ay) (N, N, m, m)
+            segments: DATAFRAME segment parameters obtained from segdim_deleva.py
+            xvals: 1-D FLOATS x-coordinates for new data series
+            contact_seg: STR name of segment that is in contact with force sensor.
+                Denote of it is left or right (ex. 'right foot')
+            mass: FLOAT individual/system's mass (kg)
+            samp_dig: INT sampling rate of digitized data
+            samp_force: INT sampling rate of force data (default=1200)
 
         Outputs
             None:
@@ -325,47 +326,29 @@ class dig2jk:
         # calculate joint angular velocities
         self.data_jointang_vel = centraldiff(self.data_jointang, np.mean(np.diff(self.data_jointang['time'])))
     
-    
-    #%%
-    """
-    selectdata
-        select only data to be used in joint kinetics calculations
-        
-    Inputs
-        data_dig: DATAFRAME digitized data (m)
-        data_cm: DATAFRAME center of mass data for segments and body (m).
-            Dataframe originally obtained from calc_centermass.py
-        data_cm_acc: DATAFRAME center of mass acceleration data (m/s^2)
-        data_i: DATAFRAME moment of inertia of each segment (obtained from calc_segmentmomentinertia.py)
-        data_segang_acc: DATAFRAME segment angular acceleration data (rad/s^2)
-        contact_seg: STR name of segment that is in contact with force sensor.
-            Denote of it is left or right (ex. 'right foot')
-        
-    Outputs
-        data_dig_njm: DATAFRAME subset of digitized data to use in joint kinetics (m)
-        data_cm_njm: DATAFRAME subset of center of mass data to use in joint kinetics (m)
-        data_cm_acc_njm: DATAFRAME subset of center of mass acceleration data to use in joint kinetics (m/s^2)
-        data_i_njm: DATAFRAME subset of moment of inertia data to use in joint kinetics
-        data_segang_acc_njm: DATAFRAME subset of segment angular acceleration data to use in joint kinetics (rad/s^2)
-        seg_sequence: LIST segment sequence for order to calculate joint kinetics
-    """
+
     def selectdata(self):
         """
-        Function::: name_of_function
-        	Description: brief description here (1 line)
-        	Details: Full description with details here
+        Function::: selectdata
+        	Description: select only data to be used in joint kinetics calculations
+        	Details:
 
         Inputs
-            input1: DATATYPE description goes here (units)
-            input2: DATATYPE description goes here (units)
-            input3: DATATYPE description goes here (units)
-            input4: DATATYPE description goes here (units)
-
+            data_dig: DATAFRAME digitized data (m)
+            data_cm: DATAFRAME center of mass data for segments and body (m).
+                Dataframe originally obtained from calc_centermass.py
+            data_cm_acc: DATAFRAME center of mass acceleration data (m/s^2)
+            data_i: DATAFRAME moment of inertia of each segment (obtained from calc_segmentmomentinertia.py)
+            data_segang_acc: DATAFRAME segment angular acceleration data (rad/s^2)
+            contact_seg: STR name of segment that is in contact with force sensor.
+                Denote of it is left or right (ex. 'right foot')
         Outputs
-            output1: DATATYPE description goes here (units)
-            output2: DATATYPE description goes here (units)
-            output3: DATATYPE description goes here (units)
-            output4: DATATYPE description goes here (units)
+            data_dig_njm: DATAFRAME subset of digitized data to use in joint kinetics (m)
+            data_cm_njm: DATAFRAME subset of center of mass data to use in joint kinetics (m)
+            data_cm_acc_njm: DATAFRAME subset of center of mass acceleration data to use in joint kinetics (m/s^2)
+            data_i_njm: DATAFRAME subset of moment of inertia data to use in joint kinetics
+            data_segang_acc_njm: DATAFRAME subset of segment angular acceleration data to use in joint kinetics (rad/s^2)
+            seg_sequence: LIST segment sequence for order to calculate joint kinetics
 
         Dependencies
             dep1
@@ -423,44 +406,28 @@ class dig2jk:
             self.data_dig_njm = self.data_dig_interp
     
     
-    #%%
-    """
-    main
-        run through all modules in specified order to calculate joint kinetics
-        
-    Inputs
-        data_dig: DATAFRAME digitized data (m)
-        data_cm: DATAFRAME center of mass data for segments and body (m).
-            Dataframe originally obtained from calc_centermass.py
-        data_force: DATAFRAME force data (fx, fy, ax, ay) (N, N, m, m)
-        segments: DATAFRAME segment parameters obtained from segdim_deleva.py
-        mass: FLOAT individual/system's mass (kg)
-        contact_seg: STR name of segment that is in contact with force sensor.
-            Denote of it is left or right (ex. 'right foot')
-        xvals: 1-D FLOATS x-coordinates for new data series
-        samp_dig: INT sampling rate of digitized data (default=240)
-        samp_force: INT sampling rate of force data (default=1200)
-        
-    Outputs
-        data_njm: DATAFRAME calculated joint kinetics variables from jointkinetics.py
-    """
+
     def main(self):
         """
-        Function::: name_of_function
-        	Description: brief description here (1 line)
-        	Details: Full description with details here
+        Function::: main
+        	Description: run through all modules in specified order to calculate joint kinetics
+        	Details:
 
         Inputs
-            input1: DATATYPE description goes here (units)
-            input2: DATATYPE description goes here (units)
-            input3: DATATYPE description goes here (units)
-            input4: DATATYPE description goes here (units)
+            data_dig: DATAFRAME digitized data (m)
+            data_cm: DATAFRAME center of mass data for segments and body (m).
+                Dataframe originally obtained from calc_centermass.py
+            data_force: DATAFRAME force data (fx, fy, ax, ay) (N, N, m, m)
+            segments: DATAFRAME segment parameters obtained from segdim_deleva.py
+            mass: FLOAT individual/system's mass (kg)
+            contact_seg: STR name of segment that is in contact with force sensor.
+                Denote of it is left or right (ex. 'right foot')
+            xvals: 1-D FLOATS x-coordinates for new data series
+            samp_dig: INT sampling rate of digitized data (default=240)
+            samp_force: INT sampling rate of force data (default=1200)
 
         Outputs
-            output1: DATATYPE description goes here (units)
-            output2: DATATYPE description goes here (units)
-            output3: DATATYPE description goes here (units)
-            output4: DATATYPE description goes here (units)
+            data_njm: DATAFRAME calculated joint kinetics variables from jointkinetics.py
 
         Dependencies
             dep1
@@ -511,13 +478,18 @@ class dig2jk_format:
             Details: Takes digitized data and calculates joint kinetics
 
         Inputs
-            input1: DATATYPE description goes here (units)
-            input2: DATATYPE description goes here (units)
-            input3: DATATYPE description goes here (units)
-            input4: DATATYPE description goes here (units)
+            data_digi:
+            data_cm:
+            data_force:
+            bw:
+            sex:
+            con_plate:
+            con_frame:
+            flip:
+            file_vid;
 
         Outputs
-            No outputs:
+            None
 
         Dependencies
             None
