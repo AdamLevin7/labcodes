@@ -1,49 +1,52 @@
-# -*- coding: utf-8 -*-
 """
-jointkinetics
+Script: jointkinetics
     Calculate variables for joint kinetics.
-    
+
 Modules
     calcnjm: actual joint kinetic calculations for a single segment
     njm_full: run calcnjm for muliple segments
-    
-Dependencies
-    pandas
-    numpy
-    
-Created on Tue Apr 28 07:54:40 2020
+    convert_to_flexext_ref: Convert reference system to flexion/extension
 
-@author: cwiens
+Author:
+    Casey Wiens
+    cwiens32@gmail.com
 """
 
-import numpy as np
-import pandas as pd
-
-"""
-calcnjm
-    actual joint kinetic calculations for a single segment
-    
-Inputs
-    segname: STR segment name
-    m: FLOAT segment mass (kg)
-    ax: DATAFRAME or FLOAT segmental horizontal acceleration (m/s^2)
-    ay: DATAFRAME or FLOAT segmental vertical acceleration (m/s^2)
-    Rxd: DATAFRAME or FLOAT distal horizontal force (N)
-    Ryd: DATAFRAME or FLOAT distal vertical force (N)
-    r_d: DATAFRAME or FLOAT distance from distal force to segment center of mass (x, y) (m)
-    r_p: DATAFRAME or FLOAT distance from proximal force to segment center of mass (x, y) (m)
-    I_cm: DATAFRAME or FLOAT segment moment of inertia (kg*m^2)
-    alpha: DATAFRAME or FLOAT segment angular velocity (rad/s^2)
-    njm_d: DATAFRAME or FLOAT distal net joint moment (N*m)
-    
-Outputs
-    dataout: DATAFRAME contains calculated variables for segment's joint kinetics
-    njm_p: DATAFRAME or FLOAT proximal net joint moment (N*m)
-    Rxp: DATAFRAME or FLOAT proximal horizontal net joint force (N)
-    Ryp: DATAFRAME or FLOAT proximal vertical net joint force (N)
-"""
 
 def calcnjm(segname, m, ax, ay, Rxd, Ryd, r_d, r_p, Icm, alpha, njm_d):
+    """
+    Function::: calcnjm
+    	Description: actual joint kinetic calculations for a single segment
+    	Details:
+
+    Inputs
+        segname: STR segment name
+        m: FLOAT segment mass (kg)
+        ax: DATAFRAME or FLOAT segmental horizontal acceleration (m/s^2)
+        ay: DATAFRAME or FLOAT segmental vertical acceleration (m/s^2)
+        Rxd: DATAFRAME or FLOAT distal horizontal force (N)
+        Ryd: DATAFRAME or FLOAT distal vertical force (N)
+        r_d: DATAFRAME or FLOAT distance from distal force to segment center of mass (x, y) (m)
+        r_p: DATAFRAME or FLOAT distance from proximal force to segment center of mass (x, y) (m)
+        I_cm: DATAFRAME or FLOAT segment moment of inertia (kg*m^2)
+        alpha: DATAFRAME or FLOAT segment angular velocity (rad/s^2)
+        njm_d: DATAFRAME or FLOAT distal net joint moment (N*m)
+
+    Outputs
+        dataout: DATAFRAME contains calculated variables for segment's joint kinetics
+        njm_p: DATAFRAME or FLOAT proximal net joint moment (N*m)
+        Rxp: DATAFRAME or FLOAT proximal horizontal net joint force (N)
+        Ryp: DATAFRAME or FLOAT proximal vertical net joint force (N)
+
+    Dependencies
+        dep1
+        dep2
+        dep3 from uscbrl_script.py (USCBRL repo)
+    """
+    # Dependencies
+    import numpy as np
+    import pandas as pd
+
     #%% gravity
     g = -9.81
     
@@ -92,26 +95,32 @@ def calcnjm(segname, m, ax, ay, Rxd, Ryd, r_d, r_p, Icm, alpha, njm_d):
     return dataout, njm_p, Rxp, Ryp
 
 
-"""
-njm_full
-    set up data to run calcnjm for muliple segments
-    
-Inputs
-    dig: DATAFRAME digitized end-point data (x,y) (m)
-    cm: DATAFRAME segment(s) center of mass position (x,y) (m)
-    cm_acc: DATAFRAME segment(s) center of mass acceleration (x,y) (m/s^2)
-    icm: DATAFRAME segment(s) moment of inertia (kg*m^2)
-    segang_acc: DATAFRAME segment(s) angular acceleration (rad/s^2)
-    forcedata: DATAFRAME force data (fx, fy, ax, ay) (N, N, m, m)
-    mass: FLOAT mass of indiviudal/system (kg)
-    seg_sequence: LIST ordered list of segments to calculate joint kinetics
-    segments: DATAFRAME segment parameters obtained from segdim_deleva.py
-    
-Outputs
-    data_njm: DATAFRAME contains calculated variables for segment(s)'s joint kinetics
-"""
-
 def njm_full(dig, cm, cm_acc, icm, segang_acc, forcedata, mass, seg_sequence, segments):
+    """
+    Function::: njm_full
+    	Description: set up data to run calcnjm for muliple segments
+    	Details:
+
+    Inputs
+        dig: DATAFRAME digitized end-point data (x,y) (m)
+        cm: DATAFRAME segment(s) center of mass position (x,y) (m)
+        cm_acc: DATAFRAME segment(s) center of mass acceleration (x,y) (m/s^2)
+        icm: DATAFRAME segment(s) moment of inertia (kg*m^2)
+        segang_acc: DATAFRAME segment(s) angular acceleration (rad/s^2)
+        forcedata: DATAFRAME force data (fx, fy, ax, ay) (N, N, m, m)
+        mass: FLOAT mass of indiviudal/system (kg)
+        seg_sequence: LIST ordered list of segments to calculate joint kinetics
+        segments: DATAFRAME segment parameters obtained from segdim_deleva.py
+
+    Outputs
+        data_njm: DATAFRAME contains calculated variables for segment(s)'s joint kinetics
+
+    Dependencies
+        pandas
+    """
+    # Dependencies
+    import pandas as pd
+
     # initialize data out
     dataout = pd.DataFrame(dig.iloc[:,0])
     
@@ -171,27 +180,27 @@ def njm_full(dig, cm, cm_acc, icm, segang_acc, forcedata, mass, seg_sequence, se
 
 
 def convert_to_flexext_ref(data_in, anterior='right'):
-
     """
-    Initialize class to create free body diagram visual.
+    Function::: convert_to_flexext_ref
+    	Description: Convert reference system to flexion extension for NJMs
+    	Details:
 
-    Parameters
-    ----------
-    data_in : DATAFRAME
-        contains calculated variables for segment's joint kinetics.
-        THIS ASSUMES THE NJM CALCULATIONS WERE IN THE REFERENCE SYSTEM WHERE CCW IS POSITIVE
-    anterior : STRING, optional (default: 'right')
-        Which direction is anterior for the individual?
-        This sets how positive/negative values will be determined as flexor or extensor moments.
-        Possible inputs:
-            'right': individual is facing right in the current reference system
-            'left': individual is facing left in the current reference system
+    Inputs
+        data_in : DATAFRAME
+            contains calculated variables for segment's joint kinetics.
+            THIS ASSUMES THE NJM CALCULATIONS WERE IN THE REFERENCE SYSTEM WHERE CCW IS POSITIVE
+        anterior : STRING, optional (default: 'right')
+            Which direction is anterior for the individual?
+            This sets how positive/negative values will be determined as flexor or extensor moments.
+            Possible inputs:
+                'right': individual is facing right in the current reference system
+                'left': individual is facing left in the current reference system
 
+    Outputs
+        dataout : DATAFRAME contains reorientated calculated variables for segment's joint kinetics.
 
-    Returns
-    -------
-    dataout : DATAFRAME
-        contains reorientated calculated variables for segment's joint kinetics.
+    Dependencies
+        None
 
     """
 
@@ -216,6 +225,5 @@ def convert_to_flexext_ref(data_in, anterior='right'):
         dataout.shank_njmd = dataout.shank_njmd * -1
         dataout.shank_mp = dataout.shank_mp * -1
         dataout.shank_njmp = dataout.shank_njmp * -1
-
 
     return dataout

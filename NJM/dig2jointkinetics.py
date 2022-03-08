@@ -462,8 +462,7 @@ class dig2jk:
         ### calculate joint kinetics
         data_njm = njm_full(self.data_dig_njm, self.data_cm_njm, self.data_cm_acc_njm, self.data_i_njm, self.data_segang_acc_njm, self.data_force, self.mass, self.seg_sequence, self.segments)
         print('Completed njm_full')
-        
-        
+
         return data_njm
 
 
@@ -511,28 +510,44 @@ class dig2jk_format:
                       con_num=0, zero_thresh=16, plate_area=None, ci_thresh=16,
                       plate_dim=(0.6, 0.4), bwpermeter=2, samp_vid=240, samp_force=1200):
         """
-        Function::: name_of_function
+        Function::: data_reformat
         	Description: brief description here (1 line)
         	Details: Full description with details here
 
         Inputs
-            input1: DATATYPE description goes here (units)
-            input2: DATATYPE description goes here (units)
-            input3: DATATYPE description goes here (units)
-            input4: DATATYPE description goes here (units)
+            view:
+            mode:
+            flipy_digi:
+            con_num:
+            zero_thresh:
+            plate_area:
+            ci_thresh:
+            plate_dim:
+            bwpermeter:
+            samp_vid: INT sampling rate of video
+            samp_force: INT sampling rate of force
 
         Outputs
-            output1: DATATYPE description goes here (units)
-            output2: DATATYPE description goes here (units)
-            output3: DATATYPE description goes here (units)
-            output4: DATATYPE description goes here (units)
+            jk_obj:
 
         Dependencies
-            dep1
-            dep2
-            dep3 from uscbrl_script.py (USCBRL repo)
+            pandas
+            FindContactIntervals (USCBRL)
+            findplate (USCBRL)
+            pixelratios (USCBRL)
+            CalcCOM (USCBRL)
+            dataconversion_force (USCBRL)
+            cv2
         """
 
+        # Dependencies
+        import pandas as pd
+        from FindContactIntervals import FindContactIntervals
+        from findplate import findplate
+        from pixelratios import pix2m_fromplate, bw2pix
+        from CalcCOM.segdim_deleva import segmentdim
+        from dataconversion_force import convertdata
+        import cv2
 
         """ find contact interval for force and digitized data """
         con_plate_fz = [s + '_Fz' for s in self.con_plate]
@@ -548,21 +563,19 @@ class dig2jk_format:
         """ crop data """
         ### force data
         # find time for cropped section
-        t = self.data_force.iloc[ci_force['Start'][con_num]:ci_force['End'][con_num]].filter(regex = 'Time')
+        t = self.data_force.iloc[ci_force['Start'][con_num]:ci_force['End'][con_num]].filter(regex='Time')
         # crop force data
         # loop through plates
         data_force_crop = {}
         for cntp in range(len(self.con_plate)):
             data_force_crop[cntp] = t.join(self.data_force.iloc[ci_force['Start'][con_num]:ci_force['End'][con_num]].filter(regex = self.con_plate[cntp]+'.*'))
-        
-        
+
         ### digitized data
         # crop digitized data
         # plus one to match force data length - need to double check why
         data_digi_crop = self.data_digi.iloc[ci_digi['Start'][0]:ci_digi['End'][0]+1]
         data_cm_crop = self.data_cm.iloc[ci_digi['Start'][0]:ci_digi['End'][0]+1]
-        
-        
+
         """ truly zero force plates """
         # set values below 16 to 0
         for cntfp in range(len(data_force_crop)):
