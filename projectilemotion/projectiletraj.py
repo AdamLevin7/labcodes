@@ -1,30 +1,42 @@
-# -*- coding: utf-8 -*-
 """
-projectiletraj
+Script: projectiletraj
     Create data frame containing time, x, and y position of object during flight.
-        
-Inputs
-    x_i: FLOAT initial x position (m)
-    y_i: FLOAT initial y position (m)
-    vx_i: FLOAT initial x velocity (m/s)
-    vy_i: FLOAT initial y velocity (m/s)
-    t_flight: FLOAT flight time (s)
-    samp: FLOAT sampling rate of video (Hz)
-    
-Outputs
-    pos: DATAFRAME contains array of time, x, and y position during flight
-    
-Uses equations of projectile motion.
+    Uses equations of projectile motion.
 
-Created on Wed May 20 10:59:52 2020
+Modules
+    flighttraj: module description here
+    flighttraj_pixels: module description here
 
-@author: cwiens
+Author:
+    Casey Wiens
+    cwiens32@gmail.com
 """
 
-import numpy as np
-import pandas as pd
 
 def flighttraj(x_i, y_i, vx_i, vy_i, t_flight, samp):
+    """
+    Function::: flighttraj
+    	Description: Create data frame containing time, x, and y position of object during flight.
+    	Details: Uses equations of projectile motion.
+
+    Inputs
+        x_i: FLOAT initial x position (m)
+        y_i: FLOAT initial y position (m)
+        vx_i: FLOAT initial x velocity (m/s)
+        vy_i: FLOAT initial y velocity (m/s)
+        t_flight: FLOAT flight time (s)
+        samp: FLOAT sampling rate of video (Hz)
+
+    Outputs
+        pos: DATAFRAME contains array of time, x, and y position during flight
+
+    Dependencies
+        numpy
+        pandas
+    """
+    # Dependencies
+    import numpy as np
+    import pandas as pd
     
     ### create array of flight time
     t = np.arange(0, t_flight, 1/samp)
@@ -41,16 +53,44 @@ def flighttraj(x_i, y_i, vx_i, vy_i, t_flight, samp):
     pos = pd.DataFrame({'t': t,
                         'x': x,
                         'y': y})
-    
-    
+
     return pos
 
 
-#%%
-"""
-"""
 def flighttraj_pixels(x_i, y_i, vx_i, vy_i, frame_start, frame_end, pix2m, samp,
                       thresh=0.2, flip_x='no', flip_y='yes'):
+    """
+    Function::: flighttraj_pixels
+    	Description: Calculate flight trajectory in pixels
+    	Details: Full description with details here
+
+    Inputs
+        x_i: FLOAT initial x position (m)
+        y_i: FLOAT initial y position (m)
+        vx_i: FLOAT initial x velocity (m/s)
+        vy_i: FLOAT initial y velocity (m/s)
+        frame_start: INT Frame where flight trajectory should start
+        frame_end: INT Frame where flight trajectory should end
+        pix2m: FLOAT Pixel to meter ratio of the video
+        samp: FLOAT sampling rate of video (Hz)
+        thresh: FLOAT Threshold padding for velocity (will define the trajectories above and below the projection)
+            ie. 0.2 would add 0.2m/s in x and y to the calculated values
+        flip_x: STR Flip x coordinates of the video
+        flip_y: STR Flip y coordinates of the video
+
+    Outputs
+        pos_pix: DF x and y coordinates of the projectile motion trajectory
+        pos_pix_max: DF x and y coordinates of the projectile motion trajectory minimum of the velocity range
+        pos_pix_min: DF x and y coordinates of the projectile motion trajectory maximum of the velocity range
+
+    Dependencies
+        numpy
+        pandas
+    """
+
+    # Dependencies
+    import numpy as np
+    import pandas as pd
 
     """ check if position is in pixel or meters """
     if x_i > 200 or y_i > 200:
@@ -92,6 +132,5 @@ def flighttraj_pixels(x_i, y_i, vx_i, vy_i, frame_start, frame_end, pix2m, samp,
         pos_pix['y'] = pos_pix['y'][0] - (pos_pix['y'] - pos_pix['y'][0])
         pos_pix_max['y'] = pos_pix_max['y'][0] - (pos_pix_max['y'] - pos_pix_max['y'][0])
         pos_pix_min['y'] = pos_pix_min['y'][0] - (pos_pix_min['y'] - pos_pix_min['y'][0])
-    
-    
+
     return pos_pix, pos_pix_max, pos_pix_min

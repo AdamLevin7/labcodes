@@ -1,46 +1,53 @@
-# -*- coding: utf-8 -*-
 """
-addcentermasstraj
+Script: addcentermasstraj
     Add visual representation of center of mass location and trajectory.
-    
-Inputs
-    file_vid: STR full file name of video
-    data: DATAFRAME 
-        Column 0: frame
-        Column 1: center of mass x location (pixels)
-        Column 2: center of mass y location (pixels)
-    file_vid_n: STR full file name of new video (default: cmtrajectoryvideo.mp4)
-    samp_vid: INT sampling rate of video (Hz) (default: 120)
-    data_max: DATAFRAME display max range on video
-        Column 0: frame
-        Column 1: center of mass x location (pixels)
-        Column 2: center of mass y location (pixels)
-    data_min: DATAFRAME display min range on video
-        Column 0: frame
-        Column 1: center of mass x location (pixels)
-        Column 2: center of mass y location (pixels)
-    
-Outputs
-    video with body center of mass location and trajectory visually represented
-    image of each frame with body center of mass location and trajectory visually represented
-        loaction: 'SkeletonOL' folder within location of file_vid
-    
-Dependencies
-    cv2 (opencv)
-    os
 
-Created on Wed May 20 07:32:56 2020
+Modules
+    addcmtraj: Add visual representation of center of mass location and trajectory.
 
-@author: cwiens
+Author:
+    Casey Wiens
+    cwiens32@gmail.com
 """
 
-import cv2
-import os
 
-
-#%%
 def addcmtraj(file_vid, data, file_vid_n='cmtrajectoryvideo.mp4', samp_vid=120,
               data_max=None, data_min=None, olimage='yes'):
+    """
+    Function::: addcentermasstraj
+    	Description: Add visual representation of center of mass location and trajectory.
+    	Details: Full description with details here
+
+    Inputs
+        file_vid: STR full file name of video
+        data: DATAFRAME
+            Column 0: frame
+            Column 1: center of mass x location (pixels)
+            Column 2: center of mass y location (pixels)
+        file_vid_n: STR full file name of new video (default: cmtrajectoryvideo.mp4)
+        samp_vid: INT sampling rate of video (Hz) (default: 120)
+        data_max: DATAFRAME display max range on video
+            Column 0: frame
+            Column 1: center of mass x location (pixels)
+            Column 2: center of mass y location (pixels)
+        data_min: DATAFRAME display min range on video
+            Column 0: frame
+            Column 1: center of mass x location (pixels)
+            Column 2: center of mass y location (pixels)
+
+    Outputs
+        video with body center of mass location and trajectory visually represented
+        image of each frame with body center of mass location and trajectory visually represented
+            location: 'SkeletonOL' folder within location of file_vid
+
+    Dependencies
+        cv2
+        os
+    """
+
+    # Dependencies
+    import cv2
+    import os
     
     #%% set up location to store images
     if olimage == 'yes':
@@ -52,8 +59,7 @@ def addcmtraj(file_vid, data, file_vid_n='cmtrajectoryvideo.mp4', samp_vid=120,
         # if folder does not exist
         if not os.path.exists(savefolder):
             os.makedirs(savefolder)
-        
-    
+
     #%% load video file and initialize new video
     cap = cv2.VideoCapture(file_vid)
     # default resolutions of the frame are obtained.The default resolutions are system dependent.
