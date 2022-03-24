@@ -1,26 +1,20 @@
-# -*- coding: utf-8 -*-
 """
-strobe
+Script: strobe
+    Functions for creating strobe images and video.
 
-Generates a strobe image and/or video.
+Modules
+    strobe: Generates a strobe image and/or video.
+    strobe_image: Create a strobe image
+    strobe_findframes:
+    strobe_autofindframes:
+    strobe_findarea:
 
-User input:
-    - filename: STRING full path file name
-    - filesave: STRING full path file name that is to be saved
-        - image: jpeg
-        - video: mp4
-    - frames: SERIES list of strobe frames
-    - searcharea (optional): DICTIONARY list of searcha area for each strobe frame
-        - key: frame number
-        - value: search area from capture_area.py's 'find_area
-    - samp: INT sampling rate of video
-    - thresh: INT absolute difference threshold to find which pixels changed
-    - bgint: INT number of frame difference from current image to use as subtraction image
-
-Created on Thu Feb  6 12:35:18 2020
-
-@author: cwiens, Casey Wiens, cwiens32@gmail.com
+Author:
+    Casey Wiens
+    cwiens32@gmail.com
 """
+
+#TODO Delete these once all codes are updated
 
 import cv2
 import numpy as np
@@ -28,6 +22,34 @@ from scipy import ndimage
 
 
 def strobe(filename, filesave, frames, searcharea=None, samp=240, thresh=60, bgint=5):
+    """
+    Function::: strobe
+    	Description: Generates a strobe image and/or video.
+    	Details: Full description with details here
+
+    Inputs
+        filename: STRING full path file name
+        filesave: STRING full path file name that is to be saved (image- jpeg, video- mp4)
+        frames: SERIES list of strobe frames
+        searcharea (optional): DICTIONARY list of search area for each strobe frame
+            - key: frame number
+            - value: search area from capture_area.py's 'find_area
+        samp: INT sampling rate of video
+        thresh: INT absolute difference threshold to find which pixels changed
+        bgint: INT number of frame difference from current image to use as subtraction image
+
+    Outputs
+        None: JGP/MP4 Write out video or image
+
+    Dependencies
+        cv2
+        numpy
+        scipy
+    """
+    # Dependencies
+    import cv2
+    import numpy as np
+    from scipy import ndimage
     
     #%% load file
     cap = cv2.VideoCapture(filename)
@@ -207,6 +229,33 @@ def strobe(filename, filesave, frames, searcharea=None, samp=240, thresh=60, bgi
 
 #%% function for only strobe image
 def strobe_image(filename, filesave, frames, searcharea=None, samp=240, thresh=60, bgint=5):
+    """
+    Function::: strobe_image
+    	Description: Create a strobe image
+    	Details:
+
+    Inputs
+        filename: STRING full path file name
+        filesave: STRING full path file name that is to be saved (image- jpeg, video- mp4)
+        frames: SERIES list of strobe frames
+        searcharea (optional): DICTIONARY list of search area for each strobe frame
+            - key: frame number
+            - value: search area from capture_area.py's 'find_area
+        samp: INT sampling rate of video
+        thresh: INT absolute difference threshold to find which pixels changed
+        bgint: INT number of frame difference from current image to use as subtraction image
+
+    Outputs
+        None: Outputs the strobe image
+
+    Dependencies
+        cv2
+        numpy
+    """
+
+    # Dependencies
+    import cv2
+    import numpy as np
 
     #%% load file
     cap = cv2.VideoCapture(filename)
@@ -337,6 +386,29 @@ from capture_area import findarea
 import numpy as np
 
 def strobe_findframes(filename, crop='yes', autoid_thresh=None, autoid_num=None):
+    """
+    Function::: name_of_function
+    	Description: brief description here (1 line)
+    	Details: Full description with details here
+
+    Inputs
+        input1: DATATYPE description goes here (units)
+        input2: DATATYPE description goes here (units)
+        input3: DATATYPE description goes here (units)
+        input4: DATATYPE description goes here (units)
+
+    Outputs
+        output1: DATATYPE description goes here (units)
+        output2: DATATYPE description goes here (units)
+        output3: DATATYPE description goes here (units)
+        output4: DATATYPE description goes here (units)
+
+    Dependencies
+        dep1
+        dep2
+        dep3 from uscbrl_script.py (USCBRL repo)
+    """
+
     ### initialize variables
     strobeframes = None
     frame = 0
@@ -428,6 +500,28 @@ Created on Tue Apr 27 4:45:26 2021
 
 
 def strobe_autofindframes(frames, autoid_thresh=25, autoid_num=7):
+    """
+    Function::: name_of_function
+    	Description: brief description here (1 line)
+    	Details: Full description with details here
+
+    Inputs
+        input1: DATATYPE description goes here (units)
+        input2: DATATYPE description goes here (units)
+        input3: DATATYPE description goes here (units)
+        input4: DATATYPE description goes here (units)
+
+    Outputs
+        output1: DATATYPE description goes here (units)
+        output2: DATATYPE description goes here (units)
+        output3: DATATYPE description goes here (units)
+        output4: DATATYPE description goes here (units)
+
+    Dependencies
+        dep1
+        dep2
+        dep3 from uscbrl_script.py (USCBRL repo)
+    """
     import pandas as pd
     import numpy as np
 
@@ -470,6 +564,28 @@ Created on Tue Apr 27 4:45:26 2021
 """
 
 def strobe_findarea(filename, frames, areatype="all", searcharea=None):
+    """
+    Function::: name_of_function
+    	Description: brief description here (1 line)
+    	Details: Full description with details here
+
+    Inputs
+        input1: DATATYPE description goes here (units)
+        input2: DATATYPE description goes here (units)
+        input3: DATATYPE description goes here (units)
+        input4: DATATYPE description goes here (units)
+
+    Outputs
+        output1: DATATYPE description goes here (units)
+        output2: DATATYPE description goes here (units)
+        output3: DATATYPE description goes here (units)
+        output4: DATATYPE description goes here (units)
+
+    Dependencies
+        dep1
+        dep2
+        dep3 from uscbrl_script.py (USCBRL repo)
+    """
     import pandas as pd
     from capture_area import findarea
     import numpy as np
