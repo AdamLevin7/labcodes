@@ -5,7 +5,7 @@ Script: strobe
 Modules
     strobe: Generates a strobe image and/or video.
     strobe_image: Create a strobe image
-    strobe_findframes:
+    strobe_findframes: Allows user to identify which frames to use for strobe creation.
     strobe_autofindframes:
     strobe_findarea:
 
@@ -345,40 +345,7 @@ def strobe_image(filename, filesave, frames, searcharea=None, samp=240, thresh=6
     
     
 #%%
-"""
-strobe_findframes
 
-Allows user to identify which frames to use for strobe creation.
-This uses the function 'findframe'.
-    - user can advance using the trackbar but must click button after to update
-    - 'k' = -100 frames
-    - 'm' = -10 frames
-    - ',' = -1 frame
-    - '.' = +1 frame
-    - '/' = +10 frames
-    - ';' = +100 frames
-    - click 'q' to select frame when identified in GUI
-    - click 'esc' to exit out of GUI
-    
-User input:
-    - filename: full path file name
-    - crop: if 'all' (default), user will identify area around the object of
-        interest that could be used to limit noise in strobe image FOR ALL FRAMES
-            - 'one' will only use the selected area from the first strobe frame
-    - autoid_thresh: OPTIONAL default: None, minimum number of frames between manually 
-        identified strobe frames before auto id occurs (will find apex and two
-        additional frames before and after apex)
-    - autoid_num: OPTIONAL default None, number of frames to automatically find
-        when autoid_thresh is triggered (ex: when two manual frames are spaced
-                                         greater than autoid_thresh, it will find
-                                         autoid_num of frames -including the
-                                         original two frames- between the
-                                         chosen frames)
-
-Created on Thu Feb 6 10:36:26 2020
-
-@author: cwiens, Casey Wiens, cwiens32@gmail.com
-"""
 
 from findframe import findframe
 import pandas as pd
@@ -387,27 +354,49 @@ import numpy as np
 
 def strobe_findframes(filename, crop='yes', autoid_thresh=None, autoid_num=None):
     """
-    Function::: name_of_function
-    	Description: brief description here (1 line)
-    	Details: Full description with details here
+    Function::: strobe_findframes
+    	Description: Allows user to identify which frames to use for strobe creation.
+    	Details: This uses the function 'findframe'.
+            - user can advance using the trackbar but must click button after to update
+            - 'k' = -100 frames
+            - 'm' = -10 frames
+            - ',' = -1 frame
+            - '.' = +1 frame
+            - '/' = +10 frames
+            - ';' = +100 frames
+            - click 'q' to select frame when identified in GUI
+            - click 'esc' to exit out of GUI
 
     Inputs
-        input1: DATATYPE description goes here (units)
-        input2: DATATYPE description goes here (units)
-        input3: DATATYPE description goes here (units)
-        input4: DATATYPE description goes here (units)
+        filename: STR full path file name
+        crop: STR if 'all' (default), user will identify area around the object of
+            interest that could be used to limit noise in strobe image FOR ALL FRAMES
+            - 'one' will only use the selected area from the first strobe frame
+        autoid_thresh: OPTIONAL default- None, minimum number of frames between manually
+            identified strobe frames before auto id occurs (will find apex and two
+            additional frames before and after apex)
+        autoid_num: OPTIONAL default- None, number of frames to automatically find
+        when autoid_thresh is triggered (ex: when two manual frames are spaced
+                                         greater than autoid_thresh, it will find
+                                         autoid_num of frames -including the
+                                         original two frames- between the
+                                         chosen frames)
 
     Outputs
-        output1: DATATYPE description goes here (units)
-        output2: DATATYPE description goes here (units)
-        output3: DATATYPE description goes here (units)
-        output4: DATATYPE description goes here (units)
+        strobeframes: DF Frames used to create strobe
+        searcharea: DF Search region for each strobe image
 
     Dependencies
-        dep1
-        dep2
-        dep3 from uscbrl_script.py (USCBRL repo)
+        findframe (USCBRL labcodes)
+        pandas
+        numpy
+        capture_area (USCBRL labcodes)
     """
+    # Dependencies
+    from findframe import findframe
+    import pandas as pd
+    from capture_area import findarea
+    import numpy as np
 
     ### initialize variables
     strobeframes = None
