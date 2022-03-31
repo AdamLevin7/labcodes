@@ -6,19 +6,13 @@ Modules
     strobe: Generates a strobe image and/or video.
     strobe_image: Create a strobe image
     strobe_findframes: Allows user to identify which frames to use for strobe creation.
-    strobe_autofindframes:
-    strobe_findarea:
+    strobe_autofindframes: Auto identifies which frames to use for strobe creation
+    strobe_findarea: Allows user to identify the search area for the creation of strobes
 
 Author:
     Casey Wiens
     cwiens32@gmail.com
 """
-
-#TODO Delete these once all codes are updated
-
-import cv2
-import numpy as np
-from scipy import ndimage
 
 
 def strobe(filename, filesave, frames, searcharea=None, samp=240, thresh=60, bgint=5):
@@ -251,11 +245,13 @@ def strobe_image(filename, filesave, frames, searcharea=None, samp=240, thresh=6
     Dependencies
         cv2
         numpy
+        scipy
     """
 
     # Dependencies
     import cv2
     import numpy as np
+    from scipy import ndimage
 
     #%% load file
     cap = cv2.VideoCapture(filename)
@@ -341,16 +337,7 @@ def strobe_image(filename, filesave, frames, searcharea=None, samp=240, thresh=6
     if filesave[-4] == '.':
         filesave = filesave[:-4]
     cv2.imwrite(filesave + '.jpg', img_strobe)
-    
-    
-    
-#%%
 
-
-from findframe import findframe
-import pandas as pd
-from capture_area import findarea
-import numpy as np
 
 def strobe_findframes(filename, crop='yes', autoid_thresh=None, autoid_num=None):
     """
@@ -463,54 +450,34 @@ def strobe_findframes(filename, crop='yes', autoid_thresh=None, autoid_num=None)
     return strobeframes, searcharea
 
 
-"""
-strobe_autofindframes
+def strobe_autofindframes(frames, autoid_thresh=25, autoid_num=7):
+    """
+    Function::: strobe_autofindframes
+    	Description: Auto identifies which frames to use for strobe creation
+    	Details: Usefully to find consistent number of strobe frames with consistent spacing between two events
+    	    example, flight phase in the long jump
 
-Auto identifies which frames to use for strobe creation.
-    - Usefully to find consistent number of strobe frames with consistent spacing between two events
-        - example, flight phase in the long jump 
-
-User input:
-    - frames: current series of already identified frames
-    - autoid_thresh: OPTIONAL default: 25, minimum number of frames between manually 
-        identified strobe frames before auto id occurs (will find apex and two
-        additional frames before and after apex)
-    - autoid_num: OPTIONAL default: 7, number of frames to automatically find
-        when autoid_thresh is triggered (ex: when two manual frames are spaced
+    Inputs
+        frames: SERIES Current series of already identified frames
+        autoid_thresh: OPTIONAL default: 25, minimum number of frames between manually
+            identified strobe frames before auto id occurs (will find apex and two
+            additional frames before and after apex)
+        autoid_num: INT optional,default- 7, number of frames to automatically find
+            when autoid_thresh is triggered (ex: when two manual frames are spaced
                                          greater than autoid_thresh, it will find
                                          autoid_num of frames -including the
                                          original two frames- between the
                                          chosen frames)
 
-Created on Tue Apr 27 4:45:26 2021
-
-@author: cwiens, Casey Wiens, cwiens32@gmail.com
-"""
-
-
-def strobe_autofindframes(frames, autoid_thresh=25, autoid_num=7):
-    """
-    Function::: name_of_function
-    	Description: brief description here (1 line)
-    	Details: Full description with details here
-
-    Inputs
-        input1: DATATYPE description goes here (units)
-        input2: DATATYPE description goes here (units)
-        input3: DATATYPE description goes here (units)
-        input4: DATATYPE description goes here (units)
-
     Outputs
-        output1: DATATYPE description goes here (units)
-        output2: DATATYPE description goes here (units)
-        output3: DATATYPE description goes here (units)
-        output4: DATATYPE description goes here (units)
+        strobeframes: DF Frames used to create strobe
 
     Dependencies
-        dep1
-        dep2
-        dep3 from uscbrl_script.py (USCBRL repo)
+        pandas
+        numpy
     """
+
+    # Dependencies
     import pandas as pd
     import numpy as np
 
@@ -534,50 +501,28 @@ def strobe_autofindframes(frames, autoid_thresh=25, autoid_num=7):
     return strobeframes
 
 
-"""
-strobe_findarea
-
-Allows user to identify the search area for the create of strobes.
-    - Note: this can only be used if the frames have already been identified
-
-User input:
-    - filename: full path file name
-    - frames: current series of identified frames
-    - areatype: find search area in all strobe frames ("all") or only find it for the first strobe frame ("one")
-    - searcharea: NONE/DICT user can provide previously selected searcharea(s) to add to
-        - ex) user already found searcharea for most frames but added new strobe frames and needs to add new searchareas
-
-Created on Tue Apr 27 4:45:26 2021
-
-@author: cwiens, Casey Wiens, cwiens32@gmail.com
-"""
-
 def strobe_findarea(filename, frames, areatype="all", searcharea=None):
     """
-    Function::: name_of_function
-    	Description: brief description here (1 line)
-    	Details: Full description with details here
+    Function::: strobe_findarea
+    	Description: Allows user to identify the search area for the creation of strobes.
+    	Details: This can only be used if the frames have already been identified
 
     Inputs
-        input1: DATATYPE description goes here (units)
-        input2: DATATYPE description goes here (units)
-        input3: DATATYPE description goes here (units)
-        input4: DATATYPE description goes here (units)
+        filename: STR full path file name
+        frames: SERIES current series of identified frames
+        areatype: STR find search area in all strobe frames ("all") or only find it for the first strobe frame ("one")
+        searcharea: NONE/DICT user can provide previously selected searcharea(s) to add to
+            ex) user already found searcharea for most frames but added new strobe frames and needs to add new searchareas
 
     Outputs
-        output1: DATATYPE description goes here (units)
-        output2: DATATYPE description goes here (units)
-        output3: DATATYPE description goes here (units)
-        output4: DATATYPE description goes here (units)
+        searcharea: DF Search region for each strobe image
 
     Dependencies
-        dep1
-        dep2
-        dep3 from uscbrl_script.py (USCBRL repo)
+        capture_area
     """
-    import pandas as pd
+
+    # Dependencies
     from capture_area import findarea
-    import numpy as np
 
     # run code only if areatype is not None
     if areatype is not None:
