@@ -1,37 +1,53 @@
-# -*- coding: utf-8 -*-
 """
-Vector Overlay
-    Add a vector to the video to represent the ground reaction force.
+Script: vectoroverlay
+    Create force-vector overlays for videos .
 
-Inputs 
-    file: STRING file name of video
-    file_out: STRING file name for new video
-    data_vid: DICT force and cop data, prefer that output from data2pix.
-        format (0: {fx, fy, ax, ay},
-                1: {fx, fy, ax, ay},
-                ...)
-    frame_con: LIST contact frame of video
-        format [INT, INT, ...]
-    vect_color: LIST color of vector
-        format ['x', 'y', ...] for how many plates
-        ex: FP1 as green and FP2 as blue: ['g', 'b']
-        ex: both FPs as green: ['g', 'g']
-    samp_video: INT sampling rate of video
-    samp_force: INT sampling rate of force
-    dispthresh: INT display threshold, amount of force needed to display
-        vector (unit=Newtons, default=60)
+Modules
+    vectoroverlay: Add a vector to the video to represent the ground reaction force
 
-Created on Thu Jan  2 16:14:15 2020
-
-@author: cwiens, Casey Wiens, cwiens32@gmail.com
+Author:
+    Casey Wiens
+    cwiens32@gmail.com
 """
 
-import cv2
-import numpy as np
 
 def vectoroverlay(file, file_out, data_vid, frame_con, vect_color='g',
                   samp_force=1200, samp_video=240, dispthresh=60):
-    
+    """
+    Function::: vectoroverlay
+    	Description: Add a vector to the video to represent the ground reaction force
+    	Details:
+
+    Inputs
+        file: STRING file name of video
+        file_out: STRING file name for new video
+        data_vid: DICT force and cop data, prefer that output from data2pix.
+            format (0: {fx, fy, ax, ay},
+                    1: {fx, fy, ax, ay},
+                    ...)
+        frame_con: LIST contact frame of video
+            format [INT, INT, ...]
+        vect_color: LIST color of vector
+            format ['x', 'y', ...] for how many plates
+            ex: FP1 as green and FP2 as blue: ['g', 'b']
+            ex: both FPs as green: ['g', 'g']
+        samp_video: INT sampling rate of video
+        samp_force: INT sampling rate of force
+        dispthresh: INT display threshold, amount of force needed to display
+            vector (unit=Newtons, default=60)
+
+    Outputs
+        output1: None
+
+    Dependencies
+        cv2
+        numpy
+    """
+
+    # Dependencies
+    import cv2
+    import numpy as np
+
     #%% reformat vect_color and frame_con if not list
     if not isinstance(vect_color, list):
         # assumes the input argument is just one letter/color, so this will make
@@ -109,4 +125,3 @@ def vectoroverlay(file, file_out, data_vid, frame_con, vect_color='g',
     out.release()
     # closes all the frames
     cv2.destroyAllWindows()
-    
