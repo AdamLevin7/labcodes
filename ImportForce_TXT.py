@@ -1,21 +1,17 @@
-# -*- coding: utf-8 -*-
 """
-ImportForce_TXT
-    Modules to import force data from text file and combine data.
+Script: ImportForce_TXT
+    Modules to import force data from text file and combine data..
 
-Dependencies:
-    pandas
-    scipy
+Modules
+    ImportForce_TXT: Import force data from text file
+    combine_force: Combine all force plates to time, fx, fy, fz
 
-Created on Mon Oct  7 10:58:39 2019
-
-@author: Casey Wiens, cwiens32@gmail.com
+Author:
+    Casey Wiens
+    cwiens32@gmail.com
 """
-import pandas as pd
-from scipy import stats
 
 
-#%%
 """
 ImportForce_TXT
     Import force data from text file.
@@ -33,6 +29,11 @@ Outputs
         ACTUAL WEIGHT OF INDIVIDUAL/SYSTEM - COULD BE FROM A PREVIOUS SESSION)
 """
 def ImportForce_TXT(file, rezero=None):
+
+
+    # Dependencies
+    import pandas as pd
+    from scipy import stats
     
     ### load data and format variables
     data = pd.read_csv(file,
