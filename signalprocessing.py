@@ -6,7 +6,7 @@ Modules
     butter_filtfilt: Butterworth filter, Note use of filtfilt which doubles order*
     calc_rss: Calculate residual sum of squares
     residual_analysis: Perform residual analysis of multiple cutoff frequencys using Winter's method and a Butterworth filter
-    module_4: module description here
+    best_fit_slope_and_intercept: Calculate the slope and y-intercept for the best fit line
 
 Author:
     Casey Wiens
@@ -174,42 +174,22 @@ def residual_analysis(data_in, fo=None, ff=None, N=None, samp=None, fi=0.1, filt
     return data_rss
 
 
-"""
-best_fit_slope_and_intercept
-    Calculate the slope and y-intercept for the best fit line
-    
-Input:
-    xs: SERIES x-axis data
-    ys: SERIES y-axis data
-
-Output:
-    data_rss: DATAFRAME the residual sum of squares for each cutoff frequency
-
-Dependencies:
-    statistics
-"""
 def best_fit_slope_and_intercept(xs, ys):
     """
-    Function::: name_of_function
-    	Description: brief description here (1 line)
-    	Details: Full description with details here
+    Function::: best_fit_slope_and_intercept
+    	Description: Calculate the slope and y-intercept for the best fit line
+    	Details: residual sum of squares for each cutoff frequency
 
     Inputs
-        input1: DATATYPE description goes here (units)
-        input2: DATATYPE description goes here (units)
-        input3: DATATYPE description goes here (units)
-        input4: DATATYPE description goes here (units)
+        xs: SERIES x-axis data
+        ys: SERIES y-axis data
 
     Outputs
-        output1: DATATYPE description goes here (units)
-        output2: DATATYPE description goes here (units)
-        output3: DATATYPE description goes here (units)
-        output4: DATATYPE description goes here (units)
+        m: FLOAT calculate the slope
+        b: FLOAT y intercept
 
     Dependencies
-        dep1
-        dep2
-        dep3 from uscbrl_script.py (USCBRL repo)
+        statistics
     """
     from statistics import mean
 
