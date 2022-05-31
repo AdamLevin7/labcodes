@@ -13,11 +13,11 @@ dependencies:
   - pip
   - matplotlib
   - numpy
-  - opencv
+  - opencv-python
   - pandas
   - spyder
   - scipy
   - xlrd
   - ffmpeg
   - wxpython
-  - cv2
+
