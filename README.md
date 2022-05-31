@@ -1,7 +1,7 @@
 # USCBRL: Codes for USC Biomechanics Research Lab
 
 ## START HERE: Environment Installation Directions
-In Anaconda prompt:
+### In Anaconda prompt:
 * Change directory to where requirements.txt is located
 ```
 conda create --name uscbrl_env
@@ -11,10 +11,18 @@ conda activate uscbrl_env
 ```
 conda install pip
 ```
-* Install requirements from .txt file
+* Install package requirements from .txt file
 ```
 pip install -r requirements.txt --user 
 ```
+### In Pycharm
+* File > Setting (Gear in top right corner) > Add
+* Select "Conda Environment" on left hand side
+* Choose Exising Environment radio button
+* Change interpreter to uscbrl_env file (probably don't select "Make available to all projects")
+* Hit OK
+* Bottom right corner will show the Python version you are running ie. Python 3.8 and the environment (uscbrl_env)
+
 
 ## Biomechanics Workflow
 
