@@ -1,5 +1,23 @@
 # USCBRL: Codes for USC Biomechanics Research Lab
 
+## START HERE: Environment Installation Directions
+In Anaconda prompt:
+* Change directory to where requirements.txt is located
+```
+conda create --name uscbrl_env
+conda activate uscbrl_env
+```
+* Install pip in the blank environment
+```
+conda install pip
+```
+* Install requirements from .txt file
+```
+pip install -r requirements.txt --user 
+```
+
+## Biomechanics Workflow
+
 ![Biomech Workflow](https://github.com/USCBiomechanicsLab/labcodes/blob/master/DocMaterials/Biomechanics_Workflow.png)
 **Figure:** *General biomechanics workflow*
 
