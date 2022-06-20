@@ -13,7 +13,7 @@ dependencies:
   - pip
   - matplotlib
   - numpy
-  - opencv-python
+  - opencv
   - pandas
   - spyder
   - scipy
