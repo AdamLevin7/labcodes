@@ -2,7 +2,8 @@
 
 ## START HERE:
 ### Creating a Jetbrains account to use Pycharm IDE (Interactive way to run python)
-[How to get Pycharm]()
+[How to get Pycharm](https://github.com/USCBiomechanicsLab/labcodes/blob/master/documentation/_Getting%20PyCharm%20Educational%20Version.pdf)
+  Created by Westview HS Students Arnav Sharma and Anirudh Kannan :slightly_smiling_face:
 
 ## START HERE: Environment Installation Directions
 ### In Anaconda prompt:
