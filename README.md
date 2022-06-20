@@ -1,5 +1,9 @@
 # USCBRL: Codes for USC Biomechanics Research Lab
 
+## START HERE:
+### Creating a Jetbrains account to use Pycharm IDE (Interactive way to run python)
+[How to get Pycharm]()
+
 ## START HERE: Environment Installation Directions
 ### In Anaconda prompt:
 * Change directory to where requirements.txt is located
