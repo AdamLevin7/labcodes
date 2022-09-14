@@ -31,16 +31,21 @@ Created on Wed Oct 30 10:06:19 2019
 
 def findarea(video, frame=0, label='frame', method="boundingbox"):
     
-    import wx
+    #import wx
     import sys
     import cv2
     import matplotlib.pyplot as plt
     from matplotlib.widgets import RectangleSelector, Button
+    import tkinter as tk
+
+
+    root = tk.Tk()
+    height = root.winfo_screenheight()
     
-    # idenify screen resolution
-    app = wx.App(False)
-    width, height = wx.GetDisplaySize()
-    app.Destroy()
+    # identify screen resolution
+    #app = wx.App(False)
+    #width, height = wx.GetDisplaySize()
+    #app.Destroy()
     
     # set label to show
     labelshow = 'a: advance, w: recrop. ' + label
