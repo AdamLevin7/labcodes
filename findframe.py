@@ -36,14 +36,14 @@ Created on Fri Dec 27 11:10:54 2019
 def findframe(file, label='Find Frame', framestart=0):
 
     import cv2
-    import wx
     import os
     import matplotlib.pyplot as plt
+    import tkinter as tk
     
     # idenify screen resolution
-    app = wx.App(False)
-    width, height = wx.GetDisplaySize()
-    app.Destroy()
+    root = tk.Tk()
+    height = root.winfo_screenheight()
+    
 
     #%% set call back for trackbar
     def nothing(x):
