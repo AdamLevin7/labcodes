@@ -10,34 +10,32 @@ Author:
     harperestewart7@gmail.com
 """
 
-# Defaults for now
-path = r'E:\Event Files\collections\220902_sprint_pilot'
-colID = 22090201 # Collection ID
-view = 'fx' # Specifies if long or short side of plate is being viewed
-bwpermeter = 2
-plate_dim = (0.6,0.4) # plate dimensions in meters
-cam_name = 'Rear_View240Hz' # Camera Name
-flip = {0: ['fy','ax'],
-        1: ['fx','fy','ay']} # Flip axes for vector orientation
-# get the contact id for each trial
-event = 'step_ic'
-
-
-
-def vect_ol_batch(path, colID, view, bwparameter, plate_dim, cam_name, flip, event, engine= None):
+def vect_ol_batch(path, colID, view, bwpermeter, plate_dim, cam_name, flip, event, engine= None):
     """
     Function::: vect_ol_batch
         Description: Create multiple vector overlays using database
         Details:
 
     Inputs
-        None
+        path: STRING path to collection
+        colID: INT collection ID
+        view: STRING view of plate (fx or fy)
+        bwpermeter: INT number of pixels per meter
+        plate_dim: TUPLE plate dimensions in meters
+        cam_name: STRING camera name
+        flip: DICT flip axes for vector orientation
+        event: STRING event name
+        engine: SQLALCHEMY engine
 
     Outputs
-        output1: None
+        output1: vector overlay video to the current path
 
     Dependencies
-        vectoroverlay
+        os
+        labcodes
+        USATF processing codes
+        sqlalchemy
+        pandas
     """
 
     # Dependencies
@@ -171,6 +169,7 @@ def vect_ol_batch(path, colID, view, bwparameter, plate_dim, cam_name, flip, eve
     plate_area = findplate(os.path.join(path_video, calibration_vid), framestart=0,
                            label='Insert image here')
 
+    #TODO this  needs to be saved to the camera table rather than the force plate table
     # Save plate corners to database
     for i in range(len(forceplates)):
         # Sql query to write coordinates to DB
