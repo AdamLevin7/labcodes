@@ -216,7 +216,7 @@ def vect_ol_batch(path, colID, view, bwparameter, plate_dim, cam_name, flip, eve
         sync_frame = df_trials[event].iloc[i]
 
         # Change system path so videos go to the correct folder
-        os.chdir(path_video)
+        os.chdir(path_video_crop)
 
         vectoroverlay(os.path.join(path_video_crop, file_vid),
                       file_vid_new, data_pix_f1,
