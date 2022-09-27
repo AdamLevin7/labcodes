@@ -43,7 +43,7 @@ def findframe(file, label='Find Frame', framestart=0):
     # idenify screen resolution
     root = tk.Tk()
     height = root.winfo_screenheight()
-    
+
 
     #%% set call back for trackbar
     def nothing(x):
