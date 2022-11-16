@@ -78,16 +78,31 @@ def vect_ol_batch(path, colID, view, bwpermeter, plate_dim, cam_name, flip, even
         sampvid = cams.loc[cams['camera_name'] == cam_name, 'sampling_rate'].values[0]
 
     # Force Plate Data
-    sql = '''
+    # Check if camera_ol value exists
+    sql_ol = '''
             SELECT forceplate_name
             FROM forceplate_list
-            WHERE collection_id = {}
-            '''.format(colID)
+            WHERE collection_id = {} AND camera_ol = '{}'
+            '''.format(colID, cam_name)
 
     with engine.connect().execution_options(autocommit=True) as conn:
-        query = conn.execute(text(sql))
-        forceplates = pd.DataFrame(query.fetchall())
-        forceplates.columns = query.keys()
+        query_ol = conn.execute(text(sql_ol))
+        forceplates = pd.DataFrame(query_ol.fetchall())
+        forceplates.columns = query_ol.keys()
+
+    # if that value is null choose all FPs from that collection
+    if forceplates.empty:
+        sql_fp = '''
+                SELECT forceplate_name
+                FROM forceplate_list
+                WHERE collection_id = {}
+                '''.format(colID)
+
+        with engine.connect().execution_options(autocommit=True) as conn:
+            query_fp = conn.execute(text(sql_fp))
+            forceplates = pd.DataFrame(query_fp.fetchall())
+            forceplates.columns = query_fp.keys()
+
 
     # Force Plates
     # TODO make this more dynamic to handle multiple force plates
@@ -147,39 +162,39 @@ def vect_ol_batch(path, colID, view, bwpermeter, plate_dim, cam_name, flip, even
         df_bw = pd.DataFrame(query_bw.fetchall())
         df_bw.columns = query_bw.keys()
 
-    ## Find Plate Corners, use first video file
-    # Need a video where they aren't in blocks to get corners
-    calibration_vid = cams['calibration_file'][0] + cams['extension'][0]
-
-    # Find Plate Corners
-    # Check database to see if plate corners are already in the database
-    # This should be put in a separate processing code because it would be used for multiple codes
-    # TODO this isn't working to read back in plate_area dataframe from the database
-    # for i in range(len(forceplates)):
-    #
-    #     sql_corners = '''
-    #             SELECT fp_coordinates
-    #             FROM forceplate_list
-    #             WHERE collection_id = {} AND forceplate_name = '{}'
-    #             '''.format(colID, forceplates['forceplate_name'][i])
-    #
-    #     with engine.connect().execution_options(autocommit=True) as conn:
-    #         query_corners = conn.execute(text(sql_corners))
-    #         plate_area[i] = pd.DataFrame(query_corners.fetchall())
-    #         plate_area[i].columns = query_corners.keys()
-    #
-    #         # Convert the dataframe to a dict
-    #         plate_area = plate_area.to_dict('records')
-
-    # If corners are not in the database, find them
-    # if plate_area[0] is None:
-    # Find Plate Corners
-    plate_area = findplate(os.path.join(path_video, calibration_vid), framestart=0,
-                           label='Insert image here')
-
     #TODO this  needs to be saved to the camera table rather than the force plate table
     # Save plate corners to database
     for i in range(len(forceplates)):
+        ## Find Plate Corners, use first video file
+        # Need a video where they aren't in blocks to get corners
+        calibration_vid = cams['calibration_file'][i] + cams['extension'][i]
+
+        # Find Plate Corners
+        # Check database to see if plate corners are already in the database
+        # This should be put in a separate processing code because it would be used for multiple codes
+        # TODO this isn't working to read back in plate_area dataframe from the database
+        # for i in range(len(forceplates)):
+        #
+        #     sql_corners = '''
+        #             SELECT fp_coordinates
+        #             FROM forceplate_list
+        #             WHERE collection_id = {} AND forceplate_name = '{}'
+        #             '''.format(colID, forceplates['forceplate_name'][i])
+        #
+        #     with engine.connect().execution_options(autocommit=True) as conn:
+        #         query_corners = conn.execute(text(sql_corners))
+        #         plate_area[i] = pd.DataFrame(query_corners.fetchall())
+        #         plate_area[i].columns = query_corners.keys()
+        #
+        #         # Convert the dataframe to a dict
+        #         plate_area = plate_area.to_dict('records')
+
+        # If corners are not in the database, find them
+        # if plate_area[0] is None:
+        # Find Plate Corners
+        plate_area = findplate(os.path.join(path_video, calibration_vid), framestart=0,
+                               label='Insert image here')
+
         # Sql query to write coordinates to DB
         sql_update_corners = '''
                 UPDATE forceplate_list
