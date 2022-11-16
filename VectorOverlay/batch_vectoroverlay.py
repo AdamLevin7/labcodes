@@ -10,7 +10,7 @@ Author:
     harperestewart7@gmail.com
 """
 
-def vect_ol_batch(path, colID, view, bwpermeter, plate_dim, cam_name, flip, event, engine= None):
+def vect_ol_batch(path, colID, view, bwpermeter, plate_dim, cam_name, flip, event, engine= None, fthresh=50):
     """
     Function::: vect_ol_batch
         Description: Create multiple vector overlays using database
@@ -110,9 +110,11 @@ def vect_ol_batch(path, colID, view, bwpermeter, plate_dim, cam_name, flip, even
     num_plates = len(forceplates)
     if num_plates == 1:
         fp1 = forceplates['forceplate_name'][0]
+
     elif num_plates == 2:
         fp1 = forceplates['forceplate_name'][0]
         fp2 = forceplates['forceplate_name'][1]
+
     else:
         print('Error: Too many force plates')
 
@@ -212,20 +214,37 @@ def vect_ol_batch(path, colID, view, bwpermeter, plate_dim, cam_name, flip, even
         # Get bodyweight for that trial
         bw = df_bw.loc[df_bw['athlete_id'] == df_trials['athlete_id'].iloc[i], fp1].values[0]
 
-        # Contact Intervals
-        ci_f1 = FindContactIntervals((data_force_raw['Attila49 9286BA_Fz'] + data_force_raw['Ryan52 9286BA_Fz']), samp,
-                                     thresh=16)
+        # Check which force plate is used
+        if  'Attila' in fp1 or 'Ryan' in fp1:
+
+            # Contact Intervals
+            ci_f1 = FindContactIntervals((data_force_raw['Attila49 9286BA_Fz'] + data_force_raw['Ryan52 9286BA_Fz']), samp,
+                                         thresh=fthresh)
+        else:
+            # USATF collection
+            # Contact Intervals
+            ci_f1 = FindContactIntervals(data_force_raw[fp1[:-2] +' '+fp1[-2:] +' 9287A_Fz'], samp, thresh=fthresh)
 
         # Crop Data
-        data_force = {0: data_force_raw.filter(regex=fp1).iloc[ci_f1['Start'][0]:ci_f1['End'][0], :],
-                      1: data_force_raw.filter(regex=fp2).iloc[ci_f1['Start'][0]:ci_f1['End'][0], :]}
+        # Check how many force plate are used
+        if num_plates == 1:
+            data_force = {0: data_force_raw.filter(regex=fp1[:-2] +' '+fp1[-2:] ).iloc[ci_f1['Start'][0]:ci_f1['End'][0], :]}
+        else:
+
+            data_force = {0: data_force_raw.filter(regex=fp1[:-2] +' '+fp1[-2:] ).iloc[ci_f1['Start'][0]:ci_f1['End'][0], :],
+                          1: data_force_raw.filter(regex=fp2[:-2] +' '+fp2[-2:] ).iloc[ci_f1['Start'][0]:ci_f1['End'][0], :]}
 
         # Pixel to meter ratios
         pix2m = pix2m_fromplate(plate_area, plate_dim)
         mag2pix = bw2pix(pix2m['x'], bw, bwpermeter=bwpermeter)
 
-        transform_data = convertdata(data_force, mag2pix, pix2m, view=view,
-                                     mode="combine", platelocs=plate_area, flip=flip)
+        # If there is one plate
+        if num_plates == 1:
+            transform_data = convertdata(data_force, mag2pix, pix2m, view=view,
+                                         mode="ind", platelocs=plate_area, flip=flip)
+        else:
+            transform_data = convertdata(data_force, mag2pix, pix2m, view=view,
+                                         mode="combine", platelocs=plate_area, flip=flip)
 
         transform_data.data2pix()
 
