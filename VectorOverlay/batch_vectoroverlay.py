@@ -92,8 +92,15 @@ def vect_ol_batch(path, colID, view, bwpermeter, plate_dim, cam_name, flip, even
     # Force Plates
     # TODO make this more dynamic to handle multiple force plates
     # TODO make a function to account for 1 or multiple force plates
-    fp1 = forceplates['forceplate_name'][0]
-    fp2 = forceplates['forceplate_name'][1]
+    num_plates = len(forceplates)
+    if num_plates == 1:
+        fp1 = forceplates['forceplate_name'][0]
+    elif num_plates == 2:
+        fp1 = forceplates['forceplate_name'][0]
+        fp2 = forceplates['forceplate_name'][1]
+    else:
+        print('Error: Too many force plates')
+
 
     # Log Sheet Information
     sql_ls = '''
@@ -125,6 +132,7 @@ def vect_ol_batch(path, colID, view, bwpermeter, plate_dim, cam_name, flip, even
     # Get rid of the rows that aren't from the collection
     # Merge df_ls and df_event_id
     df_trials = df_event_id.merge(df_ls, how='left', on=['jump_id'])
+    df_trials = df_trials[df_trials['collection_id'] == colID]
 
 
     # Get BW for athletes in the collection
