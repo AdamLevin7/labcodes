@@ -4,11 +4,110 @@ Script: vectoroverlay
 
 Modules
     vectoroverlay: Add a vector to the video to represent the ground reaction force
+    vector_overlay_single: Create a single vector overlay
 
 Author:
     Casey Wiens
     cwiens32@gmail.com
 """
+
+
+def vector_overlay_single(file_force = None,
+                          file_vid= None,
+        flip = {0: ['fy', 'ax'], 1: ['fx', 'fy', 'ay']},
+                          samp_vid = 240,
+                          bw= 871,
+                          contact_frame = 193,
+                          plate_dim = (0.6, 0.4),
+                          view = 'fy',
+                          mode = 'combine',
+                          disp_thresh = 2,
+                          force_thresh = 20,
+                          bwpermeter = 2,
+                          pix2mdir = 'x',
+                          platearea = 'hardcoded'):
+
+    """
+    Function::: vector_overlay_single
+        Description: Create a single vector overlay
+        Details:
+
+    Inputs
+    """
+
+    # Packages
+    import os
+    from ImportForce_TXT import ImportForce_TXT
+    from FindContactIntervals import FindContactIntervals
+    from findplate import findplate
+    from pixelratios import pix2m_fromplate, bw2pix
+    from dataconversion_force import convertdata
+    from VectorOverlay.vectoroverlay import vectoroverlay
+    from tkinter import filedialog as fd
+    import pandas as pd
+
+
+    # Input files
+
+    if file_force == None:
+        file_force = fd.askopenfilename()
+    if file_vid == None:
+        file_vid = fd.askopenfilename()
+    file_vid_new = file_vid[:-4] + '_OL.mp4'
+
+    #TODO fix this hard coding, Force plates
+    fp1 = 'Attila49'
+    fp2 = 'Ryan52'
+
+    data_f1_raw, samp_force, _ = ImportForce_TXT(file_force)
+
+    ci_f1 = FindContactIntervals((data_f1_raw['Attila49 9286BA_Fz'] + data_f1_raw['Ryan52 9286BA_Fz']), samp_force,
+                                 thresh=force_thresh)
+
+    # TODO this will become an input from an Excel logsheet
+    # Hardcoding the values for now... this is terrible
+    # Delete this section ASAP
+    if platearea == 'hardcoded':
+        df1 = pd.DataFrame({'x': [931,938,1351,1283],
+                           'y': [889,940,939,885]
+                           })
+        df1_transposed = df1.T  # or df1.transpose()
+
+        df2 = pd.DataFrame({'x':[561,508,932,924],
+                            'y':[887,941,939,889]})
+        df2_transposed = df2.T
+
+        # list of data frames
+        dataframes = [df1_transposed, df2_transposed]
+
+        # dictionary to save data frames
+        plate_area = {}
+
+        for key, value in enumerate(dataframes):
+            plate_area[key] = value  # assigning data frame from list to key in dictionary
+
+    elif platearea == None:
+        plate_area = findplate(file_vid, framestart=0, label='Insert image here')
+
+    ### Crop Data
+    data_f1 = {0: data_f1_raw.filter(regex=fp1).iloc[ci_f1['Start'][0]:ci_f1['End'][0], :],
+               1: data_f1_raw.filter(regex=fp2).iloc[ci_f1['Start'][0]:ci_f1['End'][0], :]}
+
+    pix2m = pix2m_fromplate(plate_area, plate_dim)
+    mag2pix = bw2pix(pix2m[pix2mdir], bw, bwpermeter=bwpermeter)
+
+    transform_data = convertdata(data_f1, mag2pix, pix2m, view=view,
+                                 mode=mode,
+                                 platelocs=plate_area, flip=flip)
+
+    transform_data.data2pix()
+
+    data_pix = transform_data.data_fp
+
+    vectoroverlay(file_vid, file_vid_new, data_pix,
+                  contact_frame, samp_force=samp_force, samp_video=samp_vid,
+                  dispthresh=disp_thresh)
+
 
 
 def vectoroverlay(file, file_out, data_vid, frame_con, vect_color='g',
