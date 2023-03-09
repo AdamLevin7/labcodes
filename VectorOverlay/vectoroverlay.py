@@ -24,7 +24,7 @@ def vector_overlay_single(file_force = None,
                           force_thresh = 20,
                           bwpermeter = 2,
                           pix2mdir = 'x',
-                          platearea = 'hardcoded'):
+                          platearea = None):
 
     """
     Function::: vector_overlay_single
@@ -47,7 +47,6 @@ def vector_overlay_single(file_force = None,
 
 
     # Input files
-
     if file_force == None:
         file_force = fd.askopenfilename()
     if file_vid == None:
@@ -73,33 +72,35 @@ def vector_overlay_single(file_force = None,
     ci_f1 = FindContactIntervals(data_f1_raw['Fz_sum'], samp_force,
                                  thresh=force_thresh)
 
-    # TODO this will become an input from an Excel logsheet
-    # Hardcoding the values for now... this is terrible
-    # Delete this section ASAP
-    if platearea == 'hardcoded':
-        df1 = pd.DataFrame({'x': [931,938,1351,1283],
-                           'y': [889,940,939,885]
-                           })
-        df1_transposed = df1.T  # or df1.transpose()
+    # This section pulls in data from an Excel logsheet if necessary
+    if platearea != None:
 
-        df2 = pd.DataFrame({'x':[561,508,932,924],
-                            'y':[887,941,939,889]})
-        df2_transposed = df2.T
+        # Read in the .csv file
+        df_plate_area = pd.read_csv(platearea)
 
-        # list of data frames
-        dataframes = [df1_transposed, df2_transposed]
-
-        # dictionary to save data frames
+        # Reformat the dataframe into the dictionary format
         plate_area = {}
 
-        for key, value in enumerate(dataframes):
-            plate_area[key] = value  # assigning data frame from list to key in dictionary
+        # Find unique plate numbers
+        fp_nums = df_plate_area['plate'].unique()
+
+        for i in range(len(fp_names)):
+            # Filter down to the correct rows
+            df_plate_area_sm = df_plate_area[df_plate_area['plate'] == fp_nums[i]]
+
+            # Drop the plate column
+            df_plate_area_sm = df_plate_area_sm.drop(columns=['plate'])
+
+            # Append that data frame to the dictionary
+            plate_area = {**plate_area, i: df_plate_area_sm.T}
 
     elif platearea == None:
         plate_area = findplate(file_vid, framestart=0, label='Select the plate area in the image:')
 
-    ### Crop Data
+    else:
+        print('Error: platearea input is incorrect or None')
 
+    # Crop Data
     data_f1 = {}
     # Append the new data to the dictionary
     for i in range(len(fp_names)):
