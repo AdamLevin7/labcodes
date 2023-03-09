@@ -11,7 +11,6 @@ Author:
     cwiens32@gmail.com
 """
 
-
 def vector_overlay_single(file_force = None,
                           file_vid= None,
         flip = {0: ['fy', 'ax'], 1: ['fx', 'fy', 'ay']},
@@ -55,13 +54,23 @@ def vector_overlay_single(file_force = None,
         file_vid = fd.askopenfilename()
     file_vid_new = file_vid[:-4] + '_OL.mp4'
 
-    #TODO fix this hard coding, Force plates
-    fp1 = 'Attila49'
-    fp2 = 'Ryan52'
+    # close out tkinter file dialog
+    fd.Tk().withdraw()
 
+    # Import the force data from the .txt file
     data_f1_raw, samp_force, _ = ImportForce_TXT(file_force)
 
-    ci_f1 = FindContactIntervals((data_f1_raw['Attila49 9286BA_Fz'] + data_f1_raw['Ryan52 9286BA_Fz']), samp_force,
+    # Find the names of all the force plates in the file before the space
+    fp_full_names = [col for col in data_f1_raw.columns if 'Fz' in col]
+
+    # Reduce to only include the name before the space
+    fp_names = [fp.split(' ')[0] for fp in fp_full_names]
+
+    # Add the columns from the list together
+    data_f1_raw['Fz_sum'] = data_f1_raw[fp_full_names].sum(axis=1)
+
+    # Find the contact intervals using the Fz axis
+    ci_f1 = FindContactIntervals(data_f1_raw['Fz_sum'], samp_force,
                                  thresh=force_thresh)
 
     # TODO this will become an input from an Excel logsheet
@@ -87,11 +96,14 @@ def vector_overlay_single(file_force = None,
             plate_area[key] = value  # assigning data frame from list to key in dictionary
 
     elif platearea == None:
-        plate_area = findplate(file_vid, framestart=0, label='Insert image here')
+        plate_area = findplate(file_vid, framestart=0, label='Select the plate area in the image:')
 
     ### Crop Data
-    data_f1 = {0: data_f1_raw.filter(regex=fp1).iloc[ci_f1['Start'][0]:ci_f1['End'][0], :],
-               1: data_f1_raw.filter(regex=fp2).iloc[ci_f1['Start'][0]:ci_f1['End'][0], :]}
+
+    data_f1 = {}
+    # Append the new data to the dictionary
+    for i in range(len(fp_names)):
+        data_f1[i] = data_f1_raw.filter(regex=fp_names[i]).iloc[ci_f1['Start'][0]:ci_f1['End'][0], :]
 
     pix2m = pix2m_fromplate(plate_area, plate_dim)
     mag2pix = bw2pix(pix2m[pix2mdir], bw, bwpermeter=bwpermeter)
