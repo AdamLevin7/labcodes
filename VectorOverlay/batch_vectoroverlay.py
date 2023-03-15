@@ -3,12 +3,222 @@ Script: batch_vectoroverlay
     Batch create vector overlays.
 
 Modules
-    batch_vectoroverlay: Create multiple vector overlays using database
+    vect_ol_batch: Create multiple vector overlays using database
+    vect_ol_batch_ls: Create multiple vector overlays using just the logsheet
 
 Author:
     Harper Stewart
     harperestewart7@gmail.com
 """
+
+def vect_ol_batch_ls(path,
+                     cam_name,
+                     logsheet_name):
+    #TODO improve this function so it finds the right value even if the row/columns shift
+    """
+    Function::: vect_ol_batch_ls
+        Description: Create multiple vector overlays without using the database, only logsheet
+        Details:
+
+    Inputs
+        path: STRING path to collection folder
+        cam_name: STRING camera name
+        logsheet_name: STRING logsheet name
+
+    Outputs
+        output1: vector overlay video to the current path
+
+    Dependencies
+        os
+        labcodes
+        USATF processing codes
+        sqlalchemy
+        pandas
+    """
+
+    # Dependencies
+    import os
+    import openpyxl
+    from VectorOverlay.vectoroverlay import vector_overlay_single # may not need this
+    from ImportForce_TXT import ImportForce_TXT
+    from FindContactIntervals import FindContactIntervals
+    from findplate import findplate
+    from pixelratios import pix2m_fromplate, bw2pix
+    from dataconversion_force import convertdata
+    from VectorOverlay.vectoroverlay import vectoroverlay
+    from tkinter import filedialog as fd
+    import pandas as pd
+
+
+    # Create additional needed paths
+    path_force = os.path.join(path, 'force')
+    path_video_crop = os.path.join(path, 'video', cam_name + '_cropped')
+    path_video = os.path.join(path, 'video', cam_name)
+    path_logsheet = os.path.join(path, logsheet_name)
+
+
+    '''Get the logsheet info'''
+    ls_workbook = openpyxl.load_workbook(path_logsheet)
+
+    ## Info Tab
+    # get the collection_id from the Info tab
+    colID = ls_workbook['Info']['D2'].value
+    # get the calibration_file from Info where camera_name == cam_name
+    # find the row of the camera_name
+    for row in range(1, 100):
+        if ls_workbook['Info'][f'A{row}'].value == cam_name:
+            cal_file = ls_workbook['Info'][f'D{row}'].value
+            cam_extension = ls_workbook['Info'][f'C{row}'].value
+            samp_vid = ls_workbook['Info'][f'B{row}'].value
+
+            break
+
+    # get the forceplate names from column A of the Info tab under forceplate_name heading
+    fp_names = []
+    for i in range(1, 100):
+        # if cell is empty, break
+        if ls_workbook['Info'][f'A1{i}'].value == None:
+            break
+        fp_names.append(ls_workbook['Info'][f'A1{i}'].value)
+
+    # Reading in Flip parameters
+    # column F is flip_fx, column G is flip_fy,column H is flip_ax,column I is flip_ay
+    # figure out if the forceplate row contains flip parameters, if it does, add to flip dict
+    # check columns F through I
+    flip_list = []
+    flip_dict = {}
+    cols = ['F', 'G', 'H', 'I']
+    for fp_row in range(11, 20):
+        # break if the cell is empty
+        if ls_workbook['Info'][f'A{fp_row}'].value == None:
+            break
+        for col in cols:
+            # if the cell is not empty, add the column letter to the flip dict
+            if ls_workbook['Info'][f'{col}{fp_row}'].value != None:
+                flip_list.append(ls_workbook['Info'][f'{col}{fp_row}'].value)
+        # add the flip parameters to the flip dict
+        flip_dict[fp_row - 11] = flip_list
+        flip_list = []
+
+    ## Overlay Tab
+    # get the view from the overlay tab
+    view = ls_workbook['overlay']['A2'].value
+    # get the bwpermeter from the overlay tab
+    bwpermeter = ls_workbook['overlay']['B2'].value
+
+    # get fthresh from the overlay tab
+    fthresh = ls_workbook['overlay']['D2'].value
+
+    plate_dim_x = (ls_workbook['overlay']['I2'].value)
+    plate_dim_y = (ls_workbook['overlay']['J2'].value)
+    plate_dim = (plate_dim_x, plate_dim_y)
+    # get the mode from the overlay tab
+    mode = ls_workbook['overlay']['F2'].value
+    # get the disp_thresh from the overlay tab
+    disp_thresh = ls_workbook['overlay']['G2'].value
+    # get the pix2mdir from the overlay tab
+    pix2mdir = ls_workbook['overlay']['H2'].value
+
+    # Get the plate area for the collection from the calibration video file
+    vid_calibration = os.path.join(path_video, cal_file + cam_extension)
+
+    #Check if the plate area exists and isn't empty
+    if 'plate_area' in ls_workbook.sheetnames and ls_workbook['plate_area']['A2'].value != None:
+        # read in first 3 rows as a dataframe
+        plate_area = {}
+        for i in range(0, len(fp_names)):
+            df_plate_area = pd.read_excel(path_logsheet, sheet_name='plate_area', nrows=2,skiprows=3*i, index_col=0)
+            # append the plate area to the plate_area dictionary
+            plate_area[i] = df_plate_area
+
+    else:
+        # if it doesn't, find the plate area in the calibration video
+        plate_area = findplate(vid_calibration, framestart=0, label='Select the plate area in the image:')
+
+        # Write out the plate area to the logsheet
+        # convert plate_area dictionary to individual dataframes
+        with pd.ExcelWriter(path_logsheet, engine='openpyxl', mode='a', if_sheet_exists ='replace') as writer:
+            for i in range(len(fp_names)):
+                plate_area[i].to_excel(writer, sheet_name='plate_area',startrow=3*i)
+
+
+    # find rows filled with data in Logsheet tab
+    for row in range(1, 1000):
+        if ls_workbook['Logsheet'][f'A{row}'].value == None:
+            end_row = row
+            break
+
+    for i in range(2, end_row):
+        # get the force file name
+        file_force = ls_workbook['Logsheet'][f'K{i}'].value
+        path_file_force = os.path.join(path_force, file_force + '.txt')
+
+        # get the video file name
+        #TODO: use the camera name to find the letter of the row in the Logsheet tab
+        file_vid = ls_workbook['Logsheet'][f'L{i}'].value
+        path_file_vid = os.path.join(path_video, file_vid + cam_extension)
+
+        # Create overlay directory
+        if not os.path.exists(os.path.join(path_video,'overlay')):
+            os.makedirs(os.path.join(path_video,'overlay'))
+
+        path_file_vid_new = os.path.join(path_video,'overlay', file_vid +'_OL.mp4')
+        print(path_file_vid)
+
+        # get the contact frame for that video
+        #TODO make this dynamic so if the column moves it still gets the right value
+        contact_frame = ls_workbook['Logsheet'][f'Q{i}'].value
+
+        # get the athlete name for that video
+        #TODO make this dynamic so if the column moves it still gets the right value
+        athlete_name = ls_workbook['Logsheet'][f'A{i}'].value
+
+        # find the bw associated with that athlete name from Info tab
+        for row in range(1, 100):
+            if ls_workbook['Info'][f'A{row}'].value == athlete_name:
+                bw = ls_workbook['Info'][f'G{row}'].value
+                break
+
+        # Import the force data from the .txt file
+        data_f1_raw, samp_force, _ = ImportForce_TXT(path_file_force)
+
+        # Find the names of all the force plates in the file before the space
+        fp_full_names = [col for col in data_f1_raw.columns if 'Fz' in col]
+
+        # Reduce to only include the name before the space
+        fp_names = [fp.split(' ')[0] for fp in fp_full_names]
+
+        # Add the columns from the list together
+        data_f1_raw['Fz_sum'] = data_f1_raw[fp_full_names].sum(axis=1)
+
+        # Find the contact intervals using the Fz axis
+        ci_f1 = FindContactIntervals(data_f1_raw['Fz_sum'], samp_force,
+                                     thresh=fthresh)
+
+        # Crop Data
+        data_f1 = {}
+        # Append the new data to the dictionary
+        for i in range(len(fp_names)):
+            data_f1[i] = data_f1_raw.filter(regex=fp_names[i]).iloc[ci_f1['Start'][0]:ci_f1['End'][0], :]
+
+        pix2m = pix2m_fromplate(plate_area, plate_dim)
+        mag2pix = bw2pix(pix2m[pix2mdir], bw, bwpermeter=bwpermeter)
+
+        transform_data = convertdata(data_f1, mag2pix, pix2m, view=view,
+                                     mode=mode,
+                                     platelocs=plate_area, flip=flip_dict)
+
+        transform_data.data2pix()
+
+        data_pix = transform_data.data_fp
+
+        vectoroverlay(path_file_vid, path_file_vid_new, data_pix,
+                      contact_frame, samp_force=samp_force, samp_video=samp_vid,
+                      dispthresh=disp_thresh)
+
+
+
+
 
 def vect_ol_batch(path, colID, view, bwpermeter, plate_dim, cam_name, flip, event, engine= None, fthresh=50):
     """
@@ -26,6 +236,9 @@ def vect_ol_batch(path, colID, view, bwpermeter, plate_dim, cam_name, flip, even
         flip: DICT flip axes for vector orientation
         event: STRING event name
         engine: SQLALCHEMY engine
+        fthresh: INT force threshold for contact detection
+        feedback: STR Path with logsheet name which specifies the collection is immediate feedback,
+            will use logsheet data instead of queries
 
     Outputs
         output1: vector overlay video to the current path
