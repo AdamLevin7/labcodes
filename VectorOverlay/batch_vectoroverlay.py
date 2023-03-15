@@ -11,12 +11,10 @@ Author:
     harperestewart7@gmail.com
 """
 
-def vect_ol_batch_ls(path, cam_name,
-                     logsheet_name,
-                     plate_dim = (0.6, 0.4),
-                     flip = {0: ['fy', 'ax'], 1: ['fx', 'fy', 'ay']}):
-    #TODO remove plate_dim from inputs and read from the logsheet**
-    #TODO remove flip from inputs and read from the logsheet**
+def vect_ol_batch_ls(path,
+                     cam_name,
+                     logsheet_name):
+
     """
     Function::: vect_ol_batch_ls
         Description: Create multiple vector overlays without using the database, only logsheet
@@ -24,16 +22,8 @@ def vect_ol_batch_ls(path, cam_name,
 
     Inputs
         path: STRING path to collection folder
-        view: STRING view of plate (fx or fy)
-        bwpermeter: INT number of pixels per meter
-        plate_dim: TUPLE plate dimensions in meters
         cam_name: STRING camera name
-        flip: DICT flip axes for vector orientation
-        event: STRING event name
-        engine: SQLALCHEMY engine
-        fthresh: INT force threshold for contact detection
-        feedback: STR Path with logsheet name which specifies the collection is immediate feedback,
-            will use logsheet data instead of queries
+        logsheet_name: STRING logsheet name
 
     Outputs
         output1: vector overlay video to the current path
@@ -83,17 +73,47 @@ def vect_ol_batch_ls(path, cam_name,
 
             break
 
+    # get the forceplate names from column A of the Info tab under forceplate_name heading
+    fp_names = []
+    for i in range(1, 100):
+        # if cell is empty, break
+        if ls_workbook['Info'][f'A1{i}'].value == None:
+            break
+        fp_names.append(ls_workbook['Info'][f'A1{i}'].value)
+
+    # Reading in Flip parameters
+    # column F is flip_fx, column G is flip_fy,column H is flip_ax,column I is flip_ay
+    # figure out if the forceplate row contains flip parameters, if it does, add to flip dict
+    # check columns F through I
+    flip_list = []
+    flip_dict = {}
+    cols = ['F', 'G', 'H', 'I']
+    for fp_row in range(11, 20):
+        # break if the cell is empty
+        if ls_workbook['Info'][f'A{fp_row}'].value == None:
+            break
+        for col in cols:
+            # if the cell is not empty, add the column letter to the flip dict
+            if ls_workbook['Info'][f'{col}{fp_row}'].value != None:
+                flip_list.append(ls_workbook['Info'][f'{col}{fp_row}'].value)
+        # add the flip parameters to the flip dict
+        flip_dict[fp_row - 11] = flip_list
+        flip_list = []
+
     ## Overlay Tab
     # get the view from the overlay tab
     view = ls_workbook['overlay']['A2'].value
     # get the bwpermeter from the overlay tab
     bwpermeter = ls_workbook['overlay']['B2'].value
-    #TODO: get the flip parameters from the overlay tab
+    #TODO: get the flip parameters from the overlay tab (probably will use Info tab instead)
 
     # get fthresh from the overlay tab
     fthresh = ls_workbook['overlay']['D2'].value
     #TODO: get the plate_area from the overlay tab
 
+    plate_dim_x = (ls_workbook['overlay']['I2'].value)
+    plate_dim_y = (ls_workbook['overlay']['J2'].value)
+    plate_dim = (plate_dim_x, plate_dim_y)
     # get the mode from the overlay tab
     mode = ls_workbook['overlay']['F2'].value
     # get the disp_thresh from the overlay tab
@@ -169,7 +189,7 @@ def vect_ol_batch_ls(path, cam_name,
 
         transform_data = convertdata(data_f1, mag2pix, pix2m, view=view,
                                      mode=mode,
-                                     platelocs=plate_area, flip=flip)
+                                     platelocs=plate_area, flip=flip_dict)
 
         transform_data.data2pix()
 
@@ -180,7 +200,7 @@ def vect_ol_batch_ls(path, cam_name,
                       dispthresh=disp_thresh)
 
 
-        
+
 
 
 def vect_ol_batch(path, colID, view, bwpermeter, plate_dim, cam_name, flip, event, engine= None, fthresh=50):
