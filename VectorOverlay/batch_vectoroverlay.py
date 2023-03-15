@@ -49,7 +49,15 @@ def vect_ol_batch_ls(path, cam_name,
     # Dependencies
     import os
     import openpyxl
-    from VectorOverlay.vectoroverlay import vector_overlay_single
+    from VectorOverlay.vectoroverlay import vector_overlay_single # may not need this
+    from ImportForce_TXT import ImportForce_TXT
+    from FindContactIntervals import FindContactIntervals
+    from findplate import findplate
+    from pixelratios import pix2m_fromplate, bw2pix
+    from dataconversion_force import convertdata
+    from VectorOverlay.vectoroverlay import vectoroverlay
+    from tkinter import filedialog as fd
+    import pandas as pd
 
 
     # Create additional needed paths
@@ -60,7 +68,7 @@ def vect_ol_batch_ls(path, cam_name,
 
 
     '''Get the logsheet info'''
-    ls_workbook = openpyxl.load_workbook(os.path.join(path, logsheet_name))
+    ls_workbook = openpyxl.load_workbook(path_logsheet)
 
     ## Info Tab
     # get the collection_id from the Info tab
@@ -93,6 +101,10 @@ def vect_ol_batch_ls(path, cam_name,
     # get the pix2mdir from the overlay tab
     pix2mdir = ls_workbook['overlay']['H2'].value
 
+    # Get the plate area for the collection from the calibration video file
+    vid_calibration = os.path.join(path_video, cal_file + cam_extension)
+    plate_area = findplate(vid_calibration, framestart=0, label='Select the plate area in the image:')
+
     # find rows filled with data in Logsheet tab
     for row in range(1, 1000):
         if ls_workbook['Logsheet'][f'A{row}'].value == None:
@@ -108,6 +120,12 @@ def vect_ol_batch_ls(path, cam_name,
         #TODO: use the camera name to find the letter of the row in the Logsheet tab
         file_vid = ls_workbook['Logsheet'][f'L{i}'].value
         path_file_vid = os.path.join(path_video, file_vid + cam_extension)
+
+        # Create overlay directory
+        if not os.path.exists(os.path.join(path_video,'overlay')):
+            os.makedirs(os.path.join(path_video,'overlay'))
+
+        path_file_vid_new = os.path.join(path_video,'overlay', file_vid +'_OL.mp4')
         print(path_file_vid)
 
         # get the contact frame for that video
@@ -124,21 +142,45 @@ def vect_ol_batch_ls(path, cam_name,
                 bw = ls_workbook['Info'][f'G{row}'].value
                 break
 
-        vector_overlay_single(file_force = path_file_force,
-                              file_vid= path_file_vid,
-                              flip = flip,
-                              samp_vid = samp_vid,
-                              bw= bw,
-                              contact_frame = contact_frame,
-                              plate_dim = plate_dim,
-                              view = view,
-                              mode = mode,
-                              disp_thresh = disp_thresh,
-                              force_thresh = fthresh,
-                              bwpermeter = bwpermeter,
-                              pix2mdir = pix2mdir,
-                              #TODO need to fix this so you don't have to choose plate area every time
-                              platearea = None)
+        # Import the force data from the .txt file
+        data_f1_raw, samp_force, _ = ImportForce_TXT(path_file_force)
+
+        # Find the names of all the force plates in the file before the space
+        fp_full_names = [col for col in data_f1_raw.columns if 'Fz' in col]
+
+        # Reduce to only include the name before the space
+        fp_names = [fp.split(' ')[0] for fp in fp_full_names]
+
+        # Add the columns from the list together
+        data_f1_raw['Fz_sum'] = data_f1_raw[fp_full_names].sum(axis=1)
+
+        # Find the contact intervals using the Fz axis
+        ci_f1 = FindContactIntervals(data_f1_raw['Fz_sum'], samp_force,
+                                     thresh=fthresh)
+
+        # Crop Data
+        data_f1 = {}
+        # Append the new data to the dictionary
+        for i in range(len(fp_names)):
+            data_f1[i] = data_f1_raw.filter(regex=fp_names[i]).iloc[ci_f1['Start'][0]:ci_f1['End'][0], :]
+
+        pix2m = pix2m_fromplate(plate_area, plate_dim)
+        mag2pix = bw2pix(pix2m[pix2mdir], bw, bwpermeter=bwpermeter)
+
+        transform_data = convertdata(data_f1, mag2pix, pix2m, view=view,
+                                     mode=mode,
+                                     platelocs=plate_area, flip=flip)
+
+        transform_data.data2pix()
+
+        data_pix = transform_data.data_fp
+
+        vectoroverlay(path_file_vid, path_file_vid_new, data_pix,
+                      contact_frame, samp_force=samp_force, samp_video=samp_vid,
+                      dispthresh=disp_thresh)
+
+
+        
 
 
 def vect_ol_batch(path, colID, view, bwpermeter, plate_dim, cam_name, flip, event, engine= None, fthresh=50):
