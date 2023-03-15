@@ -4,7 +4,7 @@ Script: batch_vectoroverlay
 
 Modules
     vect_ol_batch: Create multiple vector overlays using database
-    vect_ol_batch_ls: Create multiple vector overlays using the logsheet
+    vect_ol_batch_ls: Create multiple vector overlays using just the logsheet
 
 Author:
     Harper Stewart
@@ -48,15 +48,6 @@ def vect_ol_batch_ls(path, cam_name,
 
     # Dependencies
     import os
-    from ImportForce_TXT import ImportForce_TXT
-    from FindContactIntervals import FindContactIntervals
-    from findplate import findplate
-    from pixelratios import pix2m_fromplate, bw2pix
-    from dataconversion_force import convertdata
-    from VectorOverlay.vectoroverlay import vectoroverlay
-    from USATF_batch_db_processing import connect_to_server
-    from sqlalchemy.sql import text
-    import pandas as pd
     import openpyxl
     from VectorOverlay.vectoroverlay import vector_overlay_single
 
@@ -66,8 +57,6 @@ def vect_ol_batch_ls(path, cam_name,
     path_video_crop = os.path.join(path, 'video', cam_name + '_cropped')
     path_video = os.path.join(path, 'video', cam_name)
     path_logsheet = os.path.join(path, logsheet_name)
-
-    # Queries: camera info, force plate info, and logsheet info
 
 
     '''Get the logsheet info'''
@@ -135,20 +124,21 @@ def vect_ol_batch_ls(path, cam_name,
                 bw = ls_workbook['Info'][f'G{row}'].value
                 break
 
-    vector_overlay_single(file_force = path_file_force,
-                          file_vid= path_file_vid,
-                          flip = flip,
-                          samp_vid = samp_vid,
-                          bw= bw,
-                          contact_frame = contact_frame,
-                          plate_dim = plate_dim,
-                          view = view,
-                          mode = mode,
-                          disp_thresh = disp_thresh,
-                          force_thresh = fthresh,
-                          bwpermeter = bwpermeter,
-                          pix2mdir = pix2mdir,
-                          platearea = None)
+        vector_overlay_single(file_force = path_file_force,
+                              file_vid= path_file_vid,
+                              flip = flip,
+                              samp_vid = samp_vid,
+                              bw= bw,
+                              contact_frame = contact_frame,
+                              plate_dim = plate_dim,
+                              view = view,
+                              mode = mode,
+                              disp_thresh = disp_thresh,
+                              force_thresh = fthresh,
+                              bwpermeter = bwpermeter,
+                              pix2mdir = pix2mdir,
+                              #TODO need to fix this so you don't have to choose plate area every time
+                              platearea = None)
 
 
 def vect_ol_batch(path, colID, view, bwpermeter, plate_dim, cam_name, flip, event, engine= None, fthresh=50):
