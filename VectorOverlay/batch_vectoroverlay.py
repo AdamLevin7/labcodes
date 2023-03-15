@@ -14,7 +14,7 @@ Author:
 def vect_ol_batch_ls(path,
                      cam_name,
                      logsheet_name):
-
+    #TODO improve this function so it finds the right value even if the row/columns shift
     """
     Function::: vect_ol_batch_ls
         Description: Create multiple vector overlays without using the database, only logsheet
@@ -105,11 +105,9 @@ def vect_ol_batch_ls(path,
     view = ls_workbook['overlay']['A2'].value
     # get the bwpermeter from the overlay tab
     bwpermeter = ls_workbook['overlay']['B2'].value
-    #TODO: get the flip parameters from the overlay tab (probably will use Info tab instead)
 
     # get fthresh from the overlay tab
     fthresh = ls_workbook['overlay']['D2'].value
-    #TODO: get the plate_area from the overlay tab
 
     plate_dim_x = (ls_workbook['overlay']['I2'].value)
     plate_dim_y = (ls_workbook['overlay']['J2'].value)
@@ -123,7 +121,26 @@ def vect_ol_batch_ls(path,
 
     # Get the plate area for the collection from the calibration video file
     vid_calibration = os.path.join(path_video, cal_file + cam_extension)
-    plate_area = findplate(vid_calibration, framestart=0, label='Select the plate area in the image:')
+
+    #Check if the plate area exists and isn't empty
+    if 'plate_area' in ls_workbook.sheetnames and ls_workbook['plate_area']['A2'].value != None:
+        # read in first 3 rows as a dataframe
+        plate_area = {}
+        for i in range(0, len(fp_names)):
+            df_plate_area = pd.read_excel(path_logsheet, sheet_name='plate_area', nrows=2,skiprows=3*i, index_col=0)
+            # append the plate area to the plate_area dictionary
+            plate_area[i] = df_plate_area
+
+    else:
+        # if it doesn't, find the plate area in the calibration video
+        plate_area = findplate(vid_calibration, framestart=0, label='Select the plate area in the image:')
+
+        # Write out the plate area to the logsheet
+        # convert plate_area dictionary to individual dataframes
+        with pd.ExcelWriter(path_logsheet, engine='openpyxl', mode='a', if_sheet_exists ='replace') as writer:
+            for i in range(len(fp_names)):
+                plate_area[i].to_excel(writer, sheet_name='plate_area',startrow=3*i)
+
 
     # find rows filled with data in Logsheet tab
     for row in range(1, 1000):
