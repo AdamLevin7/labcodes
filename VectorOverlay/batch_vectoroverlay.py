@@ -3,12 +3,153 @@ Script: batch_vectoroverlay
     Batch create vector overlays.
 
 Modules
-    batch_vectoroverlay: Create multiple vector overlays using database
+    vect_ol_batch: Create multiple vector overlays using database
+    vect_ol_batch_ls: Create multiple vector overlays using the logsheet
 
 Author:
     Harper Stewart
     harperestewart7@gmail.com
 """
+
+def vect_ol_batch_ls(path, cam_name,
+                     logsheet_name,
+                     plate_dim = (0.6, 0.4),
+                     flip = {0: ['fy', 'ax'], 1: ['fx', 'fy', 'ay']}):
+    #TODO remove plate_dim from inputs and read from the logsheet**
+    #TODO remove flip from inputs and read from the logsheet**
+    """
+    Function::: vect_ol_batch_ls
+        Description: Create multiple vector overlays without using the database, only logsheet
+        Details:
+
+    Inputs
+        path: STRING path to collection folder
+        view: STRING view of plate (fx or fy)
+        bwpermeter: INT number of pixels per meter
+        plate_dim: TUPLE plate dimensions in meters
+        cam_name: STRING camera name
+        flip: DICT flip axes for vector orientation
+        event: STRING event name
+        engine: SQLALCHEMY engine
+        fthresh: INT force threshold for contact detection
+        feedback: STR Path with logsheet name which specifies the collection is immediate feedback,
+            will use logsheet data instead of queries
+
+    Outputs
+        output1: vector overlay video to the current path
+
+    Dependencies
+        os
+        labcodes
+        USATF processing codes
+        sqlalchemy
+        pandas
+    """
+
+    # Dependencies
+    import os
+    from ImportForce_TXT import ImportForce_TXT
+    from FindContactIntervals import FindContactIntervals
+    from findplate import findplate
+    from pixelratios import pix2m_fromplate, bw2pix
+    from dataconversion_force import convertdata
+    from VectorOverlay.vectoroverlay import vectoroverlay
+    from USATF_batch_db_processing import connect_to_server
+    from sqlalchemy.sql import text
+    import pandas as pd
+    import openpyxl
+    from VectorOverlay.vectoroverlay import vector_overlay_single
+
+
+    # Create additional needed paths
+    path_force = os.path.join(path, 'force')
+    path_video_crop = os.path.join(path, 'video', cam_name + '_cropped')
+    path_video = os.path.join(path, 'video', cam_name)
+    path_logsheet = os.path.join(path, logsheet_name)
+
+    # Queries: camera info, force plate info, and logsheet info
+
+
+    '''Get the logsheet info'''
+    ls_workbook = openpyxl.load_workbook(os.path.join(path, logsheet_name))
+
+    ## Info Tab
+    # get the collection_id from the Info tab
+    colID = ls_workbook['Info']['D2'].value
+    # get the calibration_file from Info where camera_name == cam_name
+    # find the row of the camera_name
+    for row in range(1, 100):
+        if ls_workbook['Info'][f'A{row}'].value == cam_name:
+            cal_file = ls_workbook['Info'][f'D{row}'].value
+            cam_extension = ls_workbook['Info'][f'C{row}'].value
+            samp_vid = ls_workbook['Info'][f'B{row}'].value
+
+            break
+
+    ## Overlay Tab
+    # get the view from the overlay tab
+    view = ls_workbook['overlay']['A2'].value
+    # get the bwpermeter from the overlay tab
+    bwpermeter = ls_workbook['overlay']['B2'].value
+    #TODO: get the flip parameters from the overlay tab
+
+    # get fthresh from the overlay tab
+    fthresh = ls_workbook['overlay']['D2'].value
+    #TODO: get the plate_area from the overlay tab
+
+    # get the mode from the overlay tab
+    mode = ls_workbook['overlay']['F2'].value
+    # get the disp_thresh from the overlay tab
+    disp_thresh = ls_workbook['overlay']['G2'].value
+    # get the pix2mdir from the overlay tab
+    pix2mdir = ls_workbook['overlay']['H2'].value
+
+    # find rows filled with data in Logsheet tab
+    for row in range(1, 1000):
+        if ls_workbook['Logsheet'][f'A{row}'].value == None:
+            end_row = row
+            break
+
+    for i in range(2, end_row):
+        # get the force file name
+        file_force = ls_workbook['Logsheet'][f'K{i}'].value
+        path_file_force = os.path.join(path_force, file_force + '.txt')
+
+        # get the video file name
+        #TODO: use the camera name to find the letter of the row in the Logsheet tab
+        file_vid = ls_workbook['Logsheet'][f'L{i}'].value
+        path_file_vid = os.path.join(path_video, file_vid + cam_extension)
+        print(path_file_vid)
+
+        # get the contact frame for that video
+        #TODO make this dynamic so if the column moves it still gets the right value
+        contact_frame = ls_workbook['Logsheet'][f'Q{i}'].value
+
+        # get the athlete name for that video
+        #TODO make this dynamic so if the column moves it still gets the right value
+        athlete_name = ls_workbook['Logsheet'][f'A{i}'].value
+
+        # find the bw associated with that athlete name from Info tab
+        for row in range(1, 100):
+            if ls_workbook['Info'][f'A{row}'].value == athlete_name:
+                bw = ls_workbook['Info'][f'G{row}'].value
+                break
+
+    vector_overlay_single(file_force = path_file_force,
+                          file_vid= path_file_vid,
+                          flip = flip,
+                          samp_vid = samp_vid,
+                          bw= bw,
+                          contact_frame = contact_frame,
+                          plate_dim = plate_dim,
+                          view = view,
+                          mode = mode,
+                          disp_thresh = disp_thresh,
+                          force_thresh = fthresh,
+                          bwpermeter = bwpermeter,
+                          pix2mdir = pix2mdir,
+                          platearea = None)
+
 
 def vect_ol_batch(path, colID, view, bwpermeter, plate_dim, cam_name, flip, event, engine= None, fthresh=50):
     """
@@ -26,6 +167,9 @@ def vect_ol_batch(path, colID, view, bwpermeter, plate_dim, cam_name, flip, even
         flip: DICT flip axes for vector orientation
         event: STRING event name
         engine: SQLALCHEMY engine
+        fthresh: INT force threshold for contact detection
+        feedback: STR Path with logsheet name which specifies the collection is immediate feedback,
+            will use logsheet data instead of queries
 
     Outputs
         output1: vector overlay video to the current path
