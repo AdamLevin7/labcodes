@@ -13,7 +13,8 @@ Author:
 
 def vect_ol_batch_ls(path,
                      cam_name,
-                     logsheet_name):
+                     logsheet_name,
+                     contact_intv = True):
     #TODO improve this function so it finds the right value even if the row/columns shift
     """
     Function::: vect_ol_batch_ls
@@ -24,6 +25,7 @@ def vect_ol_batch_ls(path,
         path: STRING path to collection folder
         cam_name: STRING camera name
         logsheet_name: STRING logsheet name
+        contact_intv: BOOLEAN whether use the contact intervals or not
 
     Outputs
         output1: vector overlay video to the current path
@@ -191,9 +193,20 @@ def vect_ol_batch_ls(path,
         # Add the columns from the list together
         data_f1_raw['Fz_sum'] = data_f1_raw[fp_full_names].sum(axis=1)
 
-        # Find the contact intervals using the Fz axis
-        ci_f1 = FindContactIntervals(data_f1_raw['Fz_sum'], samp_force,
-                                     thresh=fthresh)
+        # Specify if contact intervals should be used or not
+        if contact_intv == True:
+            # Find the contact intervals using the Fz axis
+            ci_f1 = FindContactIntervals(data_f1_raw['Fz_sum'], samp_force,
+                                         thresh=fthresh)
+        else:
+            # Dataframe with Start Column and End column
+            ci_f1 = pd.DataFrame(columns=['Start', 'End'])
+            # Add the start and end frames to the dataframe
+            ci_f1['Start'] = [0]
+            ci_f1['End'] = [len(data_f1_raw)]
+
+        # Zero out the data if Fz is less than 16N
+        data_f1_raw[data_f1_raw['Fz_sum'] < 16] = 0
 
         # Crop Data
         data_f1 = {}
