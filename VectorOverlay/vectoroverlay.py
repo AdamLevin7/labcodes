@@ -24,7 +24,8 @@ def vector_overlay_single(file_force = None,
                           force_thresh = 20,
                           bwpermeter = 2,
                           pix2mdir = 'x',
-                          platearea = None):
+                          platearea = None,
+                          con_plate=None):
 
     """
     Function::: vector_overlay_single
@@ -32,6 +33,7 @@ def vector_overlay_single(file_force = None,
         Details:
 
     Inputs
+        con_plate: LIST Force plate that is contacted in the trial
     """
 
     # Packages
@@ -60,10 +62,16 @@ def vector_overlay_single(file_force = None,
     data_f1_raw, samp_force, _ = ImportForce_TXT(file_force)
 
     # Find the names of all the force plates in the file before the space
-    fp_full_names = [col for col in data_f1_raw.columns if 'Fz' in col]
+    if con_plate == None:
+        fp_full_names = [col for col in data_f1_raw.columns if 'Fz' in col]
+    else:
+        fp_full_names = [str(fp) + '_Fz' for fp in con_plate]
 
-    # Reduce to only include the name before the space
-    fp_names = [fp.split(' ')[0] for fp in fp_full_names]
+
+    # Reduce to only include the name before the space last space
+    fp_names = [fp.split(' ')[:-1] for fp in fp_full_names]
+    # paste back together
+    fp_names = [' '.join(fp) for fp in fp_names]
 
     # Add the columns from the list together
     data_f1_raw['Fz_sum'] = data_f1_raw[fp_full_names].sum(axis=1)
