@@ -14,7 +14,8 @@ Author:
 def vect_ol_batch_ls(path,
                      cam_name,
                      logsheet_name,
-                     contact_intv = True):
+                     contact_intv = True,
+                     single=False):
     #TODO improve this function so it finds the right value even if the row/columns shift
     """
     Function::: vect_ol_batch_ls
@@ -26,6 +27,7 @@ def vect_ol_batch_ls(path,
         cam_name: STRING camera name
         logsheet_name: STRING logsheet name
         contact_intv: BOOLEAN whether use the contact intervals or not
+        single: BOOLEAN whether to do a single vector overlay or not (will use the last video/force file in the logsheet)
 
     Outputs
         output1: vector overlay video to the current path
@@ -50,6 +52,7 @@ def vect_ol_batch_ls(path,
     from VectorOverlay.vectoroverlay import vectoroverlay
     from tkinter import filedialog as fd
     import pandas as pd
+    from findplate import read_plate
 
 
     # Create additional needed paths
@@ -126,12 +129,8 @@ def vect_ol_batch_ls(path,
 
     #Check if the plate area exists and isn't empty
     if 'plate_area' in ls_workbook.sheetnames and ls_workbook['plate_area']['A2'].value != None:
-        # read in first 3 rows as a dataframe
-        plate_area = {}
-        for i in range(0, len(fp_names)):
-            df_plate_area = pd.read_excel(path_logsheet, sheet_name='plate_area', nrows=2,skiprows=3*i, index_col=0)
-            # append the plate area to the plate_area dictionary
-            plate_area[i] = df_plate_area
+        # Use the function read_plate to read in the plate area
+        plate_area = read_plate(path_logsheet, engine=None, colID = colID, camera_name = cam_name)
 
     else:
         # if it doesn't, find the plate area in the calibration video
@@ -150,7 +149,14 @@ def vect_ol_batch_ls(path,
             end_row = row
             break
 
-    for i in range(2, end_row):
+    # Use the single input to determine if one or more vector overlays should be created
+    if single == True:
+        start_row = end_row-1
+    else:
+        start_row = 2
+
+    for i in range(start_row,end_row):
+
         # get the force file name
         file_force = ls_workbook['Logsheet'][f'K{i}'].value
         path_file_force = os.path.join(path_force, file_force + '.txt')
@@ -229,6 +235,8 @@ def vect_ol_batch_ls(path,
                       contact_frame, samp_force=samp_force, samp_video=samp_vid,
                       dispthresh=disp_thresh)
 
+
+    print('Vector Overlays Complete!')
 
 
 
