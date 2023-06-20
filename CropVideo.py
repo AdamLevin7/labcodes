@@ -37,7 +37,7 @@ def CropVideo(file_o, file_n='croppedvideo.mp4', frame_start=1, frame_end=2,
     # load video file
     cap = cv2.VideoCapture(file_o)
     # set end frame as last frame
-    if frame_end == 2:
+    if (frame_end == 2) or (camera_hz*5 > cap.get(cv2.CAP_PROP_FRAME_COUNT)):
         frame_end = cap.get(cv2.CAP_PROP_FRAME_COUNT)
         
     
