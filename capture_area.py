@@ -29,7 +29,7 @@ Created on Wed Oct 30 10:06:19 2019
 # import the necessary packages
 
 
-def findarea(video, frame=0, label='frame', method="boundingbox"):
+def findarea(video, frame=0, label='frame', method="clickdrag"):
     
     import wx
     import sys

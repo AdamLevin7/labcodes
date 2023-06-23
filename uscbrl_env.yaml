@@ -17,6 +17,6 @@ dependencies:
   - pandas
   - spyder
   - scipy
-  - xlrd
+  - openpyxl
   - ffmpeg
   - wxpython

@@ -1,89 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="BranchesTreeState">
-    <expand>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-    </expand>
-    <select>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="BRANCH:master" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-    </select>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2327ad83-330a-4323-bcf2-583b3597f1e9" name="Default Changelist" comment="Updated markdown documentation for lab codes with links to the actual codes included. Still need to add pictures" />
+    <list default="true" id="700e4218-9bda-4002-a580-8cd41099a71a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/labcodes.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/VectorOverlay_Example.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VectorOverlay/vectoroverlay.py" beforeDir="false" afterPath="$PROJECT_DIR$/VectorOverlay/vectoroverlay.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/capture_area.py" beforeDir="false" afterPath="$PROJECT_DIR$/capture_area.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/findplate.py" beforeDir="false" afterPath="$PROJECT_DIR$/findplate.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/uscbrl_env.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/uscbrl_env.yaml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="JupyterTrust" id="8e9da7b8-9716-49d2-ac73-7d59bb8f8d43" />
-  <component name="ProjectId" id="1hfdmhGBL3jRQPoNyuRZtPaYeDk" />
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2Qo6D9wfhi87i9aIGFuR67Pwn5h" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="Markdown" />
-    <property name="last_opened_file_path" value="F:/Personal/Resume &amp; CV/HStewart-rmarkdown-cv.Rmd" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.appearance" />
-  </component>
-  <component name="RunManager">
-    <configuration name="ImportForce_TXT" type="PythonConfigurationType" factoryName="Python">
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "C:/Users/shani/labcodes/VectorOverlay",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  }
+}]]></component>
+  <component name="RunManager" selected="Python.VectorOverlay_Example">
+    <configuration name="VectorOverlay_Example" type="PythonConfigurationType" factoryName="Python">
       <module name="labcodes" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="C:\Users\hestewar\AppData\Local\Microsoft\WindowsApps\python.exe" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="SDK_HOME" value="C:\Users\shani\anaconda3\envs\labcodes\python.exe" />
+      <option name="SDK_NAME" value="Python 3.7 (labcodes)" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/VectorOverlay" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ImportForce_TXT.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
-      <module name="labcodes" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/VectorOverlay_Example.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -92,156 +69,53 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="findplate" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="labcodes" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/findplate.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.findplate" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="2327ad83-330a-4323-bcf2-583b3597f1e9" name="Default Changelist" comment="" />
-      <created>1600406242227</created>
+      <changelist id="700e4218-9bda-4002-a580-8cd41099a71a" name="Changes" comment="" />
+      <created>1686007468767</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1600406242227</updated>
-      <workItem from="1600406244460" duration="2196000" />
-      <workItem from="1600448821582" duration="1893000" />
-      <workItem from="1600487431759" duration="228000" />
-      <workItem from="1600487677544" duration="4658000" />
-      <workItem from="1600557749762" duration="175000" />
-      <workItem from="1600832890582" duration="4288000" />
-      <workItem from="1601189931194" duration="4413000" />
-      <workItem from="1602277552760" duration="2457000" />
-      <workItem from="1606279930971" duration="778000" />
-      <workItem from="1606782720703" duration="180000" />
-      <workItem from="1606782912373" duration="10816000" />
-      <workItem from="1606957358206" duration="149000" />
+      <updated>1686007468767</updated>
     </task>
-    <task id="LOCAL-00001" summary="Updated markdown documentation for lab codes with links to the actual codes included. Still need to add pictures">
-      <created>1600492140135</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1600492140135</updated>
-    </task>
-    <task id="LOCAL-00002" summary="Created README file for NJM (really just bare bones- not done) and created an example NJM code as an example.">
-      <created>1600836587394</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1600836587394</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Updates so it pulls the right data from the NJM structure.">
-      <created>1601191036502</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1601191036502</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Update part 2, wasn't pulling all needed data.">
-      <created>1601191942608</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1601191942608</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Changed output type to Tuple for documentation. Updates to README for FBD animate function.">
-      <created>1601193442767</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1601193442767</updated>
-    </task>
-    <task id="LOCAL-00006" summary="Continuing updates to make README more functional.">
-      <created>1601194039306</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1601194039306</updated>
-    </task>
-    <task id="LOCAL-00007" summary="Continuing updates to make README more functional.">
-      <created>1601194049072</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1601194049072</updated>
-    </task>
-    <task id="LOCAL-00008" summary="Adding links so you can get to the actual code.">
-      <created>1601194344785</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1601194344785</updated>
-    </task>
-    <task id="LOCAL-00009" summary="Updated docummentation for Vector Overlay tutorial and for the general documentation codes.">
-      <created>1606793465780</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1606793465780</updated>
-    </task>
-    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="master" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-            </State>
-          </value>
-        </entry>
-      </map>
-    </option>
-    <option name="oldMeFiltersMigrated" value="true" />
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="Updated markdown documentation for lab codes with links to the actual codes included. Still need to add pictures" />
-    <MESSAGE value="Created README file for NJM (really just bare bones- not done) and created an example NJM code as an example." />
-    <MESSAGE value="Updates so it pulls the right data from the NJM structure." />
-    <MESSAGE value="Update part 2, wasn't pulling all needed data." />
-    <MESSAGE value="Changed output type to Tuple for documentation. Updates to README for FBD animate function." />
-    <MESSAGE value="Continuing updates to make README more functional." />
-    <MESSAGE value="Adding links so you can get to the actual code." />
-    <MESSAGE value="Updated docummentation for Vector Overlay tutorial and for the general documentation codes." />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated docummentation for Vector Overlay tutorial and for the general documentation codes." />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="-1584" y="168" width="1092" height="714" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1602280519780">
-      <screen x="-1920" y="3" width="1920" height="1040" />
-    </state>
-    <state x="294" y="160" width="1092" height="714" key="#com.intellij.execution.impl.EditConfigurationsDialog/1680.-26.1536.832/0.0.1680.1010@0.0.1680.1010" timestamp="1600406787704" />
-    <state x="-1584" y="168" key="#com.intellij.execution.impl.EditConfigurationsDialog/1920.2.1536.832/0.0.1920.1040/-1920.3.1920.1040@-1920.3.1920.1040" timestamp="1602280519780" />
-    <state x="567" y="222" key="FileChooserDialogImpl" timestamp="1606280360940">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state x="567" y="222" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1606280360940" />
-    <state x="620" y="272" key="FileChooserDialogImpl/1680.-26.1536.832/0.0.1680.1010@0.0.1680.1010" timestamp="1601193803603" />
-    <state x="709" y="280" key="FileChooserDialogImpl/1920.2.1536.832/0.0.1920.1040/-1920.3.1920.1040@0.0.1920.1040" timestamp="1600449161091" />
-    <state x="-6" y="0" width="914" height="824" key="SettingsEditor" timestamp="1606957475222">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state x="-6" y="0" width="914" height="824" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1606957475222" />
-    <state x="461" y="165" key="SettingsEditor/1920.2.1536.832/0.0.1920.1040/-1920.3.1920.1040@0.0.1920.1040" timestamp="1600449028368" />
-    <state x="432" y="238" key="Vcs.Push.Dialog.v2" timestamp="1601194346876">
-      <screen x="0" y="0" width="1680" height="1010" />
-    </state>
-    <state x="432" y="238" key="Vcs.Push.Dialog.v2/1680.-26.1536.832/0.0.1680.1010@0.0.1680.1010" timestamp="1601194346876" />
-    <state x="503" y="217" key="search.everywhere.popup" timestamp="1600835600440">
-      <screen x="0" y="0" width="1680" height="1010" />
-    </state>
-    <state x="503" y="217" key="search.everywhere.popup/1680.-26.1536.832/0.0.1680.1010@0.0.1680.1010" timestamp="1600835600440" />
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/findplate.py</url>
+          <line>4</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
