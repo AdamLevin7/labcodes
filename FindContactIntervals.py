@@ -23,10 +23,12 @@ Created on Thu Nov  7 15:12:26 2019
 @author: cwiens, Casey Wiens, cwiens32@gmail.com
 """
 
-import pandas as pd
-from scipy import stats
     
 def FindContactIntervals(data, samp=1200, thresh=50):
+
+    # Dependencies
+    import pandas as pd
+    from scipy import stats
     
     #%% buffer time
     # set amount of time after event to search for next

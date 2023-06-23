@@ -36,11 +36,11 @@ Created on Fri Dec 27 11:10:54 2019
 def findframe(file, label='Find Frame', framestart=0):
 
     import cv2
-    import wx
     import os
     import matplotlib.pyplot as plt
+    import wx
     
-    # idenify screen resolution
+    # identify screen resolution
     app = wx.App(False)
     width, height = wx.GetDisplaySize()
     app.Destroy()

@@ -20,3 +20,4 @@ dependencies:
   - openpyxl
   - ffmpeg
   - wxpython
+

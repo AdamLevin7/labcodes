@@ -1,27 +1,41 @@
-# -*- coding: utf-8 -*-
 """
-Created on Mon Jul 27 09:53:35 2020
+Script: signalprocessing
+    Signal processing for biomechanics.
 
-@author: cwiens
+Modules
+    butter_filtfilt: Butterworth filter, Note use of filtfilt which doubles order*
+    calc_rss: Calculate residual sum of squares
+    residual_analysis: Perform residual analysis of multiple cutoff frequencys using Winter's method and a Butterworth filter
+    best_fit_slope_and_intercept: Calculate the slope and y-intercept for the best fit line
+
+Author:
+    Casey Wiens
+    cwiens32@gmail.com
 """
 
 
-"""
-butter_filtfilt
-    butterworth filter
-    * the function filtfilt is a dualpass so it doubles the order (e.g. resulting order = 2*order)
-    
-Inputs
-    data_in: ARRAY signal to be filtered
-    fs: INT sampling rate of signal (Hz)
-    N: INT order of filter (this will effectively be doubled since using filtfilt)
-    fc: INT cut-off frequency of filter
-    filt_pass: STRING low, high, or band pass filter (default: low)
-    
-Outputs
-    data_filt: ARRAY filtered signal
-"""
 def butter_filtfilt(data_in, fs, N, fc, filt_pass='low'):
+    """
+    Function::: butter_filtfilt
+    	Description: butterworth filter for signals
+    	Details: * the function filtfilt is a dualpass so it doubles the order (e.g. resulting order = 2*order)
+
+    Inputs
+        data_in: ARRAY signal to be filtered
+        fs: INT sampling rate of signal (Hz)
+        N: INT order of filter (this will effectively be doubled since using filtfilt)
+        fc: INT cut-off frequency of filter
+        filt_pass: STRING low, high, or band pass filter (default: low)
+
+    Outputs
+        data_filt: ARRAY filtered signal
+
+    Dependencies
+        scipy
+        numpy
+    """
+
+    # Dependencies
     from scipy.signal import butter, filtfilt
     import numpy as np
 
@@ -51,21 +65,24 @@ def butter_filtfilt(data_in, fs, N, fc, filt_pass='low'):
     return data_filt
 
 
-"""
-calc_rss
-    Calculate residual sum of squares
-
-Input:
-    data_orig: SERIES unfiltered data to be compared to filtered (data_filt) data
-    data_filt: SERIES filtered data to be compared to unfiltered (data_orig) data
-
-Output:
-    rss: FLOAT residual sum of squares of unfiltered/filtered data comparison
-
-Dependencies:
-    numpy
-"""
 def calc_rss(data_orig, data_filt):
+    """
+    Function::: calc_rss
+    	Description: Calculate residual sum of squares
+    	Details:
+
+    Inputs
+        data_orig: SERIES unfiltered data to be compared to filtered (data_filt) data
+        data_filt: SERIES filtered data to be compared to unfiltered (data_orig) data
+
+    Outputs
+        rss: FLOAT residual sum of squares of unfiltered/filtered data comparison
+
+    Dependencies
+        numpy
+    """
+
+    # Dependencies
     import numpy as np
 
     """ calculate residual sum of squares """
@@ -75,28 +92,32 @@ def calc_rss(data_orig, data_filt):
     return rss
 
 
-"""
-residual_analysis
-    Perform residual analysis of multiple cutoff frequencys using Winter's method and a Butterworth filter
-
-Input:
-    data_in: DATAFRAME unfiltered data to be compared to filtered
-    fo: FLOAT initial cutoff frequency for residual analysis
-    ff: FLOAT final cutoff frequency for residual analysis
-    N: INT order of Butterworth filter
-    samp: INT sampling rate of signal (Hz)
-    fi: FLOAT interval to increase cutoff frequency for residual analysis
-    filt_pass: STRING low, high, or band pass filter (default: low)
-
-Output:
-    data_rss: DATAFRAME the residual sum of squares for each cutoff frequency
-
-Dependencies:
-    pandas
-    numpy
-"""
 def residual_analysis(data_in, fo=None, ff=None, N=None, samp=None, fi=0.1, filt_pass='low',
                       k=None, si=None, sf=None, ss=None, cf=None, w=None):
+    """
+    Function::: residual_analysis
+    	Description: Perform residual analysis of multiple cutoff frequencys using Winter's method and a Butterworth filter
+    	Details:
+
+    Inputs
+        data_in: DATAFRAME unfiltered data to be compared to filtered
+        fo: FLOAT initial cutoff frequency for residual analysis
+        ff: FLOAT final cutoff frequency for residual analysis
+        N: INT order of Butterworth filter
+        samp: INT sampling rate of signal (Hz)
+        fi: FLOAT interval to increase cutoff frequency for residual analysis
+        filt_pass: STRING low, high, or band pass filter (default: low)
+
+    Outputs
+        data_rss: DATAFRAME the residual sum of squares for each cutoff frequency
+
+    Dependencies
+        pandas
+        numpy
+        scipy
+    """
+
+    # Dependencies
     import pandas as pd
     import numpy as np
     from scipy.interpolate import UnivariateSpline
@@ -153,21 +174,23 @@ def residual_analysis(data_in, fo=None, ff=None, N=None, samp=None, fi=0.1, filt
     return data_rss
 
 
-"""
-best_fit_slope_and_intercept
-    Calculate the slope and y-intercept for the best fit line
-    
-Input:
-    xs: SERIES x-axis data
-    ys: SERIES y-axis data
-
-Output:
-    data_rss: DATAFRAME the residual sum of squares for each cutoff frequency
-
-Dependencies:
-    statistics
-"""
 def best_fit_slope_and_intercept(xs, ys):
+    """
+    Function::: best_fit_slope_and_intercept
+    	Description: Calculate the slope and y-intercept for the best fit line
+    	Details: residual sum of squares for each cutoff frequency
+
+    Inputs
+        xs: SERIES x-axis data
+        ys: SERIES y-axis data
+
+    Outputs
+        m: FLOAT calculate the slope
+        b: FLOAT y intercept
+
+    Dependencies
+        statistics
+    """
     from statistics import mean
 
     """ calculate slope """
@@ -201,6 +224,28 @@ Dependencies:
 """
 def est_optimal_cutoff_freq(data_in, fo=None, ff=None, N=None, samp=None, fi=0.1, filt_pass='low',
                             k=None, si=None, sf=None, ss=None):
+    """
+    Function::: name_of_function
+    	Description: brief description here (1 line)
+    	Details: Full description with details here
+
+    Inputs
+        input1: DATATYPE description goes here (units)
+        input2: DATATYPE description goes here (units)
+        input3: DATATYPE description goes here (units)
+        input4: DATATYPE description goes here (units)
+
+    Outputs
+        output1: DATATYPE description goes here (units)
+        output2: DATATYPE description goes here (units)
+        output3: DATATYPE description goes here (units)
+        output4: DATATYPE description goes here (units)
+
+    Dependencies
+        dep1
+        dep2
+        dep3 from uscbrl_script.py (USCBRL repo)
+    """
 
     """ perform residual analysis """
     if fo is not None:
@@ -242,6 +287,28 @@ Dependencies:
     none
 """
 def est_optimal_weights(data_in, cf, w, k):
+    """
+    Function::: name_of_function
+    	Description: brief description here (1 line)
+    	Details: Full description with details here
+
+    Inputs
+        input1: DATATYPE description goes here (units)
+        input2: DATATYPE description goes here (units)
+        input3: DATATYPE description goes here (units)
+        input4: DATATYPE description goes here (units)
+
+    Outputs
+        output1: DATATYPE description goes here (units)
+        output2: DATATYPE description goes here (units)
+        output3: DATATYPE description goes here (units)
+        output4: DATATYPE description goes here (units)
+
+    Dependencies
+        dep1
+        dep2
+        dep3 from uscbrl_script.py (USCBRL repo)
+    """
 
     """ perform residual analysis """
     data_rss = residual_analysis(data_in, cf=cf, w=w, k=k)
@@ -280,6 +347,28 @@ Dependencies:
     numpy
 """
 def filt_butter_winter(data_orig, fo, ff, N, samp, fi=0.1, filt_pass='low'):
+    """
+    Function::: name_of_function
+    	Description: brief description here (1 line)
+    	Details: Full description with details here
+
+    Inputs
+        input1: DATATYPE description goes here (units)
+        input2: DATATYPE description goes here (units)
+        input3: DATATYPE description goes here (units)
+        input4: DATATYPE description goes here (units)
+
+    Outputs
+        output1: DATATYPE description goes here (units)
+        output2: DATATYPE description goes here (units)
+        output3: DATATYPE description goes here (units)
+        output4: DATATYPE description goes here (units)
+
+    Dependencies
+        dep1
+        dep2
+        dep3 from uscbrl_script.py (USCBRL repo)
+    """
     import pandas as pd
     import numpy as np
 
@@ -332,6 +421,28 @@ Dependencies:
 """
 
 def spline_winter(data_orig, k=3, si=0, sf=1200, ss=10, samp=240, int_s=None, int_f=None, fc=None):
+    """
+    Function::: name_of_function
+    	Description: brief description here (1 line)
+    	Details: Full description with details here
+
+    Inputs
+        input1: DATATYPE description goes here (units)
+        input2: DATATYPE description goes here (units)
+        input3: DATATYPE description goes here (units)
+        input4: DATATYPE description goes here (units)
+
+    Outputs
+        output1: DATATYPE description goes here (units)
+        output2: DATATYPE description goes here (units)
+        output3: DATATYPE description goes here (units)
+        output4: DATATYPE description goes here (units)
+
+    Dependencies
+        dep1
+        dep2
+        dep3 from uscbrl_script.py (USCBRL repo)
+    """
     import pandas as pd
     import numpy as np
     from scipy.interpolate import UnivariateSpline
@@ -417,6 +528,28 @@ def spline_winter(data_orig, k=3, si=0, sf=1200, ss=10, samp=240, int_s=None, in
 
 """
 def remove_switches():
+    """
+    Function::: name_of_function
+    	Description: brief description here (1 line)
+    	Details: Full description with details here
+
+    Inputs
+        input1: DATATYPE description goes here (units)
+        input2: DATATYPE description goes here (units)
+        input3: DATATYPE description goes here (units)
+        input4: DATATYPE description goes here (units)
+
+    Outputs
+        output1: DATATYPE description goes here (units)
+        output2: DATATYPE description goes here (units)
+        output3: DATATYPE description goes here (units)
+        output4: DATATYPE description goes here (units)
+
+    Dependencies
+        dep1
+        dep2
+        dep3 from uscbrl_script.py (USCBRL repo)
+    """
     from scipy.signal import medfilt
 
 
@@ -437,6 +570,28 @@ def remove_switches():
 
 
 def fit_spline_csaps(x, y, thresh=0.000001, imp_f=None, pif_f=None, samp=240, set_weights=False):
+    """
+    Function::: name_of_function
+    	Description: brief description here (1 line)
+    	Details: Full description with details here
+
+    Inputs
+        input1: DATATYPE description goes here (units)
+        input2: DATATYPE description goes here (units)
+        input3: DATATYPE description goes here (units)
+        input4: DATATYPE description goes here (units)
+
+    Outputs
+        output1: DATATYPE description goes here (units)
+        output2: DATATYPE description goes here (units)
+        output3: DATATYPE description goes here (units)
+        output4: DATATYPE description goes here (units)
+
+    Dependencies
+        dep1
+        dep2
+        dep3 from uscbrl_script.py (USCBRL repo)
+    """
     from csaps import csaps
     import numpy as np
     import pandas as pd
@@ -516,9 +671,6 @@ def fit_spline_csaps(x, y, thresh=0.000001, imp_f=None, pif_f=None, samp=240, se
 
 
     return ys
-
-
-
 
 
 # from gcvspline import SmoothedNSpline

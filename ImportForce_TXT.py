@@ -1,38 +1,43 @@
-# -*- coding: utf-8 -*-
 """
-ImportForce_TXT
-    Modules to import force data from text file and combine data.
+Script: ImportForce_TXT
+    Modules to import force data from text file and combine data..
 
-Dependencies:
-    pandas
-    scipy
+Modules
+    ImportForce_TXT: Import force data from text file
+    combine_force: Combine all force plates to time, fx, fy, fz
 
-Created on Mon Oct  7 10:58:39 2019
-
-@author: Casey Wiens, cwiens32@gmail.com
+Author:
+    Casey Wiens
+    cwiens32@gmail.com
 """
-import pandas as pd
-from scipy import stats
 
 
-#%%
-"""
-ImportForce_TXT
-    Import force data from text file.
-    
-Inputs
-    file: STR file name (.txt) of force data
-    rezero: STR ability to rezero force data (default: None)
-        options:    b - subtracted based on beginning 200 frames
-                    e - subtracted bassed on ending 200 frames
-    
-Outputs
-    data: DATAFRAME force data with plate names and components
-    samp: FLOAT64 sampling rate of collection
-    weight: FLOAT64 weight (N) that was stored with collection (MAY OR MAY NOT BE
-        ACTUAL WEIGHT OF INDIVIDUAL/SYSTEM - COULD BE FROM A PREVIOUS SESSION)
-"""
 def ImportForce_TXT(file, rezero=None):
+    """
+    Function::: ImportForce_TXT
+    	Description: Import force data from text file.
+    	Details:
+
+    Inputs
+        file: STR file name (.txt) of force data
+        rezero: STR ability to rezero force data (default: None)
+            options:    b - subtracted based on beginning 200 frames
+                        e - subtracted bassed on ending 200 frames
+
+    Outputs
+        data: DATAFRAME force data with plate names and components
+        samp: FLOAT64 sampling rate of collection
+        weight: FLOAT64 weight (N) that was stored with collection (MAY OR MAY NOT BE
+            ACTUAL WEIGHT OF INDIVIDUAL/SYSTEM - COULD BE FROM A PREVIOUS SESSION)
+
+    Dependencies
+        pandas
+        scipy
+    """
+
+    # Dependencies
+    import pandas as pd
+    from scipy import stats
     
     ### load data and format variables
     data = pd.read_csv(file,
@@ -69,20 +74,25 @@ def ImportForce_TXT(file, rezero=None):
     return data, samp, weight
 
 
-
-#%%
-"""
-combine_force
-    Combine all force plates to time, fx, fy, fz
-    
-Inputs
-    file: DATAFRAME force data from ImportForce_TXT module
-    
-Outputs
-    data_combined: DATAFRAME combined force data (time, fx, fy, fz)
-"""
 def combine_force(data):
-    
+    """
+    Function::: combine_force
+    	Description: Combine all force plates to time, fx, fy, fz
+    	Details:
+
+    Inputs
+        file: DATAFRAME force data from ImportForce_TXT module
+
+    Outputs
+        data_combined: DATAFRAME combined force data (time, fx, fy, fz)
+
+    Dependencies
+        pandas
+    """
+
+    # Dependencies
+    import pandas as pd
+
     ### find time
     t = data.iloc[:,0]
     # filter to fx, fy, fz
@@ -95,7 +105,5 @@ def combine_force(data):
                                   'fx': fx,
                                   'fy': fy,
                                   'fz': fz})
-    
-    
+
     return data_combined
-    

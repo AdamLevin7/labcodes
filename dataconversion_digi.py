@@ -239,7 +239,6 @@ def dltdv_import(file, file_vid=None, flipy='no'):
     
     """ flip y-axis of digitized and center of mass data """
     if flipy == 'yes':
-        print("this should be working")
         # find height of image (max y value)
         cap = cv2.VideoCapture(file_vid)
         frame_height = int(cap.get(4))
@@ -257,6 +256,93 @@ def dltdv_import(file, file_vid=None, flipy='no'):
     
     return data_out, frame_first, frame_last
 
+
+def vama_import(file, flipy="yes", frame_height=1080):
+    import json
+    import pandas
+
+    # read in json file
+    with open(file, 'r') as f:
+        df_json = json.load(f)
+    # grab anatomical landmarks in pixel coordinate system
+    df_digi_pix = df_json['processing']['views'][list(df_json['processing']['views'])[0]]['wireframes']
+    # grab kinematics data
+    df_digi_global = df_json['results']['kinematics']
+    # grab frames
+    frame_list = list(df_digi_pix.keys())
+    data_digi_pix = pd.DataFrame(columns=["frame",
+                                          "toe_right_x", "toe_right_y",
+                                          "heel_right_x", "heel_right_y",
+                                          "ankle_right_x", "ankle_right_y",
+                                          "knee_right_x", "knee_right_y",
+                                          "hip_right_x", "hip_right_y",
+                                          "toe_left_x", "toe_left_y",
+                                          "heel_left_x", "heel_left_y",
+                                          "ankle_left_x", "ankle_left_y",
+                                          "knee_left_x", "knee_left_y",
+                                          "hip_left_x", "hip_left_y",
+                                          "shoulder_right_x", "shoulder_right_y",
+                                          "elbow_right_x", "elbow_right_y",
+                                          "wrist_right_x", "wrist_right_y",
+                                          "finger_right_x", "finger_right_y",
+                                          "shoulder_left_x", "shoulder_left_y",
+                                          "elbow_left_x", "elbow_left_y",
+                                          "wrist_left_x", "wrist_left_y",
+                                          "finger_left_x", "finger_left_y",
+                                          "c7_x", "c7_y",
+                                          "vertex_x", "vertex_y"])
+    for cnti in frame_list:
+        if len(list(df_digi_pix[cnti])) > 0:
+            cur_dig = df_digi_pix[cnti][list(df_digi_pix[cnti])[0]]['dots']
+            data_digi_pix = pd.concat([data_digi_pix,
+                                       pd.DataFrame({'frame': [int(cnti)],
+                                                     'toe_right_x': [cur_dig['toe_r']['x']],
+                                                     'toe_right_y': [cur_dig['toe_r']['y']],
+                                                     'heel_right_x': [cur_dig['heel_r']['x']],
+                                                     'heel_right_y': [cur_dig['heel_r']['y']],
+                                                     'ankle_right_x': [cur_dig['ankle_r']['x']],
+                                                     'ankle_right_y': [cur_dig['ankle_r']['y']],
+                                                     'knee_right_x': [cur_dig['knee_r']['x']],
+                                                     'knee_right_y': [cur_dig['knee_r']['y']],
+                                                     'hip_right_x': [cur_dig['hip_r']['x']],
+                                                     'hip_right_y': [cur_dig['hip_r']['y']],
+                                                     'toe_left_x': [cur_dig['toe_l']['x']],
+                                                     'toe_left_y': [cur_dig['toe_l']['y']],
+                                                     'heel_left_x': [cur_dig['heel_l']['x']],
+                                                     'heel_left_y': [cur_dig['heel_l']['y']],
+                                                     'ankle_left_x': [cur_dig['ankle_l']['x']],
+                                                     'ankle_left_y': [cur_dig['ankle_l']['y']],
+                                                     'knee_left_x': [cur_dig['knee_l']['x']],
+                                                     'knee_left_y': [cur_dig['knee_l']['y']],
+                                                     'hip_left_x': [cur_dig['hip_l']['x']],
+                                                     'hip_left_y': [cur_dig['hip_l']['y']],
+                                                     'shoulder_right_x': [cur_dig['shoulder_r']['x']],
+                                                     'shoulder_right_y': [cur_dig['shoulder_r']['y']],
+                                                     'elbow_right_x': [cur_dig['elbow_r']['x']],
+                                                     'elbow_right_y': [cur_dig['elbow_r']['y']],
+                                                     'wrist_right_x': [cur_dig['wrist_r']['x']],
+                                                     'wrist_right_y': [cur_dig['wrist_r']['y']],
+                                                     'finger_right_x': [cur_dig['hand_r']['x']],
+                                                     'finger_right_y': [cur_dig['hand_r']['y']],
+                                                     'shoulder_left_x': [cur_dig['shoulder_l']['x']],
+                                                     'shoulder_left_y': [cur_dig['shoulder_l']['y']],
+                                                     'elbow_left_x': [cur_dig['elbow_l']['x']],
+                                                     'elbow_left_y': [cur_dig['elbow_l']['y']],
+                                                     'wrist_left_x': [cur_dig['wrist_l']['x']],
+                                                     'wrist_left_y': [cur_dig['wrist_l']['y']],
+                                                     'finger_left_x': [cur_dig['hand_l']['x']],
+                                                     'finger_left_y': [cur_dig['hand_l']['y']],
+                                                     'c7_x': [cur_dig['neck']['x']],
+                                                     'c7_y': [cur_dig['neck']['y']],
+                                                     'vertex_x': [cur_dig['head']['x']],
+                                                     'vertex_y': [cur_dig['head']['y']]})]).reset_index(drop=True)
+
+    """ flip y-axis of digitized and center of mass data """
+    if flipy == 'yes':
+        # subtract digitzed loction from frame height (only y columns)
+        data_digi_pix[data_digi_pix.columns[data_digi_pix.columns.str.contains('_y')]] = frame_height - data_digi_pix.filter(regex='_y')
+
+    return data_digi_pix
 
 
 #%% OLD VERSION - WILL BE REMOVED IN FUTURE

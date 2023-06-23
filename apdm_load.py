@@ -1,26 +1,40 @@
 """
-apdm_import
+Script: apdm_load
+    Load APDM data.
 
-Reads in APDM's h5 file and creates dataframes for accelerometer, gyroscope,
-    magnetometer, and quaternions. It uses the sampling rate of the sensors
+Modules
+    apdm_import: Reads in APDM's h5 file and creates dataframes
+
+Author:
+    Casey Wiens
+    cwiens32@gmail.com
+"""
+
+
+def apdm_import(filename):
+    """
+    Function::: apdm_import
+    	Description: Reads in APDM's h5 file and creates dataframes.
+    	Details: For accelerometer, gyroscope, magnetometer, and quaternions. Uses the sampling rate of the sensors
     to set the time.
 
-Inputs:
-    filename: STR filename of the h5 file to be loaded
+    Inputs
+        filename: STR filename of the h5 file to be loaded
 
-Output:
-    acc_df: DATAFRAME accelerometer data from all sensors (x, y, z)
-    gyro_df: DATAFRAME gyroscope data from all sensors (x, y, z)
-    mag_df: DATAFRAME magnetometer data from all sensors (x, y, z)
-    orient_df: DATAFRAME quaternion data from all sensors (r, x, y, z)
-        [real (scalar), x (complex), y (complex), z (complex)]
-    temp: FLOAT Temperature of the sensor during collection
+    Outputs
+        acc_df: DATAFRAME accelerometer data from all sensors (x, y, z)
+        gyro_df: DATAFRAME gyroscope data from all sensors (x, y, z)
+        mag_df: DATAFRAME magnetometer data from all sensors (x, y, z)
+        orient_df: DATAFRAME quaternion data from all sensors (r, x, y, z)
+            [real (scalar), x (complex), y (complex), z (complex)]
+        temp: FLOAT Temperature of the sensor during collection
 
-Created on Wed Oct  7 10:01:02 2020
+    Dependencies
+        pandas
+        numpy
+        h5py
+    """
 
-@author: cwiens, Casey Wiens, cwiens32@gmail.com
-"""
-def apdm_import(filename):
     """ import packages """
     import pandas as pd
     import numpy as np
